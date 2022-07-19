@@ -1,7 +1,10 @@
 #pragma once
 
-class Window
-{
+class Window {
 public:
 	Window(int width, int height);
+	HWND getHandle();
+
+private:
+	HWND m_handle;
 };

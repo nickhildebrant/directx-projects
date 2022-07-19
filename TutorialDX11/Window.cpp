@@ -3,6 +3,12 @@
 
 LRESULT CALLBACK WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	if (msg == WM_DESTROY || msg == WM_CLOSE)
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
+
 	return DefWindowProc(handle, msg, wparam, lparam);
 }
 
@@ -17,8 +23,13 @@ Window::Window(int width, int height)
 	RegisterClass(&wc);
 
 	// Create the window
-	CreateWindow("DX11Tutorial", "DX11 Tutorial",
+	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",
 		WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE,
 		100, 100, width, height,
 		nullptr, nullptr, nullptr, nullptr);
+}
+
+HWND Window::getHandle()
+{
+	return m_handle;
 }
