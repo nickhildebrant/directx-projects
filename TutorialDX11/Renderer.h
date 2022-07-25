@@ -7,6 +7,8 @@ public:
 	Renderer(Window& window);
 	void beginFrame();			// Clear frame at start
 	void endFrame();			// Swap buffer
+	ID3D11Device* getDevice();
+	ID3D11DeviceContext* getDeviceContext();
 
 private:
 	void createDevice(Window& window);
