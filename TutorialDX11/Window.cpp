@@ -1,4 +1,3 @@
-#include <Windows.h>
 #include "Window.h"
 
 LRESULT CALLBACK WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
