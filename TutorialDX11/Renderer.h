@@ -5,9 +5,17 @@
 class Renderer {
 public:
 	Renderer(Window& window);
+	void beginFrame();			// Clear frame at start
+	void endFrame();			// Swap buffer
 
 private:
-	IDXGISwapChain* m_SwapChain = nullptr;			// Swap buffer at end of frame
+	void createDevice(Window& window);
+	void createRenderTarget();
+
+	IDXGISwapChain* m_swapChain = nullptr;			// Swap buffer at end of frame
 	ID3D11Device* m_device = nullptr;				// Used to create resources
 	ID3D11DeviceContext* m_deviceContext = nullptr;	// Used to use resources and render
+
+	// Render target
+	ID3D11RenderTargetView* m_renderTargetView = nullptr;
 };

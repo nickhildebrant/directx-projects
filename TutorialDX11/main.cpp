@@ -22,7 +22,11 @@ int CALLBACK WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLin
 
 		/// --- Main Loop ---
 		// Update
-		// Draw 
+		
+		// Draw
+		renderer.beginFrame();
+		// Render polygons
+		renderer.endFrame();
 	}
 
 	return 0;
