@@ -42,7 +42,7 @@ void Renderer::createRenderTarget()
 
 void Renderer::beginFrame()
 {
-	// Bind render target
+	// Bind render target to output merger
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
 	// Set viewport

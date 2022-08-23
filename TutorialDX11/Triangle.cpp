@@ -44,7 +44,7 @@ void Triangle::createMesh(Renderer& renderer)
 {
 	// Defining vertices
 	Vertex vertices[] = {
-		{ -1, -1, 1, 1, 1 },
+		{ -1, -1, 1, 0, 0 },
 		{ 0, 1, 0, 1, 0 },
 		{ 1, -1, 0, 0, 1 },
 	};
