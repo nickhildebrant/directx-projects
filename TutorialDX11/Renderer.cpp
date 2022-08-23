@@ -50,7 +50,7 @@ void Renderer::beginFrame()
 	m_deviceContext->RSSetViewports(1, &viewport);
 
 	// Setting the background color
-	float clearColor[] = { 0.0f, 0.5f, 0.25f, 1 }; // RGBA
+	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1 }; // RGBA
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView, clearColor);
 }
 
