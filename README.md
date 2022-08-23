@@ -1,4 +1,4 @@
 # TutorialDX11
 >DirectX11 Tutorial for learning
 
-![image](https://user-images.githubusercontent.com/78184238/186273791-ec7a2e98-e9c7-40dc-95f6-05d032ce8121.png)
+![image](https://user-images.githubusercontent.com/78184238/186273908-9b883fac-c2a2-4229-92aa-a9e03067c1b2.png)
