@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "Triangle.h"
 
-int CALLBACK WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount)
+int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount)
 {
 	Window window(640, 640);
 	Renderer renderer(window);
