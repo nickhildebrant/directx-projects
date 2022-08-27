@@ -26,11 +26,13 @@ int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine,
 		// Update
 		
 		// Draw
-		renderer.beginFrame();
+		/*renderer.beginFrame();
 		// Render polygons
 		triangle.draw(renderer);
-		renderer.endFrame();
+		renderer.endFrame();*/
 	}
+
+	renderer.CleanUp();
 
 	return 0;
 }

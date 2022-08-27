@@ -8,19 +8,21 @@ Renderer::Renderer(Window& window)
 
 void Renderer::createDevice(Window& window)
 {
-	// Define the swap chain
-	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
-	swapChainDesc.BufferCount = 1;	// Double buffering = 1, Triple = 2
-	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 8-bit Color
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.OutputWindow = window.getHandle();
-	swapChainDesc.SampleDesc.Count = 1;	// Anti-Aliasing
-	swapChainDesc.Windowed = true;	// Windowed, false = fullscreen
+	// Define the swap chain and clear out struct
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
+	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+	swapChainDesc.BufferCount = 1;									// Double buffering = 1, Triple = 2 (# of back buffers)
+	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 32-bit Color, 8 per channel
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
+	swapChainDesc.OutputWindow = window.getHandle();				// window to be used
+	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing
+	swapChainDesc.Windowed = true;									// Windowed, false = fullscreen
 
 	// Create the swap chain device and device context
-	auto result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0,
-		nullptr, 0, D3D11_SDK_VERSION,
-		&swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext);
+	auto result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE,
+		nullptr, 0, nullptr, 0,
+		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext);
 
 	// Error handling
 	if (result != S_OK)
@@ -60,12 +62,13 @@ void Renderer::endFrame()
 	m_swapChain->Present(1, 0);	// First param is V-sync, second is flag
 }
 
-ID3D11Device* Renderer::getDevice()
+void Renderer::CleanUp(void)
 {
-	return m_device;
+	m_swapChain->Release();
+	m_device->Release();
+	m_deviceContext->Release();
 }
 
-ID3D11DeviceContext* Renderer::getDeviceContext()
-{
-	return m_deviceContext;
-}
+ID3D11Device* Renderer::getDevice() { return m_device; }
+
+ID3D11DeviceContext* Renderer::getDeviceContext() { return m_deviceContext; }
