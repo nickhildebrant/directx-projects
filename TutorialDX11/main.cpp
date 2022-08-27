@@ -13,10 +13,10 @@ int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine,
 	while (true)
 	{
 		// Catching message from window
-		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			TranslateMessage(&msg);	// Translates the msg
+			DispatchMessage(&msg);	// Sends msg to WinProc
 
 			// Quit and shutdown window
 			if (msg.message == WM_QUIT) break;

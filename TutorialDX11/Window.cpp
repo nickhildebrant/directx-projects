@@ -21,14 +21,15 @@ Window::Window(int width, int height)
 	wc.lpszClassName = "DX11Tutorial";
 	RegisterClass(&wc);
 
+	// Creating rect with size but not location
+	RECT rect = { 0, 0, width, height };
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW | WS_VISIBLE, FALSE);	// Adjusts size for screen, sharpens image
+
 	// Create the window
-	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",					// name and id
-		WS_OVERLAPPEDWINDOW | WS_VISIBLE,		// window style
-		500, 100, width, height,												// size and location
-		nullptr, nullptr, nullptr, nullptr);									// parent window, menu, application handle, for multiple windows
+	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",		// name and id
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,							// window style
+		500, 150, rect.right - rect.left, rect.bottom - rect.top,	// size and location
+		nullptr, nullptr, nullptr, nullptr);						// parent window, menu, application handle, for multiple windows
 }
 
-HWND Window::getHandle()
-{
-	return m_handle;
-}
+HWND Window::getHandle() { return m_handle; }
