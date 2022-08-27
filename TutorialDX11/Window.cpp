@@ -22,10 +22,10 @@ Window::Window(int width, int height)
 	RegisterClass(&wc);
 
 	// Create the window
-	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",	// name and id
-		WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE,		// window style
-		500, 100, width, height,								// size and location
-		nullptr, nullptr, nullptr, nullptr);					// parent window, menu, application handle, for multiple windows
+	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",					// name and id
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,		// window style
+		500, 100, width, height,												// size and location
+		nullptr, nullptr, nullptr, nullptr);									// parent window, menu, application handle, for multiple windows
 }
 
 HWND Window::getHandle()
