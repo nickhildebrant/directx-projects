@@ -51,9 +51,15 @@ void Triangle::createMesh(Renderer& renderer)
 
 	// Creating vertex buffer, putting verticies in VRAM
 	auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
+
+	//vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;				// write access allowed by CPU and GPU
+	//vertexBufferDesc.ByteWidth = sizeof(Vertex) * 3;			// size of 3 triangles
+	//vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// use as a vertex buffer
+	//vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;	// allows CPU to write to buffer
+
+	// ^ does above comments easily ^
 	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
 	vertexData.pSysMem = vertices;
-
 	auto result = renderer.getDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 
 	// Error handling

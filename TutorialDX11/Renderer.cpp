@@ -14,10 +14,13 @@ void Renderer::createDevice(Window& window)
 
 	swapChainDesc.BufferCount = 1;									// Double buffering = 1, Triple = 2 (# of back buffers)
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 32-bit Color, 8 per channel
+	swapChainDesc.BufferDesc.Width = window.getWidth();
+	swapChainDesc.BufferDesc.Height = window.getHeight();
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
 	swapChainDesc.OutputWindow = window.getHandle();				// window to be used
-	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing
+	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing, currently using 4x
 	swapChainDesc.Windowed = true;									// Windowed, false = fullscreen
+	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
 	// Create the swap chain device and device context
 	auto result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE,
@@ -35,7 +38,7 @@ void Renderer::createDevice(Window& window)
 void Renderer::createRenderTarget()
 {
 	ID3D11Texture2D* backBuffer;
-	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
+	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 	m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView);
 
 	backBuffer->GetDesc(&m_backBufferDesc);
@@ -52,7 +55,7 @@ void Renderer::beginFrame()
 	m_deviceContext->RSSetViewports(1, &viewport);
 
 	// Setting the background color
-	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1 }; // RGBA
+	float clearColor[] = { 0.0f, 0.2f, 0.4f, 1 }; // RGBA
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView, clearColor);
 }
 
@@ -64,7 +67,11 @@ void Renderer::endFrame()
 
 void Renderer::CleanUp(void)
 {
+	// switches to windowed
+	m_swapChain->SetFullscreenState(FALSE, nullptr);
+
 	m_swapChain->Release();
+	m_renderTargetView->Release();
 	m_device->Release();
 	m_deviceContext->Release();
 }

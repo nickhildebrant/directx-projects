@@ -13,6 +13,8 @@ LRESULT CALLBACK WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
 
 Window::Window(int width, int height)
 {
+	m_width = width; m_height = height;
+
 	// Define window style
 	WNDCLASS wc = { 0 };
 	wc.style = CS_OWNDC;
@@ -28,8 +30,12 @@ Window::Window(int width, int height)
 	// Create the window
 	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",		// name and id
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,							// window style
-		500, 150, rect.right - rect.left, rect.bottom - rect.top,	// size and location
+		0, 0, rect.right - rect.left, rect.bottom - rect.top,	// size and location
 		nullptr, nullptr, nullptr, nullptr);						// parent window, menu, application handle, for multiple windows
 }
+
+int Window::getWidth() { return m_width; }
+
+int Window::getHeight() { return m_height; }
 
 HWND Window::getHandle() { return m_handle; }

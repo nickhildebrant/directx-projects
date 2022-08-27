@@ -5,7 +5,7 @@
 
 int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount)
 {
-	Window window(640, 640);
+	Window window(800, 600);
 	Renderer renderer(window);
 	Triangle triangle(renderer);
 
@@ -26,10 +26,10 @@ int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine,
 		// Update
 		
 		// Draw
-		/*renderer.beginFrame();
+		renderer.beginFrame();
 		// Render polygons
-		triangle.draw(renderer);
-		renderer.endFrame();*/
+		//triangle.draw(renderer);
+		renderer.endFrame();
 	}
 
 	renderer.CleanUp();
