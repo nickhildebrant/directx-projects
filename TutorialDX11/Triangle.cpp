@@ -43,6 +43,7 @@ void Triangle::draw(Renderer& renderer)
 void Triangle::createMesh(Renderer& renderer)
 {
 	// Defining vertices
+	// Holds position and rgb color
 	Vertex vertices[] = {
 		{ -.5f, -.5f, 0, 0, 1 },
 		{ 0, .5f, 1, 0, 0 },
