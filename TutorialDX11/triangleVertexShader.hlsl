@@ -8,13 +8,13 @@ struct Output {
 	float3 color : COLOR;
 };
 
-cbuffer ColorConstantBuffer {
+cbuffer ColorConstantBuffer : register(b0) {
 	float RedLevel;
 	float GreenLevel;
 	float BlueLevel;
 };
 
-cbuffer PositionConstantBuffer {
+cbuffer PositionConstantBuffer : register(b1) {
 	float xOffset;
 	float yOffset;
 	float zOffset;

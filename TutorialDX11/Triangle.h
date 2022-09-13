@@ -15,6 +15,5 @@ private:
 	ID3D11VertexShader* m_vertexShader = nullptr;
 	ID3D11PixelShader* m_pixelShader = nullptr;
 	ID3D11InputLayout* m_inputLayout = nullptr;
-	ID3D11Buffer* m_pixelCBuffer = nullptr;
-	ID3D11Buffer* m_positionCBuffer = nullptr;
+	ID3D11Buffer* m_cBuffer = nullptr;
 };

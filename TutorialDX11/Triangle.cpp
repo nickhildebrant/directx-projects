@@ -27,8 +27,7 @@ Triangle::~Triangle()
 	m_vertexShader->Release();
 	m_pixelShader->Release();
 	m_inputLayout->Release();
-	m_pixelCBuffer->Release();
-	m_positionCBuffer->Release();
+	m_cBuffer->Release();
 }
 
 void Triangle::draw(Renderer& renderer)
@@ -48,14 +47,14 @@ void Triangle::draw(Renderer& renderer)
 	auto deviceContext = renderer.getDeviceContext();
 
 	// Setting new values in the constant buffer
-	deviceContext->UpdateSubresource(m_pixelCBuffer, 0, nullptr, &Colors, 0, 0);
-	deviceContext->UpdateSubresource(m_positionCBuffer, 0, nullptr, &Offset, 0, 0);
+	deviceContext->UpdateSubresource(m_cBuffer, 0, nullptr, &Colors, 0, 0);
+	deviceContext->UpdateSubresource(m_cBuffer, 0, nullptr, &Offset, 0, 0);
 
 	// Bind triangle shaders
 	deviceContext->IASetInputLayout(m_inputLayout);
 	deviceContext->VSSetShader(m_vertexShader, nullptr, 0);
-	deviceContext->VSSetConstantBuffers(0, 1, &m_pixelCBuffer);
-	deviceContext->VSSetConstantBuffers(1, 1, &m_positionCBuffer);
+	deviceContext->VSSetConstantBuffers(0, 1, &m_cBuffer);
+	deviceContext->VSSetConstantBuffers(1, 1, &m_cBuffer);
 	deviceContext->PSSetShader(m_pixelShader, nullptr, 0);
 
 	// Bind vertex buffer to render multiple times from memory
@@ -107,16 +106,7 @@ void Triangle::createMesh(Renderer& renderer)
 	cBufferDesc.ByteWidth = 16;
 	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
-	result = renderer.getDevice()->CreateBuffer(&cBufferDesc, NULL, &m_pixelCBuffer);
-
-	// Error handling
-	if (result != S_OK)
-	{
-		MessageBox(nullptr, "Error with DX11: " + result, "Error", MB_OK);
-		exit(0);
-	}
-
-	result = renderer.getDevice()->CreateBuffer(&cBufferDesc, NULL, &m_positionCBuffer);
+	result = renderer.getDevice()->CreateBuffer(&cBufferDesc, NULL, &m_cBuffer);
 
 	// Error handling
 	if (result != S_OK)
