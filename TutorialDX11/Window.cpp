@@ -30,7 +30,7 @@ Window::Window(int width, int height)
 	// Create the window
 	m_handle = CreateWindow("DX11Tutorial", "DX11 Tutorial",		// name and id
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,							// window style
-		0, 0, rect.right - rect.left, rect.bottom - rect.top,	// size and location
+		0, 0, rect.right - rect.left, rect.bottom - rect.top,		// size and location
 		nullptr, nullptr, nullptr, nullptr);						// parent window, menu, application handle, for multiple windows
 }
 

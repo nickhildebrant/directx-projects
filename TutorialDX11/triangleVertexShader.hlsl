@@ -25,9 +25,9 @@ Output main(Input input)
 	Output output;
 
 	output.position = float4(input.position.x, input.position.y, 0, 1);
-	//output.position.x += xOffset;
-	//output.position.x += yOffset;
-	//output.position.xy *= zOffset;
+	output.position.x += xOffset;
+	output.position.x += yOffset;
+	output.position.xy *= zOffset;
 
 	output.color = input.color;
 	output.color.r *= RedLevel;
