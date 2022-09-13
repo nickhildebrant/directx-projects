@@ -7,6 +7,14 @@ struct Vertex {
 	float r, g, b;
 };
 
+struct ColorMod {
+	float RedLevel, GreenLevel, BlueLevel;
+};
+
+struct PositionOffset {
+	float xOffset, yOffset, zOffset;
+};
+
 Triangle::Triangle(Renderer& renderer)
 {
 	createMesh(renderer);
@@ -19,15 +27,34 @@ Triangle::~Triangle()
 	m_vertexShader->Release();
 	m_pixelShader->Release();
 	m_inputLayout->Release();
+	m_pixelCBuffer->Release();
 }
 
 void Triangle::draw(Renderer& renderer)
 {
+	// create ColorMod struct for constant buffer
+	ColorMod Colors;
+	Colors.RedLevel = 0.5f;
+	Colors.GreenLevel = 0.5f;
+	Colors.BlueLevel = 0.5f;
+
+	// create PositionOffset struct for Constant buffer
+	PositionOffset Offset;
+	Offset.xOffset = 0.5f;
+	Offset.yOffset = 0.2f;
+	Offset.zOffset = 0.7f;
+
 	auto deviceContext = renderer.getDeviceContext();
+
+	// Setting new values in the constant buffer
+	deviceContext->UpdateSubresource(m_pixelCBuffer, 0, nullptr, &Colors, 0, 0);
+	deviceContext->UpdateSubresource(m_pixelCBuffer, 0, nullptr, &Offset, 0, 0);
 
 	// Bind triangle shaders
 	deviceContext->IASetInputLayout(m_inputLayout);
 	deviceContext->VSSetShader(m_vertexShader, nullptr, 0);
+	deviceContext->VSSetConstantBuffers(0, 1, &m_pixelCBuffer);
+	//deviceContext->VSSetConstantBuffers(0, 1, &m_pixelCBuffer);
 	deviceContext->PSSetShader(m_pixelShader, nullptr, 0);
 
 	// Bind vertex buffer to render multiple times from memory
@@ -60,7 +87,26 @@ void Triangle::createMesh(Renderer& renderer)
 
 	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
 	vertexData.pSysMem = vertices;
+
+	// create vertex buffer
 	auto result = renderer.getDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+
+	// Error handling
+	if (result != S_OK)
+	{
+		MessageBox(nullptr, "Error with DX11: " + result, "Error", MB_OK);
+		exit(0);
+	}
+
+	// create constant buffer
+	D3D11_BUFFER_DESC cBufferDesc;
+	ZeroMemory(&cBufferDesc, sizeof(cBufferDesc));
+
+	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	cBufferDesc.ByteWidth = 16;
+	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	result = renderer.getDevice()->CreateBuffer(&cBufferDesc, NULL, &m_pixelCBuffer);
 
 	// Error handling
 	if (result != S_OK)
