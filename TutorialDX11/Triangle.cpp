@@ -12,7 +12,7 @@ struct ColorMod {
 };
 
 struct PositionOffset {
-	float xOffset, yOffset, zOffset;
+	float X, Y, Z, D;
 };
 
 Triangle::Triangle(Renderer& renderer)
@@ -40,9 +40,10 @@ void Triangle::draw(Renderer& renderer)
 
 	// create PositionOffset struct for Constant buffer
 	PositionOffset Offset;
-	Offset.xOffset = 0.5f;
-	Offset.yOffset = 0.2f;
-	Offset.zOffset = 0.7f;
+	Offset.X = 0.5f;
+	Offset.Y = 0.2f;
+	Offset.Z = 0.7f;
+	Offset.D = 1.0f;
 
 	auto deviceContext = renderer.getDeviceContext();
 

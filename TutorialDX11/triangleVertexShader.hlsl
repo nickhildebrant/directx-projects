@@ -15,9 +15,7 @@ cbuffer ColorConstantBuffer : register(b0) {
 };
 
 cbuffer PositionConstantBuffer : register(b1) {
-	float xOffset;
-	float yOffset;
-	float zOffset;
+	float4 posMatrix;
 };
 
 Output main(Input input)
@@ -25,9 +23,9 @@ Output main(Input input)
 	Output output;
 
 	output.position = float4(input.position.x, input.position.y, 0, 1);
-	output.position.x += xOffset;
-	output.position.x += yOffset;
-	output.position.xy *= zOffset;
+	output.position.x += posMatrix.x;
+	output.position.x += posMatrix.y;
+	output.position.xy *= posMatrix.z;
 
 	output.color = input.color;
 	output.color.r *= RedLevel;
