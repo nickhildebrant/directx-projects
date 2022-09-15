@@ -1,5 +1,6 @@
 #include <Windows.h>
-#include "../TutorialDX11/Window.h"
+#include "Window.h"
+
 
 int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount)
 {
