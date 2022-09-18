@@ -4,6 +4,7 @@
 class Window {
 public:
 	Window(int width, int height);
+	~Window();
 	int getWidth();
 	int getHeight();
 	HWND getHandle();

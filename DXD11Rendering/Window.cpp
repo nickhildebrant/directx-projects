@@ -51,10 +51,15 @@ Window::Window(int width, int height)
 	AdjustWindowRect(&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_VISIBLE, FALSE);	// Adjusts size for screen, sharpens image
 
 	// Create the window
-	m_handle = CreateWindow("3DRenderer", "3D Renderer",									// name and id
+	m_handle = CreateWindow("3DRenderer", "3D Renderer",										// name and id
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_VISIBLE,  // window style
 		0, 0, rect.right - rect.left, rect.bottom - rect.top,									// size and location
 		nullptr, nullptr, nullptr, nullptr);													// parent window, menu, application handle, for multiple windows
+}
+
+Window::~Window()
+{
+	DestroyWindow(m_handle);
 }
 
 int Window::getWidth() { return m_width; }
