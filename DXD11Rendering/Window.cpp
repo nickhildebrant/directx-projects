@@ -58,15 +58,24 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_KEYDOWN:
-		keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+	case WM_SYSKEYDOWN: // sys key is for things like the ALT key
+		// lParam's 30th bit is set to 1 when held down, 0 if up before message
+		// check that bit or check if autorepeat is set to true
+		if (!(lParam & 0x40000000) || keyboard.GetAutorepeatStatus())
+		{ keyboard.OnKeyPressed(static_cast<unsigned char>(wParam)); }
 		break;
 
 	case WM_KEYUP:
+	case WM_SYSKEYUP: // sys key is for things like the ALT key
 		keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 
 	case WM_CHAR:
 		keyboard.OnChar(static_cast<unsigned char>(wParam));
+		break;
+
+	case WM_KILLFOCUS:
+		keyboard.ClearState();
 		break;
 
 	case WM_CLOSE:
