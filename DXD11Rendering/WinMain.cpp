@@ -20,6 +20,8 @@ int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine,
 				if (msg.message == WM_QUIT) break;
 			}
 
+			if (window.keyboard.isKeyPressed(VK_SPACE)) MessageBox(nullptr, "Boom", "Space key pressed", MB_OK);
+
 			/// --- Main Loop ---
 			// Update
 

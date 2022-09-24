@@ -57,6 +57,17 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
+	case WM_KEYDOWN:
+		keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+		break;
+
+	case WM_KEYUP:
+		keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
+		break;
+
+	case WM_CHAR:
+		keyboard.OnChar(static_cast<unsigned char>(wParam));
+		break;
 
 	case WM_CLOSE:
 		PostQuitMessage(0);
@@ -76,7 +87,6 @@ LRESULT WINAPI WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch (msg)
 	{
-
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;

@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include "ExceptionHandler.h"
+#include "Keyboard.h"
 
 class Window {
 public:
@@ -11,6 +12,8 @@ public:
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
+
+	Keyboard keyboard;
 
 	class Exception : public ExceptionHandler {
 	public:
