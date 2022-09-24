@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "ExceptionHandler.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 
 class Window {
 public:
@@ -9,11 +10,13 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
+	void SetTitle(const std::string title);
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
 
 	Keyboard keyboard;
+	Mouse mouse;
 
 	class Exception : public ExceptionHandler {
 	public:

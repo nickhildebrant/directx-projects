@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <sstream>
 #include "Window.h"
 
 int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount)
@@ -15,8 +16,6 @@ int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine,
 			{
 				TranslateMessage(&msg);	// Translates the msg
 				DispatchMessage(&msg);	// Sends msg to WinProc
-
-				if (window.keyboard.isKeyPressed(VK_MENU)) MessageBox(nullptr, "Boom", "Space key pressed", MB_OK);
 
 				// Quit and shutdown window
 				if (msg.message == WM_QUIT) break;
