@@ -219,6 +219,23 @@ void Window::SetTitle(const std::string title)
 	if (SetWindowText(m_handle, title.c_str()) == 0) throw HWND_LAST_EXCEPT();
 }
 
+std::optional<int> Window::ProcessMessages()
+{
+	MSG msg = { 0 };
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+	{
+		// Quit and shutdown window
+		if (msg.message == WM_QUIT) return msg.wParam;
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	// return empty when not quitting
+	// allowed by C++17
+	return {};
+}
+
 int Window::getWidth() { return m_width; }
 
 int Window::getHeight() { return m_height; }
