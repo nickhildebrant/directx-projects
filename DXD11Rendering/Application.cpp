@@ -26,8 +26,5 @@ int Application::Run()
 
 void Application::DoFrame()
 {
-	const float time = timer.PeekDelta();
-	std::ostringstream oss;
-	oss << "Time elapsed: " << std::setprecision(1) << std::fixed << time;
-	window.SetTitle(oss.str());
+	
 }
