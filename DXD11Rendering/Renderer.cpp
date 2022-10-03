@@ -8,7 +8,7 @@
 #define GFX_EXCEPT_NOINFO(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr))
 #define GFX_THROW_NOINFO(hrcall) if(FAILED( hr = (hrcall))) throw Renderer::GraphicsHrException(__LINE__, __FILE__, hr)
 
-#if defined(_DEBUG)
+#ifndef NDEBUG
 #define GFX_EXCEPT(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr), infoManager.GetMessages())
 #define GFX_THROW_INFO(hrcall) infoManager.Set(); if(FAILED(hr = (hrcall))) throw GFX_EXCEPT(hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Renderer::DeviceRemovedException(__LINE__, __FILE__, (hr), infoManager.GetMessages())
@@ -43,14 +43,14 @@ void Renderer::CreateDevice(HWND handle)
 	swapChainDesc.BufferDesc.Width = 0;								// Looks at graphics adapter for width
 	swapChainDesc.BufferDesc.Height = 0;							// Looks at graphics adapter for height
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
-	swapChainDesc.OutputWindow = (HWND)626262;							// window to be used
+	swapChainDesc.OutputWindow = handle;							// window to be used
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;			// How the swap is handled, best in most cases
 	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing, currently using 4x
 	swapChainDesc.Windowed = TRUE;									// Windowed, false = fullscreen
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
 	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#if defined(_DEBUG)
+#ifndef NDEBUG
 	// If the project is in a debug build, enable the debug layer.
 	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -63,9 +63,9 @@ void Renderer::CreateDevice(HWND handle)
 
 void Renderer::CreateRenderTarget()
 {
-	ID3D11Resource* backBuffer;
+	ID3D11Resource* backBuffer = nullptr;
 	HRESULT hr;// error handling
-	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), (LPVOID*)&backBuffer));
+	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer)));
 	GFX_THROW_INFO(m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView));
 
 	backBuffer->Release();
@@ -87,7 +87,7 @@ void Renderer::BeginFrame()
 
 void Renderer::EndFrame()
 {
-#if defined(_DEBUG)
+#ifndef NDEBUG
 	infoManager.Set();
 #endif
 
@@ -118,7 +118,7 @@ Renderer::GraphicsHrException::GraphicsHrException(int line, const char* file, H
 	}
 
 	// remove last newline
-	if (m_info.empty()) m_info.pop_back();
+	if (!m_info.empty()) m_info.pop_back();
 }
 
 const char* Renderer::GraphicsHrException::what() const noexcept
@@ -128,11 +128,11 @@ const char* Renderer::GraphicsHrException::what() const noexcept
 		<< "Error Code: 0x" << std::hex << std::uppercase << GetErrorCode()
 		<< std::dec << " (" << (unsigned long)GetErrorCode() << ")" << std::endl
 		<< "Error String: " << GetErrorString() << std::endl
-		<< "Desc: " << GetErrorDescription() << std::endl
-		<< GetOriginString();
+		<< "Desc: " << GetErrorDescription() << std::endl;
 
-	if (m_info.empty()) oss << "\n[Error Info]\n" << GetErrorInfo() << std::endl << std::endl;
+	if (!m_info.empty()) oss << "\n[Error Info]\n" << GetErrorInfo() << std::endl << std::endl;
 
+	oss << GetOriginString();
 	_buffer = oss.str();
 	return _buffer.c_str();
 }

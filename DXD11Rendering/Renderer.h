@@ -51,7 +51,7 @@ private:
 	void CreateDevice(HWND handle);
 	void CreateRenderTarget();
 
-#if defined(_DEBUG)
+#ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif
 	ID3D11Device* m_device = nullptr;				// Used to create resources
