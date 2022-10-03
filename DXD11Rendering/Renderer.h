@@ -9,6 +9,14 @@ public:
 	Renderer& operator=(const Renderer&) = delete;
 	~Renderer();
 
+	void BeginFrame();			// Clear frame at start
+	void EndFrame();			// Swap buffer
+
+	void ClearBuffer(float r, float g, float b) {
+		const float color[] = { r, g, b };
+		m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
+	}
+
 private:
 	void CreateDevice(HWND handle);
 	void CreateRenderTarget();
@@ -19,5 +27,5 @@ private:
 
 	// Render target
 	ID3D11RenderTargetView* m_renderTargetView = nullptr;
-	D3D11_TEXTURE2D_DESC m_backBufferDesc;
+	//D3D11_Resource_desc m_backBufferDesc;
 };

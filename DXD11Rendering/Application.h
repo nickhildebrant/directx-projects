@@ -4,9 +4,9 @@
 
 class Application {
 public:
-	int Run();
-
 	Application();
+
+	int Run();
 
 private:
 	Window m_window;

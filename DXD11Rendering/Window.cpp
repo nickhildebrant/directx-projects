@@ -195,21 +195,24 @@ Window::Window(int width, int height, const char* name) : m_width(width), m_heig
 {
 	// Creating rect with size but not location
 	RECT rect = { 0, 0, m_width, m_height };
-	if(!AdjustWindowRect(&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_VISIBLE, FALSE))	// Adjusts size for screen, sharpens image
+	if(!AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW | WS_VISIBLE, FALSE))	// Adjusts size for screen, sharpens image
 	{
 		throw HWND_LAST_EXCEPT();
 	}
 
 	// Create the window
-	m_handle = CreateWindow(WindowClass::GetName(), name,										// name and id
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_VISIBLE,	// window style
-		CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,			// size and location
-		nullptr, nullptr, WindowClass::GetInstance(), this);									// parent window, menu, application handle, for multiple windows
+	m_handle = CreateWindow(WindowClass::GetName(), name,								// name and id
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,												// window style
+		CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,	// size and location
+		nullptr, nullptr, WindowClass::GetInstance(), this);							// parent window, menu, application handle, for multiple windows
 
 	// check for error creating window
 	if (m_handle == nullptr) throw HWND_LAST_EXCEPT();
 
 	ShowWindow(m_handle, SW_SHOWDEFAULT);
+
+	// Creating Renderer
+	m_renderer = std::make_unique<Renderer>(m_handle);
 }
 
 Window::~Window() { DestroyWindow(m_handle); }
@@ -241,6 +244,8 @@ int Window::getWidth() { return m_width; }
 int Window::getHeight() { return m_height; }
 
 HWND Window::getHandle() { return m_handle; }
+
+Renderer& Window::getRenderer() { return *m_renderer; }
 
 // *** Window Exception Handling *****************************************************************
 Window::Exception::Exception(int line, const char* file, HRESULT hresult) noexcept

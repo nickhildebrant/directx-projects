@@ -26,5 +26,7 @@ int Application::Run()
 
 void Application::DoFrame()
 {
-	
+	const float c = sin(m_timer.PeekDelta()) / 2.0f + 0.5f;
+	m_window.getRenderer().ClearBuffer(c, c, 1.0f);
+	m_window.getRenderer().EndFrame();
 }

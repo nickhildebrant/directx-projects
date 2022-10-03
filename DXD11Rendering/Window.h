@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <optional>
+#include <memory>
 #include "ExceptionHandler.h"
 #include "Keyboard.h"
 #include "Mouse.h"
@@ -14,9 +15,12 @@ public:
 	Window& operator=(const Window&) = delete;
 	void SetTitle(const std::string title);
 	static std::optional<int> ProcessMessages();
+
+	// Accessors
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
+	Renderer& getRenderer();
 
 	Keyboard keyboard;
 	Mouse mouse;
@@ -37,6 +41,7 @@ public:
 private:
 	int m_width, m_height;
 	HWND m_handle;
+	std::unique_ptr<Renderer> m_renderer;
 
 	static LRESULT WINAPI HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT WINAPI HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
