@@ -6,10 +6,9 @@
 #include "DxgiInfoManager.h"
 
 class Renderer {
-
+public:
 	class GraphicsHrException : public ExceptionHandler {
 	public:
-		GraphicsHrException(int line, const char* file, HRESULT hr) noexcept;
 		GraphicsHrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs = {}) noexcept;
 		const char* what() const noexcept override;
 		const char* GetType() const noexcept override;

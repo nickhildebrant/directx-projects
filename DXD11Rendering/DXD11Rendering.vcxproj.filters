@@ -42,9 +42,6 @@
     <ClCompile Include="DirectXErrors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DxgiInfoManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">

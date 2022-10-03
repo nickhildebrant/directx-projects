@@ -1,11 +1,12 @@
-#include "Window.h"
 #include "DxgiInfoManager.h"
+#include "Window.h"
+#include "Renderer.h"
 #include <dxgidebug.h>
 #include <memory>
 
 #pragma comment(lib, "dxguid.lib")
 
-#define GFX_THROW_NOINFO(hrcall) if(FAILED(hr = (hrcall))) throw Renderer::GraphicsHrException(__LINE__, __FILE__, hr)
+#define GFX_THROW_NOINFO(hrcall) if( FAILED( hr = (hrcall) ) ) throw Renderer::GraphicsHrException( __LINE__,__FILE__,hr )
 
 DxgiInfoManager::DxgiInfoManager()
 {
@@ -44,7 +45,7 @@ void DxgiInfoManager::Set() noexcept
 
 std::vector<std::string> DxgiInfoManager::GetMessages() const
 {
-	std::vector<std::string> messages(0, "");
+	std::vector<std::string> messages;
 	const auto end = m_DxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 	for (auto i = next; i < end; i++)
 	{

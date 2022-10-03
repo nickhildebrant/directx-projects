@@ -43,7 +43,7 @@ void Renderer::CreateDevice(HWND handle)
 	swapChainDesc.BufferDesc.Width = 0;								// Looks at graphics adapter for width
 	swapChainDesc.BufferDesc.Height = 0;							// Looks at graphics adapter for height
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
-	swapChainDesc.OutputWindow = handle;							// window to be used
+	swapChainDesc.OutputWindow = (HWND)6262;							// window to be used
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;			// How the swap is handled, best in most cases
 	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing, currently using 4x
 	swapChainDesc.Windowed = TRUE;									// Windowed, false = fullscreen
@@ -51,7 +51,7 @@ void Renderer::CreateDevice(HWND handle)
 
 	UINT swapCreateFlags = 0u;
 #ifndef NDEBUG
-	swapCreateFlags = D3D11_CREATE_DEVICE_DEBUG;
+	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 	// Create the swap chain device and device context
