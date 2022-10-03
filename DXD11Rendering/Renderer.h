@@ -1,9 +1,38 @@
 #pragma once
 #include <Windows.h>
-#include <d3d11.h>
 #include "ExceptionHandler.h"
+#include <d3d11.h>
+#include <vector>
+#include "DxgiInfoManager.h"
 
 class Renderer {
+
+	class GraphicsHrException : public ExceptionHandler {
+	public:
+		GraphicsHrException(int line, const char* file, HRESULT hr) noexcept;
+		GraphicsHrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs = {}) noexcept;
+		const char* what() const noexcept override;
+		const char* GetType() const noexcept override;
+
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorString() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+		std::string GetErrorInfo() const noexcept;
+
+	private:
+		HRESULT m_hresult;
+		std::string m_info;
+	};
+
+	class DeviceRemovedException : public GraphicsHrException {
+		using GraphicsHrException::GraphicsHrException;
+	public:
+		const char* GetType() const noexcept override;
+
+	private:
+		std::string m_reason;
+	};
+
 public:
 	Renderer(HWND handle);
 	Renderer(const Renderer&) = delete;
@@ -15,34 +44,13 @@ public:
 
 	void ClearBuffer(float r, float g, float b);
 
-	class GraphicsException : public ExceptionHandler {
-		using ExceptionHandler::ExceptionHandler;
-	};
-
-	class GraphicsHrException : public GraphicsException {
-	public:
-		GraphicsHrException(int line, const char* file, HRESULT hr) noexcept;
-		const char* what() const noexcept override;
-		const char* GetType() const noexcept override;
-
-		HRESULT GetErrorCode() const noexcept;
-		std::string GetErrorString() const noexcept;
-		std::string GetErrorDescription() const noexcept;
-
-	private:
-		HRESULT m_hresult;
-	};
-
-	class DeviceRemovedException : public GraphicsHrException {
-		using GraphicsHrException::GraphicsHrException;
-	public:
-		const char* GetType() const noexcept override;
-	};
-
 private:
 	void CreateDevice(HWND handle);
 	void CreateRenderTarget();
 
+#ifndef NDEBUG
+	DxgiInfoManager infoManager;
+#endif
 	ID3D11Device* m_device = nullptr;				// Used to create resources
 	IDXGISwapChain* m_swapChain = nullptr;			// Swap buffer at end of frame
 	ID3D11DeviceContext* m_deviceContext = nullptr;	// Used to use resources and render

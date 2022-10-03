@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------
-// File: DXErr.cpp
+// File: DirectXErrors.cpp
 //
 // DirectX Error Library
 //
