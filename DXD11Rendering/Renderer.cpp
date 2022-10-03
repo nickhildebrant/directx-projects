@@ -34,8 +34,15 @@ void Renderer::CreateDevice(HWND handle)
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
 	// Create the swap chain device and device context
-	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0,
+	auto result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0,
 		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext);
+
+	// Error handling
+	if (result != S_OK)
+	{
+		MessageBox(nullptr, "Error with DX11(CreateDeviceAndSwapChain): " + result, "Error", MB_OK);
+		exit(-1);
+	}
 }
 
 void Renderer::CreateRenderTarget()
@@ -64,5 +71,12 @@ void Renderer::BeginFrame()
 void Renderer::EndFrame()
 {
 	// Swapping buffer
-	m_swapChain->Present(1u, 0u);	// First param is V-sync, second is flag
+	auto result = m_swapChain->Present(1, 0);	// First param is V-sync, second is flag
+
+	// Error handling
+	if (result != S_OK)
+	{
+		MessageBox(nullptr, "" + m_device->GetDeviceRemovedReason() + result, "Error", MB_OK);
+		exit(-1);
+	}
 }

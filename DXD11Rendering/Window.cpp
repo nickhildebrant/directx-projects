@@ -245,7 +245,15 @@ int Window::getHeight() { return m_height; }
 
 HWND Window::getHandle() { return m_handle; }
 
-Renderer& Window::getRenderer() { return *m_renderer; }
+Renderer& Window::getRenderer()
+{ 
+	if (!m_renderer)
+	{
+		MessageBox(nullptr, "Error: No Graphics Renderer found", "Error", MB_OK);
+		exit(-1);
+	}
+	return *m_renderer; 
+}
 
 // *** Window Exception Handling *****************************************************************
 Window::Exception::Exception(int line, const char* file, HRESULT hresult) noexcept
