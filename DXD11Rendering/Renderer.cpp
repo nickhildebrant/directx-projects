@@ -8,7 +8,7 @@
 #define GFX_EXCEPT_NOINFO(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr))
 #define GFX_THROW_NOINFO(hrcall) if(FAILED( hr = (hrcall))) throw Renderer::GraphicsHrException(__LINE__, __FILE__, hr)
 
-#ifndef NDEBUG
+#if defined(_DEBUG)
 #define GFX_EXCEPT(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr), infoManager.GetMessages())
 #define GFX_THROW_INFO(hrcall) infoManager.Set(); if(FAILED(hr = (hrcall))) throw GFX_EXCEPT(hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Renderer::DeviceRemovedException(__LINE__, __FILE__, (hr), infoManager.GetMessages())
@@ -43,20 +43,21 @@ void Renderer::CreateDevice(HWND handle)
 	swapChainDesc.BufferDesc.Width = 0;								// Looks at graphics adapter for width
 	swapChainDesc.BufferDesc.Height = 0;							// Looks at graphics adapter for height
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
-	swapChainDesc.OutputWindow = (HWND)6262;							// window to be used
+	swapChainDesc.OutputWindow = (HWND)626262;							// window to be used
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;			// How the swap is handled, best in most cases
 	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing, currently using 4x
 	swapChainDesc.Windowed = TRUE;									// Windowed, false = fullscreen
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
-	UINT swapCreateFlags = 0u;
-#ifndef NDEBUG
-	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#if defined(_DEBUG)
+	// If the project is in a debug build, enable the debug layer.
+	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 	// Create the swap chain device and device context
 	HRESULT hr;// error handling
-	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, swapCreateFlags, nullptr, 0,
+	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, creationFlags, nullptr, 0,
 		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext));
 }
 
@@ -86,7 +87,7 @@ void Renderer::BeginFrame()
 
 void Renderer::EndFrame()
 {
-#ifndef NDEBUG
+#if defined(_DEBUG)
 	infoManager.Set();
 #endif
 
@@ -107,7 +108,7 @@ void Renderer::ClearBuffer(float r, float g, float b)
 
 // Graphics Exceptions *********************************************************************************************
 Renderer::GraphicsHrException::GraphicsHrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept
-	: ExceptionHandler(line, file), m_hresult(hr)
+	: GraphicsException(line, file), m_hresult(hr)
 {
 	// combine messages with newlines into one string
 	for (const auto& str : infoMsgs)

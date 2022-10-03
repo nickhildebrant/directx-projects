@@ -35,7 +35,7 @@ public:
 	public:
 		WindowHrException(int line, const char* file, HRESULT hresult) noexcept;
 		const char* what() const noexcept override;
-		virtual const char* GetType() const noexcept override;
+		const char* GetType() const noexcept override;
 		HRESULT GetErrorCode() const noexcept;
 		std::string GetErrorDescription() const noexcept;
 

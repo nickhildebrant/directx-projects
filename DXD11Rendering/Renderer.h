@@ -7,7 +7,11 @@
 
 class Renderer {
 public:
-	class GraphicsHrException : public ExceptionHandler {
+	class GraphicsException : public ExceptionHandler {
+		using ExceptionHandler::ExceptionHandler;
+	};
+
+	class GraphicsHrException : public GraphicsException {
 	public:
 		GraphicsHrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs = {}) noexcept;
 		const char* what() const noexcept override;
@@ -47,7 +51,7 @@ private:
 	void CreateDevice(HWND handle);
 	void CreateRenderTarget();
 
-#ifndef NDEBUG
+#if defined(_DEBUG)
 	DxgiInfoManager infoManager;
 #endif
 	ID3D11Device* m_device = nullptr;				// Used to create resources
