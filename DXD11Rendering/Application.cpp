@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 
-Application::Application() : window(640, 480, "3D Renderer")
+Application::Application() : m_window(640, 480, "3D Renderer")
 {
 
 }

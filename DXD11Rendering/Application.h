@@ -9,8 +9,8 @@ public:
 	Application();
 
 private:
-	Window window;
-	Timer timer;
+	Window m_window;
+	Timer m_timer;
 
 	void DoFrame();
 };
