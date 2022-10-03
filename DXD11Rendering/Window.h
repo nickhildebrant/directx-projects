@@ -4,6 +4,7 @@
 #include "ExceptionHandler.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "Renderer.h"
 
 class Window {
 public:
