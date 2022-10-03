@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <d3d11.h>
+#include "ExceptionHandler.h"
 
 class Renderer {
 public:
@@ -12,10 +13,31 @@ public:
 	void BeginFrame();			// Clear frame at start
 	void EndFrame();			// Swap buffer
 
-	void ClearBuffer(float r, float g, float b) {
-		const float color[] = { r, g, b };
-		m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
-	}
+	void ClearBuffer(float r, float g, float b);
+
+	class GraphicsException : public ExceptionHandler {
+		using ExceptionHandler::ExceptionHandler;
+	};
+
+	class GraphicsHrException : public GraphicsException {
+	public:
+		GraphicsHrException(int line, const char* file, HRESULT hr) noexcept;
+		const char* what() const noexcept override;
+		const char* GetType() const noexcept override;
+
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorString() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+
+	private:
+		HRESULT m_hresult;
+	};
+
+	class DeviceRemovedException : public GraphicsHrException {
+		using GraphicsHrException::GraphicsHrException;
+	public:
+		const char* GetType() const noexcept override;
+	};
 
 private:
 	void CreateDevice(HWND handle);

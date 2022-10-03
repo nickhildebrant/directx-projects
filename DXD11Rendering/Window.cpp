@@ -247,34 +247,31 @@ HWND Window::getHandle() { return m_handle; }
 
 Renderer& Window::getRenderer()
 { 
-	if (!m_renderer)
-	{
-		MessageBox(nullptr, "Error: No Graphics Renderer found", "Error", MB_OK);
-		exit(-1);
-	}
+	if (!m_renderer) throw HWND_NOGFX_EXCEPT();
+
 	return *m_renderer; 
 }
 
 // *** Window Exception Handling *****************************************************************
-Window::Exception::Exception(int line, const char* file, HRESULT hresult) noexcept
-	: ExceptionHandler(line, file), m_hresult(hresult)
+Window::WindowHrException::WindowHrException(int line, const char* file, HRESULT hresult) noexcept
+	: Exception(line, file), m_hresult(hresult)
 {
 
 }
 
-const char* Window::Exception::what() const noexcept
+const char* Window::WindowHrException::what() const noexcept
 {
 	std::ostringstream oss;
 	oss << GetType() << std::endl
 		<< "Error Code: (" << GetErrorCode() << ")" << std::endl
-		<< "Desc: " << GetErrorString() << std::endl
+		<< "Desc: " << GetErrorDescription() << std::endl
 		<< GetOriginString();
 
 	_buffer = oss.str();
 	return _buffer.c_str();
 }
 
-const char* Window::Exception::GetType() const noexcept { return "3DRender Window Exception"; }
+const char* Window::WindowHrException::GetType() const noexcept { return "3DRender Window Exception"; }
 
 std::string Window::Exception::TranslateErrorCode(HRESULT hresult) noexcept
 {
@@ -294,6 +291,8 @@ std::string Window::Exception::TranslateErrorCode(HRESULT hresult) noexcept
 	return errorString;
 }
 
-HRESULT Window::Exception::GetErrorCode() const noexcept { return m_hresult; }
+HRESULT Window::WindowHrException::GetErrorCode() const noexcept { return m_hresult; }
 
-std::string Window::Exception::GetErrorString() const noexcept { return TranslateErrorCode(m_hresult); }
+std::string Window::WindowHrException::GetErrorDescription() const noexcept { return TranslateErrorCode(m_hresult); }
+
+const char* Window::MissingGraphicsException::GetType() const noexcept { return "Graphics Window Exception [No Graphics]"; }

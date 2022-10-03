@@ -39,6 +39,9 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXErrors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -62,5 +65,19 @@
     <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXErrors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DXGetErrorDescription.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="DXGetErrorString.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="DXTrace.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

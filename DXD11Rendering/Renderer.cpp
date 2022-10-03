@@ -1,6 +1,11 @@
 #include "Renderer.h"
+#include "DirectXErrors.h"
+#include <sstream>
 
 #pragma comment(lib, "d3d11.lib") // compiler sets linker settings to allow D3D11CreateDeviceAndSwapChain
+
+#define GFX_THROW_FAILED(hrcall) if(FAILED(hr = (hrcall))) throw Renderer::GraphicsHrException(__LINE__, __FILE__, hr)
+#define GFX_DEVICE_REMOVED_EXCEPT(hr) Renderer::DeviceRemovedException(__LINE__, __FILE__, (hr))
 
 Renderer::Renderer(HWND handle)
 {
@@ -34,22 +39,17 @@ void Renderer::CreateDevice(HWND handle)
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
 	// Create the swap chain device and device context
-	auto result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0,
-		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext);
-
-	// Error handling
-	if (result != S_OK)
-	{
-		MessageBox(nullptr, "Error with DX11(CreateDeviceAndSwapChain): " + result, "Error", MB_OK);
-		exit(-1);
-	}
+	HRESULT hr;// error handling
+	GFX_THROW_FAILED(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0,
+		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext));
 }
 
 void Renderer::CreateRenderTarget()
 {
 	ID3D11Resource* backBuffer;
-	m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), (LPVOID*)&backBuffer);
-	m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView);
+	HRESULT hr;// error handling
+	GFX_THROW_FAILED(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer));
+	GFX_THROW_FAILED(m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView));
 
 	backBuffer->Release();
 }
@@ -71,12 +71,49 @@ void Renderer::BeginFrame()
 void Renderer::EndFrame()
 {
 	// Swapping buffer
-	auto result = m_swapChain->Present(1, 0);	// First param is V-sync, second is flag
-
-	// Error handling
-	if (result != S_OK)
+	HRESULT hr;
+	if (FAILED(hr = m_swapChain->Present(1u, 0u))) // First param is V-sync, second is flag
 	{
-		MessageBox(nullptr, "" + m_device->GetDeviceRemovedReason() + result, "Error", MB_OK);
-		exit(-1);
+		if (hr == DXGI_ERROR_DEVICE_REMOVED) throw GFX_DEVICE_REMOVED_EXCEPT(m_device->GetDeviceRemovedReason());
+		else GFX_THROW_FAILED(hr);
 	}
 }
+
+void Renderer::ClearBuffer(float r, float g, float b)
+{
+	const float color[] = { r, g, b };
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
+}
+
+// Graphics Exceptions *********************************************************************************************
+Renderer::GraphicsHrException::GraphicsHrException(int line, const char* file, HRESULT hr) noexcept
+	: GraphicsException(line, file), m_hresult(hr)
+{}
+
+const char* Renderer::GraphicsHrException::what() const noexcept
+{
+	std::ostringstream oss;
+	oss << GetType() << std::endl
+		<< "Error Code: (0x" << std::hex << std::uppercase << GetErrorCode()
+		<< std::dec << " (" << (unsigned long)GetErrorCode() << ")" << std::endl
+		<< "Desc: " << GetErrorDescription() << std::endl
+		<< GetOriginString();
+
+	_buffer = oss.str();
+	return _buffer.c_str();
+}
+
+const char* Renderer::GraphicsHrException::GetType() const noexcept{ return "Graphics Renderer Exception"; }
+
+HRESULT Renderer::GraphicsHrException::GetErrorCode() const noexcept { return m_hresult; }
+
+std::string Renderer::GraphicsHrException::GetErrorString() const noexcept { return DXGetErrorString(m_hresult); }
+
+std::string Renderer::GraphicsHrException::GetErrorDescription() const noexcept
+{
+	char buf[512];
+	DXGetErrorDescription(m_hresult, buf, sizeof(buf));
+	return buf;
+}
+
+const char* Renderer::DeviceRemovedException::GetType() const noexcept { return "Graphics Render Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)"; }
