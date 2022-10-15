@@ -24,14 +24,6 @@ Renderer::Renderer(HWND handle)
 	CreateRenderTarget();
 }
 
-Renderer::~Renderer()
-{
-	if (m_renderTargetView) m_renderTargetView->Release();
-	if (m_deviceContext) m_deviceContext->Release();
-	if (m_swapChain) m_swapChain->Release();
-	if (m_device) m_device->Release();
-}
-
 void Renderer::CreateDevice(HWND handle)
 {
 	// Define the swap chain and clear out struct
@@ -63,12 +55,10 @@ void Renderer::CreateDevice(HWND handle)
 
 void Renderer::CreateRenderTarget()
 {
-	ID3D11Resource* backBuffer = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
 	HRESULT hr;// error handling
-	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer)));
-	GFX_THROW_INFO(m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView));
-
-	backBuffer->Release();
+	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
+	GFX_THROW_INFO(m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_renderTargetView));
 }
 
 void Renderer::BeginFrame()
@@ -82,7 +72,7 @@ void Renderer::BeginFrame()
 
 	// Setting the background color
 	float clearColor[] = { 0.0f, 0.2f, 0.4f, 1 }; // RGBA
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView, clearColor);
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
 }
 
 void Renderer::EndFrame()
@@ -103,7 +93,7 @@ void Renderer::EndFrame()
 void Renderer::ClearBuffer(float r, float g, float b)
 {
 	const float color[] = { r, g, b };
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 }
 
 // Graphics Exceptions *********************************************************************************************

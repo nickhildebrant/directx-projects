@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "ExceptionHandler.h"
 #include <d3d11.h>
+#include <wrl.h>
 #include <vector>
 #include "DxgiInfoManager.h"
 
@@ -40,7 +41,7 @@ public:
 	Renderer(HWND handle);
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
-	~Renderer();
+	~Renderer() = default;
 
 	void BeginFrame();			// Clear frame at start
 	void EndFrame();			// Swap buffer
@@ -54,11 +55,11 @@ private:
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif
-	ID3D11Device* m_device = nullptr;				// Used to create resources
-	IDXGISwapChain* m_swapChain = nullptr;			// Swap buffer at end of frame
-	ID3D11DeviceContext* m_deviceContext = nullptr;	// Used to use resources and render
+	Microsoft::WRL::ComPtr<ID3D11Device> m_device;					// Used to create resources
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;				// Swap buffer at end of frame
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;	// Used to use resources and render
 
 	// Render target
-	ID3D11RenderTargetView* m_renderTargetView = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;
 	//D3D11_Resource_desc m_backBufferDesc;
 };
