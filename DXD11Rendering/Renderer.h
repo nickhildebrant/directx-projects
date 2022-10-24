@@ -28,6 +28,18 @@ public:
 		std::string m_info;
 	};
 
+	class InfoException : public ExceptionHandler
+	{
+	public:
+		InfoException(int line, const char* file, std::vector<std::string> infoMsgs = {}) noexcept;
+		const char* what() const noexcept override;
+		const char* GetType() const noexcept override;
+		std::string GetErrorInfo() const noexcept;
+
+	private:
+		std::string m_info;
+	};
+
 	class DeviceRemovedException : public GraphicsHrException {
 		using GraphicsHrException::GraphicsHrException;
 	public:
@@ -47,6 +59,8 @@ public:
 	void EndFrame();			// Swap buffer
 
 	void ClearBuffer(float r, float g, float b);
+
+	void DrawTestTriangle();
 
 private:
 	void CreateDevice(HWND handle);

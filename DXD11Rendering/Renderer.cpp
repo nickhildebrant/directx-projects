@@ -1,8 +1,10 @@
 #include "Renderer.h"
 #include "DirectXErrors.h"
 #include <sstream>
+#include <d3dcompiler.h>
 
 #pragma comment(lib, "d3d11.lib") // compiler sets linker settings to allow D3D11CreateDeviceAndSwapChain
+#pragma comment(lib, "D3DCompiler.lib")
 
 // graphics exception macros
 #define GFX_EXCEPT_NOINFO(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr))
@@ -12,10 +14,12 @@
 #define GFX_EXCEPT(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr), infoManager.GetMessages())
 #define GFX_THROW_INFO(hrcall) infoManager.Set(); if(FAILED(hr = (hrcall))) throw GFX_EXCEPT(hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Renderer::DeviceRemovedException(__LINE__, __FILE__, (hr), infoManager.GetMessages())
+#define GFX_THROW_INFO_ONLY(call) infoManager.Set(); (call); {auto v = infoManager.GetMessages(); if(!v.empty()) {throw Renderer::InfoException(__LINE__, __FILE__, v);}}
 #else
 #define GFX_EXCEPT(hr) Renderer::GraphicsHrException(__LINE__, __FILE__, (hr))
 #define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Renderer::DeviceRemovedException(__LINE__, __FILE__, (hr))
+#define GFX_THROW_INFO_ONLY(call) (call)
 #endif
 
 Renderer::Renderer(HWND handle)
@@ -96,6 +100,55 @@ void Renderer::ClearBuffer(float r, float g, float b)
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 }
 
+void Renderer::DrawTestTriangle()
+{
+	HRESULT hr;
+
+	struct Vertex
+	{
+		float x;
+		float y;
+	};
+
+	// Vertices for the triangle
+	struct Vertex vertices[] =
+	{
+		{  0.0f,  0.5f },
+		{  0.5f, -0.5f },
+		{ -0.5f, -0.5f },
+	};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+	D3D11_BUFFER_DESC bd = {};
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
+	bd.ByteWidth = sizeof(vertices);
+	bd.StructureByteStride = sizeof(Vertex);
+
+	D3D11_SUBRESOURCE_DATA sd = {};
+	sd.pSysMem = vertices;
+
+	GFX_THROW_INFO(m_device->CreateBuffer(&bd, &sd, &vertexBuffer));
+
+	// Binding vertex buffer to pipeline
+	const UINT stride = sizeof(Vertex);
+	const UINT offset = 0u;
+	m_deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+	// Creating the vertex shader
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
+	Microsoft::WRL::ComPtr<ID3DBlob> blob;
+	GFX_THROW_INFO_ONLY(D3DReadFileToBlob(L"VertexShader.cso", &blob));
+	GFX_THROW_INFO_ONLY(m_device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader));
+
+	// bind vertex shader
+	m_deviceContext->VSSetShader(vertexShader.Get(), 0, 0);
+
+	GFX_THROW_INFO_ONLY(m_deviceContext->Draw((UINT)std::size(vertices), 0));
+}
+
 // Graphics Exceptions *********************************************************************************************
 Renderer::GraphicsHrException::GraphicsHrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept
 	: GraphicsException(line, file), m_hresult(hr)
@@ -143,3 +196,29 @@ std::string Renderer::GraphicsHrException::GetErrorDescription() const noexcept
 std::string Renderer::GraphicsHrException::GetErrorInfo() const noexcept { return m_info; }
 
 const char* Renderer::DeviceRemovedException::GetType() const noexcept { return "Graphics Render Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)"; }
+
+Renderer::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMsgs) noexcept
+	: ExceptionHandler(line, file)
+{
+	for (const auto& m : infoMsgs)
+	{
+		m_info += m;
+		m_info.push_back('\n');
+	}
+
+	// Removes final newline char
+	if (!m_info.empty()) m_info.pop_back();
+}
+
+const char* Renderer::InfoException::what() const noexcept
+{
+	std::ostringstream oss;
+	oss << GetType() << std::endl << "\nInfo: " << GetErrorInfo() << std::endl << std::endl;
+	oss << GetOriginString();
+	_buffer = oss.str();
+	return _buffer.c_str();
+}
+
+const char* Renderer::InfoException::GetType() const noexcept { return "Graphics Renderer Info Exception"; }
+
+std::string Renderer::InfoException::GetErrorInfo() const noexcept { return m_info; }
