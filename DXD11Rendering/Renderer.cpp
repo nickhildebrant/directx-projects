@@ -137,35 +137,51 @@ void Renderer::DrawTestTriangle()
 	const UINT offset = 0u;
 	m_deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 
+	Microsoft::WRL::ComPtr<ID3DBlob> blob;
+
+	// Creating the pixel shader
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+	GFX_THROW_INFO_ONLY(D3DReadFileToBlob(L"PixelShader.cso", &blob));
+	GFX_THROW_INFO_ONLY(m_device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixelShader));
+
+	// bind pixel shader
+	m_deviceContext->PSSetShader(pixelShader.Get(), 0, 0);
+
 	// Creating the vertex shader
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 	GFX_THROW_INFO_ONLY(D3DReadFileToBlob(L"VertexShader.cso", &blob));
 	GFX_THROW_INFO_ONLY(m_device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader));
 
 	// bind vertex shader
 	m_deviceContext->VSSetShader(vertexShader.Get(), 0, 0);
 
-	// Creating the pixel shader
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-	GFX_THROW_INFO_ONLY(D3DReadFileToBlob(L"PizelShader.cso", &blob));
-	GFX_THROW_INFO_ONLY(m_device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixelShader));
+	// input layout
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+	const D3D11_INPUT_ELEMENT_DESC elementDesc[] = {
+		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+	GFX_THROW_INFO(m_device->CreateInputLayout(elementDesc, (UINT)std::size(elementDesc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout));
 
-	// bind pixel shader
-	m_deviceContext->PSSetShader(pixelShader.Get(), 0, 0);
+	// bind input layout
+	m_deviceContext->IASetInputLayout(inputLayout.Get());
 
 	// bind render target
 	m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), nullptr);
 
+	// set primitive topology to triangle list
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	// configure viewport
 	D3D11_VIEWPORT vp;
-	vp.Width = 840;
-	vp.Height = 680;
+	vp.Width = 640;
+	vp.Height = 480;
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	m_deviceContext->RSSetViewports(1, &vp);
+
+
 
 	GFX_THROW_INFO_ONLY(m_deviceContext->Draw((UINT)std::size(vertices), 0));
 }
