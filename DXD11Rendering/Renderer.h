@@ -75,5 +75,5 @@ private:
 
 	// Render target
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;
-	//D3D11_Resource_desc m_backBufferDesc;
+	//Microsoft::WRL::ComPtr<D3D11_Resource_> m_backBufferDesc;
 };
