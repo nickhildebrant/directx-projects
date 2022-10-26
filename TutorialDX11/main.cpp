@@ -21,9 +21,6 @@ int WINAPI WinMain(HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine,
 			// Quit and shutdown window
 			if (msg.message == WM_QUIT) break;
 		}
-
-		/// --- Main Loop ---
-		// Update
 		
 		// Draw
 		renderer.beginFrame();

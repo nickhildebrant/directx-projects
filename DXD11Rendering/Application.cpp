@@ -15,19 +15,14 @@ int Application::Run()
 		if (const auto errorCode = Window::ProcessMessages()) return *errorCode;
 
 		/// --- Main Loop ---
-		// Update
 		DoFrame();
-
-		// Draw
-
-		// Render polygons
 	}
 }
 
 void Application::DoFrame()
 {
-	const float c = sin(m_timer.PeekDelta()) / 2.0f + 0.5f;
-	m_window.getRenderer().ClearBuffer(c, c, 1.0f);
-	m_window.getRenderer().DrawTestTriangle();
+	const float c = sin(m_timer.PeekDelta()) / 2.0f + 0.5f; // changes color on background, based on sin wave
+	m_window.getRenderer().ClearBuffer(c, c, 1.0f);			// sets background color
+	m_window.getRenderer().DrawTestTriangle();				// Draws triangle
 	m_window.getRenderer().EndFrame();
 }

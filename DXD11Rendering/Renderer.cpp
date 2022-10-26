@@ -181,8 +181,6 @@ void Renderer::DrawTestTriangle()
 	vp.TopLeftY = 0;
 	m_deviceContext->RSSetViewports(1, &vp);
 
-
-
 	GFX_THROW_INFO_ONLY(m_deviceContext->Draw((UINT)std::size(vertices), 0));
 }
 
