@@ -106,11 +106,16 @@ void Renderer::DrawTestTriangle()
 
 	struct Vertex
 	{
-		float x;
-		float y;
-		float r;
-		float g;
-		float b;
+		struct {
+			float x;
+			float y;
+		} position;
+
+		struct {
+			float r;
+			float g;
+			float b;
+		} color;
 	};
 
 	// Vertices for the triangle
@@ -119,26 +124,64 @@ void Renderer::DrawTestTriangle()
 		{  0.0f,  0.5f, 1.0f, 0.0f, 0.0f },
 		{  0.5f, -0.5f, 0.0f, 1.0f, 0.0f },
 		{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
+
+		//{  0.0f,  0.5f, 1.0f, 0.0f, 0.0f },
+		//{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
+		{ -0.3f,  0.3f, 0.0f, 1.0f, 0.0f },
+
+		//{  0.0f,  0.5f, 1.0f, 0.0f, 0.0f },
+		{  0.3f,  0.3f, 0.0f, 0.0f, 1.0f },
+		//{  0.5f, -0.5f, 0.0f, 1.0f, 0.0f },
+
+		{  0.0f, -0.8f, 1.0f, 0.0f, 0.0f },
+		//{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
+		//{  0.5f, -0.5f, 0.0f, 1.0f, 0.0f },
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-	D3D11_BUFFER_DESC bd = {};
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
-	bd.ByteWidth = sizeof(vertices);
-	bd.StructureByteStride = sizeof(Vertex);
+	D3D11_BUFFER_DESC bufferDescription = {};
+	bufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDescription.Usage = D3D11_USAGE_DEFAULT;
+	bufferDescription.CPUAccessFlags = 0;
+	bufferDescription.MiscFlags = 0;
+	bufferDescription.ByteWidth = sizeof(vertices);
+	bufferDescription.StructureByteStride = sizeof(Vertex);
 
-	D3D11_SUBRESOURCE_DATA sd = {};
-	sd.pSysMem = vertices;
+	D3D11_SUBRESOURCE_DATA subresourceData = {};
+	subresourceData.pSysMem = vertices;
 
-	GFX_THROW_INFO(m_device->CreateBuffer(&bd, &sd, &vertexBuffer));
+	GFX_THROW_INFO(m_device->CreateBuffer(&bufferDescription, &subresourceData, &vertexBuffer));
 
 	// Binding vertex buffer to pipeline
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0u;
 	m_deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+	// create the index buffer
+	const unsigned short indices[] =
+	{
+		0, 1, 2,
+		0, 2, 3,
+		0, 4, 1,
+		2, 1, 5,
+	};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+	D3D11_BUFFER_DESC indexBufferDescription = {};
+	indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDescription.CPUAccessFlags = 0;
+	indexBufferDescription.MiscFlags = 0;
+	indexBufferDescription.ByteWidth = sizeof(indices);
+	indexBufferDescription.StructureByteStride = sizeof(unsigned short);
+	
+	D3D11_SUBRESOURCE_DATA indexSubresourcesData = {};
+	indexSubresourcesData.pSysMem = vertices;
+
+	GFX_THROW_INFO(m_device->CreateBuffer(&indexBufferDescription, &indexSubresourcesData, &indexBuffer));
+
+	// bind index buffer
+	m_deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
