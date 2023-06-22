@@ -108,14 +108,17 @@ void Renderer::DrawTestTriangle()
 	{
 		float x;
 		float y;
+		float r;
+		float g;
+		float b;
 	};
 
 	// Vertices for the triangle
 	struct Vertex vertices[] =
 	{
-		{  0.0f,  0.5f },
-		{  0.5f, -0.5f },
-		{ -0.5f, -0.5f },
+		{  0.0f,  0.5f, 1.0f, 0.0f, 0.0f },
+		{  0.5f, -0.5f, 0.0f, 1.0f, 0.0f },
+		{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
@@ -159,6 +162,7 @@ void Renderer::DrawTestTriangle()
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 	const D3D11_INPUT_ELEMENT_DESC elementDesc[] = {
 		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Color", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 8u, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 	GFX_THROW_INFO(m_device->CreateInputLayout(elementDesc, (UINT)std::size(elementDesc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout));
 
