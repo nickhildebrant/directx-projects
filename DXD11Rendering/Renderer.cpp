@@ -176,7 +176,7 @@ void Renderer::DrawTestTriangle()
 	indexBufferDescription.StructureByteStride = sizeof(unsigned short);
 	
 	D3D11_SUBRESOURCE_DATA indexSubresourcesData = {};
-	indexSubresourcesData.pSysMem = vertices;
+	indexSubresourcesData.pSysMem = indices;
 
 	GFX_THROW_INFO(m_device->CreateBuffer(&indexBufferDescription, &indexSubresourcesData, &indexBuffer));
 
@@ -228,7 +228,7 @@ void Renderer::DrawTestTriangle()
 	vp.TopLeftY = 0;
 	m_deviceContext->RSSetViewports(1, &vp);
 
-	GFX_THROW_INFO_ONLY(m_deviceContext->Draw((UINT)std::size(vertices), 0));
+	GFX_THROW_INFO_ONLY(m_deviceContext->DrawIndexed((UINT)std::size(indices), 0u, 0u));
 }
 
 // Graphics Exceptions *********************************************************************************************
