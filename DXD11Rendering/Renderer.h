@@ -60,7 +60,7 @@ public:
 
 	void ClearBuffer(float r, float g, float b);
 
-	void DrawTestTriangle();
+	void DrawTestTriangle(float angle);
 
 private:
 	void CreateDevice(HWND handle);

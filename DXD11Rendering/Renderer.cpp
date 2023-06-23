@@ -100,7 +100,7 @@ void Renderer::ClearBuffer(float r, float g, float b)
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 }
 
-void Renderer::DrawTestTriangle()
+void Renderer::DrawTestTriangle(float angle)
 {
 	HRESULT hr;
 
@@ -182,6 +182,41 @@ void Renderer::DrawTestTriangle()
 
 	// bind index buffer
 	m_deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+	// create a constant buffer for a transformation matrix
+	struct ConstantBuffer {
+		struct {
+			float entry[4][4];
+		} transformationMatrix;
+	};
+
+	const ConstantBuffer matrixBuffer =
+	{
+		// Z-rotation matrix
+		{ 
+			std::cos(angle),	std::sin(angle),	0.0f,	0.0f,
+			-std::sin(angle),	std::cos(angle),	0.0f,	0.0f,
+			0.0f,				0.0f,				1.0f,	0.0f,
+			0.0f,				0.0f,				0.0f,	1.0f,
+		}
+	};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
+	D3D11_BUFFER_DESC constantBufferDescription = {};
+	constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+	constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	constantBufferDescription.MiscFlags = 0u;
+	constantBufferDescription.ByteWidth = sizeof(matrixBuffer);
+	constantBufferDescription.StructureByteStride = 0u;
+
+	D3D11_SUBRESOURCE_DATA constantSubresourcesData = {};
+	constantSubresourcesData.pSysMem = &matrixBuffer;
+
+	GFX_THROW_INFO(m_device->CreateBuffer(&constantBufferDescription, &constantSubresourcesData, &constantBuffer));
+
+	// bind constant buffer to the vertex shader
+	m_deviceContext->VSSetConstantBuffers(0u, 1u, constantBuffer.GetAddressOf());
 
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
