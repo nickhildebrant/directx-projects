@@ -190,14 +190,15 @@ void Renderer::DrawTestTriangle(float angle)
 		} transformationMatrix;
 	};
 
+	float aspectRatio = 3.0f / 4.0f;
 	const ConstantBuffer matrixBuffer =
 	{
 		// Z-rotation matrix
 		{ 
-			std::cos(angle),	std::sin(angle),	0.0f,	0.0f,
-			-std::sin(angle),	std::cos(angle),	0.0f,	0.0f,
-			0.0f,				0.0f,				1.0f,	0.0f,
-			0.0f,				0.0f,				0.0f,	1.0f,
+			aspectRatio * std::cos(angle),	std::sin(angle),	0.0f,	0.0f,
+			aspectRatio * -std::sin(angle),	std::cos(angle),	0.0f,	0.0f,
+			0.0f,								0.0f,				1.0f,	0.0f,
+			0.0f,								0.0f,				0.0f,	1.0f,
 		}
 	};
 
