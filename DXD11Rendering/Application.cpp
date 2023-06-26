@@ -22,7 +22,8 @@ int Application::Run()
 void Application::DoFrame()
 {
 	const float c = sin(m_timer.PeekDelta()) / 2.0f + 0.5f; // changes color on background, based on sin wave
-	m_window.getRenderer().ClearBuffer(c, c, 1.0f);			// sets background color
+	m_window.getRenderer().ClearBuffer(c, c, 1.0f, 1.0f);	// sets background color
+	m_window.getRenderer().DrawTestTriangle(-m_timer.PeekDelta(), 0, 0); // Draws triangle
 	m_window.getRenderer().DrawTestTriangle(
 												m_timer.PeekDelta(), 
 												m_window.mouse.GetMouseX() / ((float) m_window.getWidth() / 2.0f) - 1.0f,

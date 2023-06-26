@@ -58,9 +58,9 @@ public:
 	void BeginFrame();			// Clear frame at start
 	void EndFrame();			// Swap buffer
 
-	void ClearBuffer(float r, float g, float b);
+	void ClearBuffer(float r, float g, float b, float a);
 
-	void DrawTestTriangle(float angle, float x, float y);
+	void DrawTestTriangle(float angle, float x, float z);
 
 private:
 	void CreateDevice(HWND handle);
@@ -75,4 +75,7 @@ private:
 
 	// Render target
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+
+	// Stencil View
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 };
