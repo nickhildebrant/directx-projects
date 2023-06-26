@@ -268,17 +268,17 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	const ColorConstantBuffer colorBuffer =
 	{
 		{
-			{ 1.0f, 0.0f, 1.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f, 1.0f },
-			{ 0.0f, 1.0f, 0.0f, 1.0f },
-			{ 0.0f, 0.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 0.0f, 1.0f },
-			{ 0.0f, 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 0.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f },
+			{ 0.0f, 1.0f, 0.0f },
+			{ 0.0f, 0.0f, 1.0f },
+			{ 1.0f, 1.0f, 0.0f },
+			{ 0.0f, 1.0f, 1.0f },
 		}
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constantColors;
-	D3D11_BUFFER_DESC colorBufferDescription = {};
+	D3D11_BUFFER_DESC colorBufferDescription;
 	colorBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	colorBufferDescription.Usage = D3D11_USAGE_DEFAULT;
 	colorBufferDescription.CPUAccessFlags = 0u;
