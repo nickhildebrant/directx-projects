@@ -2,6 +2,7 @@
 #include "DirectXErrors.h"
 #include <sstream>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 #pragma comment(lib, "d3d11.lib") // compiler sets linker settings to allow D3D11CreateDeviceAndSwapChain
 #pragma comment(lib, "D3DCompiler.lib")
@@ -100,7 +101,7 @@ void Renderer::ClearBuffer(float r, float g, float b)
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 }
 
-void Renderer::DrawTestTriangle(float angle)
+void Renderer::DrawTestTriangle(float angle, float x, float y)
 {
 	HRESULT hr;
 
@@ -185,20 +186,19 @@ void Renderer::DrawTestTriangle(float angle)
 
 	// create a constant buffer for a transformation matrix
 	struct ConstantBuffer {
-		struct {
-			float entry[4][4];
-		} transformationMatrix;
+		DirectX::XMMATRIX transformMatrix;
 	};
 
 	float aspectRatio = 3.0f / 4.0f;
 	const ConstantBuffer matrixBuffer =
 	{
 		// Z-rotation matrix
-		{ 
-			aspectRatio * std::cos(angle),	std::sin(angle),	0.0f,	0.0f,
-			aspectRatio * -std::sin(angle),	std::cos(angle),	0.0f,	0.0f,
-			0.0f,								0.0f,				1.0f,	0.0f,
-			0.0f,								0.0f,				0.0f,	1.0f,
+		{
+			DirectX::XMMatrixTranspose(
+				DirectX::XMMatrixRotationZ(angle) *
+				DirectX::XMMatrixScaling(aspectRatio, 1.0f, 1.0f) *
+				DirectX::XMMatrixTranslation(x, y, 0.0f)
+			)
 		}
 	};
 
