@@ -25,8 +25,8 @@ void Application::DoFrame()
 	m_window.getRenderer().ClearBuffer(c, c, 1.0f);			// sets background color
 	m_window.getRenderer().DrawTestTriangle(
 												m_timer.PeekDelta(), 
-												m_window.mouse.GetMouseX() / 400.0f - 1.0f, 
-												-m_window.mouse.GetMouseY() / 300.0f + 1.0f
+												m_window.mouse.GetMouseX() / ((float) m_window.getWidth() / 2.0f) - 1.0f,
+												-m_window.mouse.GetMouseY() / ((float)m_window.getHeight() / 2.0f) + 1.0f
 											); // Draws triangle
 	m_window.getRenderer().EndFrame();
 }
