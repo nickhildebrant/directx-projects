@@ -2,7 +2,7 @@
 #include "Mouse.h"
 
 int Mouse::GetMouseX() { return x; }
-int Mouse::GetMouseY() { return x; }
+int Mouse::GetMouseY() { return y; }
 std::pair<int, int> Mouse::GetPos() { return {x, y}; }
 
 bool Mouse::IsInWindow() { return isInWindow; }
