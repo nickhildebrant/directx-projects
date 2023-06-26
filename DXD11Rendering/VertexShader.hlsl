@@ -4,7 +4,7 @@ struct VertexShaderOutput {
 };
 
 cbuffer ConstantBuffer {
-	matrix transform;
+	row_major matrix transform;
 };
 
 VertexShaderOutput main(float2 pos : Position, float3 color : Color)
