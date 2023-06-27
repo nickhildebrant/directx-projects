@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 
+#include "WindowsErrorMacros.h"
+#include "RendererErrorMacros.h"
+
 class DxgiInfoManager {
 public:
 	DxgiInfoManager();

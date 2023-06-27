@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "WindowsMacroErrors.h"
+#include "WindowsErrorMacros.h"
 #include <sstream>
 
 // *** Windows Class *********************************************************************

@@ -6,7 +6,14 @@
 #include <vector>
 #include "DxgiInfoManager.h"
 
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <memory>
+#include <random>
+
 class Renderer {
+	friend class Bindable;
+
 public:
 	class GraphicsException : public ExceptionHandler {
 		using ExceptionHandler::ExceptionHandler;
@@ -60,9 +67,13 @@ public:
 
 	void ClearBuffer(float r, float g, float b, float a);
 
-	void DrawTestTriangle(float angle, float x, float z);
+	void DrawIndexed(UINT count);
+	void SetProjection(DirectX::FXMMATRIX projection) noexcept;
+	DirectX::XMMATRIX GetProjection() const noexcept;
 
 private:
+	DirectX::XMMATRIX m_projection;
+
 	void CreateDevice(HWND handle);
 	void CreateRenderTarget();
 	void CreateDepthStencil();
