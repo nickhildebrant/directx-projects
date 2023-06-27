@@ -28,6 +28,9 @@ Renderer::Renderer(HWND handle)
 	CreateDevice(handle);
 	CreateRenderTarget();
 	CreateDepthStencil();
+
+	// binding the render target and depth stencil to the output merger
+	m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 }
 
 void Renderer::CreateDevice(HWND handle)
@@ -43,7 +46,7 @@ void Renderer::CreateDevice(HWND handle)
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
 	swapChainDesc.OutputWindow = handle;							// window to be used
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;			// How the swap is handled, best in most cases
-	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing, currently using 4x
+	swapChainDesc.SampleDesc.Count = 1;								// Anti-Aliasing sampling, currently using 1x
 	swapChainDesc.Windowed = TRUE;									// Windowed, false = fullscreen
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
@@ -63,6 +66,7 @@ void Renderer::CreateRenderTarget()
 {
 	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
 	HRESULT hr;// error handling
+
 	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
 	GFX_THROW_INFO(m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_renderTargetView));
 }
@@ -329,8 +333,7 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	// bind input layout
 	m_deviceContext->IASetInputLayout(inputLayout.Get());
 
-	// output merger binding done in BeginFrame()
-	m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), nullptr);// m_depthStencilView.Get());
+	m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
 	// set primitive topology to triangle list
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
