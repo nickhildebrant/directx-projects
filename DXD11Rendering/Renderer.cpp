@@ -27,6 +27,7 @@ Renderer::Renderer(HWND handle)
 {
 	CreateDevice(handle);
 	CreateRenderTarget();
+	CreateDepthStencil();
 }
 
 void Renderer::CreateDevice(HWND handle)
@@ -56,6 +57,19 @@ void Renderer::CreateDevice(HWND handle)
 	HRESULT hr;// error handling
 	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, creationFlags, nullptr, 0,
 		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, nullptr, &m_deviceContext));
+}
+
+void Renderer::CreateRenderTarget()
+{
+	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
+	HRESULT hr;// error handling
+	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
+	GFX_THROW_INFO(m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_renderTargetView));
+}
+
+void Renderer::CreateDepthStencil()
+{
+	HRESULT hr; // error handling
 
 	// create depth stencil state
 	D3D11_DEPTH_STENCIL_DESC depthDescription = {};
@@ -94,27 +108,19 @@ void Renderer::CreateDevice(HWND handle)
 	GFX_THROW_INFO(m_device->CreateDepthStencilView(depthStencilTexture.Get(), &stencilViewDescription, &m_depthStencilView));
 }
 
-void Renderer::CreateRenderTarget()
-{
-	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
-	HRESULT hr;// error handling
-	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
-	GFX_THROW_INFO(m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_renderTargetView));
-}
-
 void Renderer::BeginFrame()
 {
 	// binding of render target and depth stencil to Output Merger
-	m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), nullptr);//m_depthStencilView.Get());
+	m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
 	// Set viewport
 	//auto viewport = CD3D11_VIEWPORT(0.f, 0.f, (float)m_backBufferDesc.Width, (float)m_backBufferDesc.Height);
 	//m_deviceContext->RSSetViewports(1, &viewport);
 
 	// Setting the background color
-	const float color[]{ 0.0f, 0.2f, 0.4f, 1.0f };
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
-	//ClearBuffer(0.0f, 0.2f, 0.4f, 1.0f);
+	//const float color[]{ 0.0f, 0.2f, 0.4f, 1.0f };
+	//m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
+	ClearBuffer(0.0f, 0.2f, 0.4f, 1.0f);
 }
 
 void Renderer::EndFrame()
@@ -136,7 +142,7 @@ void Renderer::ClearBuffer(float r, float g, float b, float a)
 {
 	const float color[] = { r, g, b , a };
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
-	//m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void Renderer::DrawTestTriangle(float angle, float x, float z)

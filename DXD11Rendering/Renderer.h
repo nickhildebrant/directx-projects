@@ -65,6 +65,7 @@ public:
 private:
 	void CreateDevice(HWND handle);
 	void CreateRenderTarget();
+	void CreateDepthStencil();
 
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
