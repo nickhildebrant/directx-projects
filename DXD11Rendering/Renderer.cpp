@@ -160,16 +160,16 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	};
 
 	// Vertices for the triangle
-	struct Vertex vertices[] =
+	Vertex vertices[] =
 	{
-		{  -1.0f,  -1.0f, -1.0f },//, 255,	0,   0, 0 },
-		{   1.0f,  -1.0f, -1.0f },//,   0, 255,   0, 0 },
-		{  -1.0f,   1.0f, -1.0f },//,   0,   0, 255, 0 },
-		{   1.0f,   1.0f, -1.0f },//, 255, 255,   0, 0 },
-		{  -1.0f,  -1.0f,  1.0f },//, 255,   0, 255, 0 },
-		{   1.0f,  -1.0f,  1.0f },//,   0, 255, 255, 0 },
-		{  -1.0f,   1.0f,  1.0f },//,   0,   0,   0, 0 },
-		{   1.0f,   1.0f,  1.0f },//, 255, 255, 255, 0},
+		{ -1.0f,	-1.0f,	-1.0f },
+		{  1.0f,	-1.0f,	-1.0f },
+		{ -1.0f,	 1.0f,	-1.0f },
+		{  1.0f,	 1.0f,	-1.0f },
+		{ -1.0f,	-1.0f,	 1.0f },
+		{  1.0f,	-1.0f,	 1.0f },
+		{ -1.0f,	 1.0f,	 1.0f },
+		{  1.0f,	 1.0f,	 1.0f },
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
@@ -194,12 +194,12 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	// create the index buffer
 	const unsigned short indices[] =
 	{
-		0, 2, 1,   2, 3, 1,
-		1, 3, 5,   3, 7, 5,
-		2, 6, 3,   3, 6, 7,
-		4, 5, 7,   4, 7, 6,
-		0, 4, 2,   2, 4, 6,
-		0, 1, 4,   1, 5, 4
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
@@ -256,6 +256,7 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	m_deviceContext->VSSetConstantBuffers(0u, 1u, constantBuffer.GetAddressOf());
 
 	// Creating colors for the face of the cube
+	// lookup table for cube face colors
 	struct ColorConstantBuffer {
 		struct {
 			float r;
@@ -265,19 +266,19 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 		} faceColors[6];
 	};
 
-	const ColorConstantBuffer colorBuffer =
+	const ColorConstantBuffer colorBuffer = // colorBuffer = 
 	{
 		{
-			{ 1.0f, 0.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f },
-			{ 0.0f, 0.0f, 1.0f },
-			{ 1.0f, 1.0f, 0.0f },
-			{ 0.0f, 1.0f, 1.0f },
+			{ 1.0f,	0.0f, 1.0f },
+			{ 1.0f,	0.0f, 0.0f },
+			{ 0.0f,	1.0f, 0.0f },
+			{ 0.0f,	0.0f, 1.0f },
+			{ 1.0f,	1.0f, 0.0f },
+			{ 0.0f,	1.0f, 1.0f },
 		}
 	};
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> constantColors;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> colorConstantBuffer;
 	D3D11_BUFFER_DESC colorBufferDescription;
 	colorBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	colorBufferDescription.Usage = D3D11_USAGE_DEFAULT;
@@ -286,13 +287,13 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	colorBufferDescription.ByteWidth = sizeof(colorBuffer);
 	colorBufferDescription.StructureByteStride = 0u;
 
-	D3D11_SUBRESOURCE_DATA colorSubresourceData = {};
-	colorSubresourceData.pSysMem = &colorBufferDescription;
+	D3D11_SUBRESOURCE_DATA colorSubresource = {};
+	colorSubresource.pSysMem = &colorBuffer;
 
-	GFX_THROW_INFO(m_device->CreateBuffer(&colorBufferDescription, &colorSubresourceData, &constantColors));
+	GFX_THROW_INFO(m_device->CreateBuffer(&colorBufferDescription, &colorSubresource, &colorConstantBuffer));
 
 	// bind constant buffer to the pixel shader
-	m_deviceContext->PSSetConstantBuffers(0u, 1u, constantColors.GetAddressOf());
+	m_deviceContext->PSSetConstantBuffers(0u, 1u, colorConstantBuffer.GetAddressOf());
 
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
@@ -316,7 +317,6 @@ void Renderer::DrawTestTriangle(float angle, float x, float z)
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 	const D3D11_INPUT_ELEMENT_DESC elementDesc[] = {
 		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		//{"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 	GFX_THROW_INFO(m_device->CreateInputLayout(elementDesc, (UINT)std::size(elementDesc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout));
 
