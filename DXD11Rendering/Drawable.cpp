@@ -6,10 +6,16 @@
 
 void Drawable::Draw(Renderer& renderer) const noexcept
 {
-	for (auto& b : binds)
+	for (auto& bind : binds)
 	{
-		b->Bind(renderer);
+		bind->Bind(renderer);
 	}
+
+	for (auto& bind : GetStaticBinds())
+	{
+		bind->Bind(renderer);
+	}
+
 	renderer.DrawIndexed(m_indexBuffer->GetCount());
 }
 

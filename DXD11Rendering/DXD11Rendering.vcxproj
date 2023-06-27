@@ -166,6 +166,7 @@
     <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="DirectXErrors.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="IndexBuffer.h" />
