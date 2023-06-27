@@ -153,11 +153,13 @@
     <ClInclude Include="DirectXErrors.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="GraphicsMacroErrors.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowsMacroErrors.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl" />

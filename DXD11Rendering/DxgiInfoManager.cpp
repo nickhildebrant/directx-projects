@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include <dxgidebug.h>
 #include <memory>
+#include "GraphicsMacroErrors.h"
+#include "WindowsMacroErrors.h"
 
 #pragma comment(lib, "dxguid.lib")
 
