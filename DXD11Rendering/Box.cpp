@@ -76,19 +76,17 @@ Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<f
 
 		AddBind(std::make_unique<PixelConstantBuffer<ConstantBuffer2>>(renderer, cb2));
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
-		AddBind(std::make_unique<InputLayout>(renderer, ied, pvsbc));
+		AddBind(std::make_unique<InputLayout>(renderer, inputDesc, pvsbc));
 
 		AddBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}
-	else
-	{
-		AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
-	}
+
+	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
 }
 
 void Box::Update(float dt) noexcept
