@@ -18,6 +18,7 @@ public:
 	void Draw(Renderer& renderer) const noexcept;
 	virtual void Update(float dt) noexcept = 0;
 
+protected:
 	void AddBind(std::unique_ptr<Bindable> bind) noexcept;
 	void AddIndexBuffer(std::unique_ptr<class IndexBuffer> ibuf) noexcept;
 
