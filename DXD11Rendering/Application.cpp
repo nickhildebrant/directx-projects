@@ -13,10 +13,13 @@ Application::Application() : m_window(640, 480, "3D Renderer")
 	std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 1.0f);
 	std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.08f);
 	std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
-	for (auto i = 0; i < 180; i++)
-	{
-		m_boxes.push_back(std::make_unique<Box>(m_window.getRenderer(), rng, adist, ddist, odist, rdist));
-	}
+
+	const size_t numberOfModels = 180;
+	ModelFactory factory(m_window.getRenderer());
+	m_models.reserve(numberOfModels);
+
+	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
+
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.1f, 100.0f));
 }
 
@@ -39,10 +42,10 @@ void Application::DoFrame()
 	m_window.getRenderer().ClearBuffer(0.07f, 0.0f, 0.12f, 1.0f);	// sets background color
 	
 	float deltaTime = m_timer.DeltaTime();
-	for (auto& box : m_boxes)
+	for (auto& model : m_models)
 	{
-		box->Update(deltaTime);
-		box->Draw(m_window.getRenderer());
+		model->Update(deltaTime);
+		model->Draw(m_window.getRenderer());
 	}
 
 	m_window.getRenderer().EndFrame();

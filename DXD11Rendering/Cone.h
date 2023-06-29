@@ -9,6 +9,7 @@ public:
 	{
 		assert(longitudeDivisions >= 3);
 
+		const float PI = 3.14159265f;
 		const auto base = DirectX::XMVectorSet(1.0f, 0.0f, -1.0f, 0.0f);
 		const float longitudeAngle = 2.0f * PI / longitudeDivisions;
 
@@ -18,17 +19,17 @@ public:
 		{
 			vertices.emplace_back();
 			auto vec = DirectX::XMVector3Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
-			DirectX::XMStoreFloat3(&vertices.back().pos, vec);
+			DirectX::XMStoreFloat3(&vertices.back().position, vec);
 		}
 
 		// the center
 		vertices.emplace_back();
-		vertices.back().pos = { 0.0f,0.0f,-1.0f };
+		vertices.back().position = { 0.0f,0.0f,-1.0f };
 		const auto iCenter = (unsigned short)(vertices.size() - 1);
 
 		// the tip :darkness:
 		vertices.emplace_back();
-		vertices.back().pos = { 0.0f,0.0f,1.0f };
+		vertices.back().position = { 0.0f,0.0f,1.0f };
 		const auto iTip = (unsigned short)(vertices.size() - 1);
 
 
