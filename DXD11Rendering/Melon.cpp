@@ -59,7 +59,9 @@ Melon::Melon(Renderer& renderer, std::mt19937& rng, std::uniform_real_distributi
 	{
 		DirectX::XMFLOAT3 position;
 	};
+
 	auto model = Sphere::MakeTesselated<Vertex>(latdist(rng), longdist(rng));
+
 	// deform vertices of model by linear transformation
 	model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.2f));
 
@@ -70,14 +72,14 @@ Melon::Melon(Renderer& renderer, std::mt19937& rng, std::uniform_real_distributi
 	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
 }
 
-void Melon::Update(float dt) noexcept
+void Melon::Update(float deltaTime) noexcept
 {
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
+	roll += droll * deltaTime;
+	pitch += dpitch * deltaTime;
+	yaw += dyaw * deltaTime;
+	theta += dtheta * deltaTime;
+	phi += dphi * deltaTime;
+	chi += dchi * deltaTime;
 }
 
 DirectX::XMMATRIX Melon::GetTransformXM() const noexcept

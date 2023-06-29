@@ -4,13 +4,6 @@
 
 Application::Application() : m_window(640, 480, "3D Renderer")
 {
-	// Random cubes
-	std::mt19937 rng(std::random_device{}());
-	std::uniform_real_distribution<float> adist(0.0f, 3.1415f * 2.0f);
-	std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 1.0f);
-	std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.08f);
-	std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
-
 	const size_t numberOfModels = 180;
 	ModelFactory factory(m_window.getRenderer());
 	m_models.reserve(numberOfModels);

@@ -7,7 +7,7 @@ public:
 		std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist,
 		std::uniform_int_distribution<int>& longdist, std::uniform_int_distribution<int>& latdist);
 
-	void Update(float dt) noexcept override;
+	void Update(float deltaTime) noexcept override;
 
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 
