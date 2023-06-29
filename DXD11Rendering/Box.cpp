@@ -4,7 +4,8 @@
 #include "Cube.h"
 
 Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist,
-	std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, std::uniform_real_distribution<float>& bdist) :
+	std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, std::uniform_real_distribution<float>& bdist) 
+	:
 	r(rdist(rng)), droll(ddist(rng)), dpitch(ddist(rng)), dyaw(ddist(rng)), dphi(odist(rng)), dtheta(odist(rng)),
 	dchi(odist(rng)), chi(adist(rng)), theta(adist(rng)), phi(adist(rng))
 {
@@ -20,11 +21,11 @@ Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<f
 
 		AddStaticBind(std::make_unique<VertexBuffer>(renderer, model.vertices));
 
-		auto pvs = std::make_unique<VertexShader>(renderer, L"ColorIndexVS.cso");
+		auto pvs = std::make_unique<VertexShader>(renderer, L"ColorIndexVertexShader.cso");
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind(std::move(pvs));
 
-		AddStaticBind(std::make_unique<PixelShader>(renderer, L"ColorIndexPS.cso"));
+		AddStaticBind(std::make_unique<PixelShader>(renderer, L"ColorIndexPixelShader.cso"));
 
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
 

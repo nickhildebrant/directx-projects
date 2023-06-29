@@ -1,6 +1,9 @@
 #pragma once
 #include "Window.h"
 #include "Timer.h"
+#include "Box.h"
+#include "Pyramid.h"
+#include "Melon.h"
 
 class Application {
 public:
@@ -9,8 +12,7 @@ public:
 
 	int Run();
 
-	class ModelFactory
-	{
+	class ModelFactory {
 	public:
 		ModelFactory(Renderer& renderer) : renderer(renderer) {}
 
@@ -36,6 +38,7 @@ public:
 				break;
 			}
 		}
+
 	private:
 		const float PI = 3.14159265f;
 

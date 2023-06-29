@@ -1,10 +1,8 @@
-cbuffer ConstantBuffer
-{
+cbuffer ConstantBuffer {
 	matrix transform;
 };
 
-struct VertexShaderOutput
-{
+struct VertexShaderOutput {
 	float4 color : Color;
 	float4 position : SV_Position;
 };

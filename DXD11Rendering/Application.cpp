@@ -1,9 +1,6 @@
 #include "Application.h"
-#include <sstream>
-#include <iomanip>
-
-#include "Box.h"
 #include <memory>
+#include <algorithm>
 
 Application::Application() : m_window(640, 480, "3D Renderer")
 {
@@ -20,7 +17,7 @@ Application::Application() : m_window(640, 480, "3D Renderer")
 
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
 
-	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.1f, 100.0f));
+	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
 }
 
 Application::~Application() {}
