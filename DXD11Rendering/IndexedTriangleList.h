@@ -7,7 +7,7 @@ class IndexedTriangleList {
 public:
 	IndexedTriangleList() = default;
 	IndexedTriangleList(std::vector<T> vertices_in, std::vector<unsigned short> indices_in)
-		: this.vertices(std::move(vertices_in)), this.indices(std::move(indices_in))
+		: vertices(std::move(vertices_in)), indices(std::move(indices_in))
 	{
 		assert(vertices.size() > 2);
 		assert(indices.size() % 3 == 0);
@@ -17,8 +17,8 @@ public:
 	{
 		for (auto& vertex : vertices)
 		{
-			const DirectX::XMVector pos = DirectX::XMLoadFloat3(&vertex.position);
-			DirectX::XMStoreFloat3(&vertex.position, DirectX::XMVector3Transform(position, matrix));
+			const DirectX::XMVECTOR pos = DirectX::XMLoadFloat3(&vertex.position);
+			DirectX::XMStoreFloat3(&vertex.position, DirectX::XMVector3Transform(pos, matrix));
 		}
 	}
 

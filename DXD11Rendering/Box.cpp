@@ -1,6 +1,7 @@
 #include "Box.h"
 #include "BindableBase.h"
 #include "RendererErrorMacros.h"
+#include "Sphere.h"
 
 Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist) :
@@ -11,45 +12,21 @@ Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<f
 	{
 		struct Vertex
 		{
-			struct
-			{
-				float x;
-				float y;
-				float z;
-			} pos;
+			DirectX::XMFLOAT3 position;
 		};
 
-		const std::vector<Vertex> vertices =
-		{
-			{ -1.0f,-1.0f,-1.0f },
-			{ 1.0f,-1.0f,-1.0f },
-			{ -1.0f,1.0f,-1.0f },
-			{ 1.0f,1.0f,-1.0f },
-			{ -1.0f,-1.0f,1.0f },
-			{ 1.0f,-1.0f,1.0f },
-			{ -1.0f,1.0f,1.0f },
-			{ 1.0f,1.0f,1.0f },
-		};
+		auto model = Sphere::Make<Vertex>();
+		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.2f));
 
-		AddBind(std::make_unique<VertexBuffer>(renderer, vertices));
+		AddStaticBind(std::make_unique<VertexBuffer>(renderer, model.vertices));
 
 		auto pvs = std::make_unique<VertexShader>(renderer, L"VertexShader.cso");
 		auto pvsbc = pvs->GetBytecode();
-		AddBind(std::move(pvs));
+		AddStaticBind(std::move(pvs));
 
-		AddBind(std::make_unique<PixelShader>(renderer, L"PixelShader.cso"));
+		AddStaticBind(std::make_unique<PixelShader>(renderer, L"PixelShader.cso"));
 
-		const std::vector<unsigned short> indices =
-		{
-			0,2,1, 2,3,1,
-			1,3,5, 3,7,5,
-			2,6,3, 3,6,7,
-			4,5,7, 4,7,6,
-			0,4,2, 2,4,6,
-			0,1,4, 1,5,4
-		};
-
-		AddIndexBuffer(std::make_unique<IndexBuffer>(renderer, indices));
+		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
 
 		struct ConstantBuffer2
 		{
@@ -74,16 +51,20 @@ Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<f
 			}
 		};
 
-		AddBind(std::make_unique<PixelConstantBuffer<ConstantBuffer2>>(renderer, cb2));
+		AddStaticBind(std::make_unique<PixelConstantBuffer<ConstantBuffer2>>(renderer, cb2));
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
-		AddBind(std::make_unique<InputLayout>(renderer, inputDesc, pvsbc));
+		AddStaticBind(std::make_unique<InputLayout>(renderer, inputDesc, pvsbc));
 
-		AddBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		AddStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	}
+	else
+	{
+		SetIndexFromStatic();
 	}
 
 	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
