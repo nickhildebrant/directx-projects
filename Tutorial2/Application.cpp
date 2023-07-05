@@ -2,6 +2,11 @@
 #include <memory>
 #include <algorithm>
 
+#include "Surface.h"
+#include "GDIPlusManager.h"
+
+GDIPlusManager gdiManager;
+
 Application::Application() : m_window(640, 480, "3D Renderer")
 {
 	const size_t numberOfModels = 180;
@@ -9,6 +14,8 @@ Application::Application() : m_window(640, 480, "3D Renderer")
 	m_models.reserve(numberOfModels);
 
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
+
+	const Surface surface = Surface::FromFile("Images/Me.png");
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
 }
