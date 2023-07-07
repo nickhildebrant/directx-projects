@@ -18,7 +18,7 @@ void Renderer::createDevice( Window& window )
 	swapChainDesc.BufferDesc.Height = window.getHeight();
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
 	swapChainDesc.OutputWindow = window.getHandle();				// window to be used
-	swapChainDesc.SampleDesc.Count = 4;								// Anti-Aliasing, currently using 4x
+	swapChainDesc.SampleDesc.Count = 1;								// Anti-Aliasing, currently using 4x
 	swapChainDesc.Windowed = true;									// Windowed, false = fullscreen
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching
 
