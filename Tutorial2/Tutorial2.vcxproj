@@ -145,7 +145,6 @@
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="ExceptionHandler.cpp" />
-    <ClCompile Include="GDIPlusManager.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -154,7 +153,6 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformConstantBuffer.cpp" />
@@ -176,7 +174,6 @@
     <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="ExceptionHandler.h" />
-    <ClInclude Include="GDIPlusManager.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IndexedTriangleList.h" />
     <ClInclude Include="InputLayout.h" />
@@ -190,7 +187,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererErrorMacros.h" />
     <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Surface.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Topology.h" />
     <ClInclude Include="TransformConstantBuffer.h" />
