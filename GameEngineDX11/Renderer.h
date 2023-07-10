@@ -4,7 +4,7 @@
 
 class Renderer {
 public:
-	Renderer( Window& window );
+	Renderer( HWND& handle );
 
 	void beginFrame();			// Clear frame at start
 	void endFrame();			// Swap buffer
@@ -14,7 +14,7 @@ public:
 	ID3D11DeviceContext* getDeviceContext();
 
 private:
-	void createDevice( Window& window );
+	void createDevice( HWND& handle );
 	void createRenderTarget();
 
 	IDXGISwapChain* m_swapChain = nullptr;			// Swap buffer at end of frame

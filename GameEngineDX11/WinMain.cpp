@@ -6,7 +6,6 @@
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount )
 {
 	Window window( 640, 480, "My Game Engine" );
-	Renderer renderer( window );
 
 	MSG msg = { 0 };
 	while ( true )
@@ -22,13 +21,13 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 		}
 
 		// Draw
-		renderer.beginFrame();
+		//renderer.beginFrame();
 		// Render polygons
 		//triangle.draw( renderer );
-		renderer.endFrame();
+		//renderer.endFrame();
 	}
 
-	renderer.CleanUp();
+	//renderer.CleanUp();
 
 	return 0;
 }

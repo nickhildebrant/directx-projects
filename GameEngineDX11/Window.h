@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
+#include <memory>
 
+#include "Renderer.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
@@ -19,6 +21,8 @@ public:
 private:
 	int m_width, m_height;
 	HWND m_handle;
+
+	Renderer m_renderer;
 
 	// Singleton for window management
 	class WindowClass {
