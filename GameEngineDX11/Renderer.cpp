@@ -120,4 +120,5 @@ void Renderer::ClearBuffer( float r, float g, float b, float a )
 void Renderer::DrawIndexed( UINT count ) { m_deviceContext->DrawIndexed( count, 0u, 0u ); }
 
 void Renderer::SetProjection( DirectX::FXMMATRIX projection ) { m_projection = projection; }
+
 DirectX::XMMATRIX Renderer::GetProjection() { return m_projection; }
