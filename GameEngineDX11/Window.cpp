@@ -1,27 +1,4 @@
 #include "Window.h"
-#include <sstream>
-
-Window::WindowClass Window::WindowClass::wndClass;
-
-Window::WindowClass::WindowClass() : hInstance( GetModuleHandle( nullptr ) )
-{
-	// Defining the window style
-	WNDCLASS windowClass = { 0 };
-	windowClass.style = CS_OWNDC;
-	windowClass.lpfnWndProc = HandleMsgSetup;
-	windowClass.hInstance = GetInstance();
-	windowClass.hIcon = nullptr;
-	windowClass.hCursor = LoadCursor( nullptr, IDC_ARROW );
-	windowClass.hbrBackground = nullptr;
-	windowClass.lpszClassName = GetName();
-	RegisterClass( &windowClass );
-}
-
-Window::WindowClass::~WindowClass() { UnregisterClass( wndClassName, GetInstance() ); }
-
-const char* Window::WindowClass::GetName() { return wndClassName; }
-
-HINSTANCE Window::WindowClass::GetInstance() { return wndClass.hInstance; }
 
 LRESULT CALLBACK WinProc( HWND handle, UINT msg, WPARAM wparam, LPARAM lparam )
 {
@@ -50,6 +27,14 @@ LRESULT CALLBACK WinProc( HWND handle, UINT msg, WPARAM wparam, LPARAM lparam )
 
 Window::Window( int width, int height, const char* title ) : m_width(width), m_height(height)
 {
+	// Defining the window style
+	WNDCLASS windowClass = { 0 };
+	windowClass.style = CS_OWNDC;
+	windowClass.lpfnWndProc = HandleMsgSetup;
+	windowClass.hCursor = LoadCursor( nullptr, IDC_ARROW );
+	windowClass.lpszClassName = "My Game Engine";
+	RegisterClass( &windowClass );
+
 	// Defining the size and type of the window
 	RECT rect = { 0, 0, m_width, m_height };
 	AdjustWindowRect( &rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_VISIBLE, FALSE ); // Adjusts size for screen, sharpens image
@@ -63,7 +48,10 @@ Window::Window( int width, int height, const char* title ) : m_width(width), m_h
 	ShowWindow( m_handle, SW_SHOWDEFAULT );
 }
 
-Window::~Window() { DestroyWindow( m_handle ); }
+Window::~Window()
+{
+
+}
 
 int Window::getWidth() { return m_width; }
 int Window::getHeight() { return m_height; }
