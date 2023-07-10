@@ -20,6 +20,22 @@ private:
 	int m_width, m_height;
 	HWND m_handle;
 
+	// Singleton for window management
+	class WindowClass {
+	public:
+		static const char* GetName();
+		static HINSTANCE GetInstance();
+
+	private:
+		WindowClass();
+		~WindowClass();
+		WindowClass( const WindowClass& ) = delete;
+		WindowClass& operator=( const WindowClass& ) = delete;
+		static constexpr const char* wndClassName = "Direct3D Rendering Window";
+		static WindowClass wndClass;
+		HINSTANCE hInstance;
+	};
+
 	static LRESULT WINAPI HandleMsgSetup( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 	static LRESULT WINAPI HandleMsgThunk( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 	LRESULT HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
