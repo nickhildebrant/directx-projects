@@ -12,7 +12,6 @@ public:
 
 	void BeginFrame();			// Clear frame at start
 	void EndFrame();			// Swap buffer
-	void CleanUp( void );
 
 	void ClearBuffer( float r, float g, float b, float a );
 

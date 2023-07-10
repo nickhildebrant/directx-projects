@@ -28,7 +28,5 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 		renderer.EndFrame();
 	}
 
-	renderer.CleanUp();
-
 	return 0;
 }
