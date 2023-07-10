@@ -61,9 +61,6 @@ Window::Window( int width, int height, const char* title ) : m_width(width), m_h
 		nullptr, nullptr, nullptr, nullptr );													// parent window, menu, application handle, for multiple windows
 
 	ShowWindow( m_handle, SW_SHOWDEFAULT );
-
-	// Creating Renderer
-	m_renderer = new Renderer( m_handle );
 }
 
 Window::~Window() { DestroyWindow( m_handle ); }
