@@ -1,27 +1,42 @@
 #pragma once
-#include "Window.h"
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
 #include <d3d11.h>
+#include <wrl.h>
+
+#include "Window.h"
 
 class Renderer {
 public:
 	Renderer( Window& window );
 
-	void beginFrame();			// Clear frame at start
-	void endFrame();			// Swap buffer
+	void BeginFrame();			// Clear frame at start
+	void EndFrame();			// Swap buffer
 	void CleanUp( void );
+
+	void ClearBuffer( float r, float g, float b, float a );
+
+	void DrawIndexed( UINT count );
+	void SetProjection( DirectX::FXMMATRIX projection );
+	DirectX::XMMATRIX GetProjection();
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
 
 private:
-	void createDevice( Window& window );
-	void createRenderTarget();
+	void CreateDevice( Window& window );
+	void CreateRenderTarget();
+	void CreateDepthStencil();
 
-	IDXGISwapChain* m_swapChain = nullptr;			// Swap buffer at end of frame
-	ID3D11Device* m_device = nullptr;				// Used to create resources
-	ID3D11DeviceContext* m_deviceContext = nullptr;	// Used to use resources and render
+	DirectX::XMMATRIX m_projection;
+
+	Microsoft::WRL::ComPtr<ID3D11Device> m_device;					// Used to create resources
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;				// Swap buffer at end of frame
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;	// Used to use resources and render
 
 	// Render target
-	ID3D11RenderTargetView* m_renderTargetView = nullptr;
-	D3D11_TEXTURE2D_DESC m_backBufferDesc;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+
+	// Stencil View
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 };

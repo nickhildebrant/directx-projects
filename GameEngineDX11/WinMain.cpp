@@ -22,10 +22,10 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 		}
 
 		// Draw
-		renderer.beginFrame();
+		renderer.BeginFrame();
 		// Render polygons
 		//triangle.draw( renderer );
-		renderer.endFrame();
+		renderer.EndFrame();
 	}
 
 	renderer.CleanUp();
