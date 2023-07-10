@@ -11,6 +11,8 @@ public:
 	Window( int width, int height, const char* title );
 	~Window();
 
+	void SetTitle( const std::string title );
+
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
@@ -21,8 +23,6 @@ public:
 private:
 	int m_width, m_height;
 	HWND m_handle;
-
-	Renderer m_renderer;
 
 	// Singleton for window management
 	class WindowClass {
