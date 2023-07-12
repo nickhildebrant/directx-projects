@@ -91,7 +91,7 @@ void Triangle::createMesh( Renderer& renderer )
 	vertexData.pSysMem = vertices;
 
 	// create vertex buffer
-	auto result = renderer.getDevice()->CreateBuffer( &vertexBufferDesc, &vertexData, &m_vertexBuffer );
+	auto result = renderer.GetDevice()->CreateBuffer( &vertexBufferDesc, &vertexData, &m_vertexBuffer );
 
 	// Error handling
 	if ( result != S_OK )
@@ -108,7 +108,7 @@ void Triangle::createMesh( Renderer& renderer )
 	cBufferDesc.ByteWidth = 16;
 	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
-	result = renderer.getDevice()->CreateBuffer( &cBufferDesc, NULL, &m_cBuffer );
+	result = renderer.GetDevice()->CreateBuffer( &cBufferDesc, NULL, &m_cBuffer );
 
 	// Error handling
 	if ( result != S_OK )
@@ -127,8 +127,8 @@ void Triangle::createShaders( Renderer& renderer )
 	std::vector<char> vsData = { std::istreambuf_iterator<char>( vsFile ), std::istreambuf_iterator<char>() };
 	std::vector<char> psData = { std::istreambuf_iterator<char>( psFile ), std::istreambuf_iterator<char>() };
 
-	renderer.getDevice()->CreateVertexShader( vsData.data(), vsData.size(), nullptr, &m_vertexShader );
-	renderer.getDevice()->CreatePixelShader( psData.data(), psData.size(), nullptr, &m_pixelShader );
+	renderer.GetDevice()->CreateVertexShader( vsData.data(), vsData.size(), nullptr, &m_vertexShader );
+	renderer.GetDevice()->CreatePixelShader( psData.data(), psData.size(), nullptr, &m_pixelShader );
 
 	// Create input layouts
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
@@ -136,5 +136,5 @@ void Triangle::createShaders( Renderer& renderer )
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	renderer.getDevice()->CreateInputLayout( layout, 2, vsData.data(), vsData.size(), &m_inputLayout );
+	renderer.GetDevice()->CreateInputLayout( layout, 2, vsData.data(), vsData.size(), &m_inputLayout );
 }

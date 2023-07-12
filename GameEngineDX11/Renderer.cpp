@@ -123,8 +123,8 @@ void Renderer::DrawIndexed( UINT count ) { m_deviceContext->DrawIndexed( count, 
 
 void Renderer::SetProjection( DirectX::FXMMATRIX projection ) { m_projection = projection; }
 
-ID3D11Device* Renderer::getDevice() { return m_device.Get(); }
+ID3D11Device* Renderer::GetDevice() { return m_device.Get(); }
 
-ID3D11DeviceContext* Renderer::getDeviceContext() { return m_deviceContext.Get(); }
+ID3D11DeviceContext* Renderer::GetDeviceContext() { return m_deviceContext.Get(); }
 
 DirectX::XMMATRIX Renderer::GetProjection() { return m_projection; }
