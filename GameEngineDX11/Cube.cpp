@@ -1,139 +1,92 @@
-#pragma comment(lib,"d3d11.lib")
-
+#include "Bindable.h"
 #include "Cube.h"
-#include <fstream>
-#include <vector>
 
-struct Vertex {
-	float x, y;
-	float r, g, b;
-};
-
-struct ColorMod {
-	float RedLevel, GreenLevel, BlueLevel;
-};
-
-struct PositionOffset {
-	float X, Y, Z, D;
-};
-
-Cube::Cube( Renderer& renderer )
+Cube::Cube( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist,
+	std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, std::uniform_real_distribution<float>& bdist )
+	:
+	r( rdist( rng ) ), droll( ddist( rng ) ), dpitch( ddist( rng ) ), dyaw( ddist( rng ) ), dphi( odist( rng ) ), dtheta( odist( rng ) ),
+	dchi( odist( rng ) ), chi( adist( rng ) ), theta( adist( rng ) ), phi( adist( rng ) )
 {
-	CreateMesh( renderer );
-	CreateShaders( renderer );
-}
-
-Cube::~Cube()
-{
-	m_vertexBuffer->Release();
-	m_vertexShader->Release();
-	m_pixelShader->Release();
-	m_inputLayout->Release();
-	m_cBuffer->Release();
-}
-
-void Cube::Draw( Renderer& renderer )
-{
-	// create ColorMod struct for constant buffer
-	ColorMod Colors;
-	Colors.RedLevel = 0.5f;
-	Colors.GreenLevel = 0.5f;
-	Colors.BlueLevel = 0.5f;
-
-	// create PositionOffset struct for Constant buffer
-	PositionOffset Offset;
-	Offset.X = 0.5f;
-	Offset.Y = 0.2f;
-	Offset.Z = 0.7f;
-	Offset.D = 1.0f;
-
-	auto deviceContext = renderer.GetDeviceContext();
-
-	// Setting new values in the constant buffer
-	deviceContext->UpdateSubresource( m_cBuffer, 0, nullptr, &Colors, 0, 0 );
-	deviceContext->UpdateSubresource( m_cBuffer, 0, nullptr, &Offset, 0, 0 );
-
-	// Bind triangle shaders
-	deviceContext->IASetInputLayout( m_inputLayout );
-	deviceContext->VSSetShader( m_vertexShader, nullptr, 0 );
-	deviceContext->VSSetConstantBuffers( 0, 1, &m_cBuffer );
-	deviceContext->VSSetConstantBuffers( 1, 1, &m_cBuffer );
-	deviceContext->PSSetShader( m_pixelShader, nullptr, 0 );
-
-	// Bind vertex buffer to render multiple times from memory
-	UINT stride = sizeof( Vertex );	// Size between each vertex
-	UINT offset = 0;				// Offset render for things like shadow
-	deviceContext->IASetVertexBuffers( 0, 1, &m_vertexBuffer, &stride, &offset );	// Hardware Specific
-
-	// Draw
-	deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );	// For devices without dedicated GPU
-	deviceContext->Draw( 3, 0 );
-}
-
-void Cube::CreateMesh( Renderer& renderer )
-{
-	// Defining vertices, holds position and rgb color
-	Vertex vertices[] = {
-		{ -10, 10, 10, 1, 1, 1f },
-		{ -10, 10, 10, 1, 1, 1 },
-	};
-
-	// Creating vertex buffer, putting verticies in VRAM
-	auto vertexBufferDesc = CD3D11_BUFFER_DESC( sizeof( vertices ), D3D11_BIND_VERTEX_BUFFER );
-
-	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;				// write access allowed by CPU and GPU
-	vertexBufferDesc.ByteWidth = sizeof( Vertex ) * 3;			// size of 3 triangles
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;		// use as a vertex buffer
-	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;	// allows CPU to write to buffer
-
-	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
-	vertexData.pSysMem = vertices;
-
-	// create vertex buffer
-	auto result = renderer.GetDevice()->CreateBuffer( &vertexBufferDesc, &vertexData, &m_vertexBuffer );
-
-	// Error handling
-	if ( result != S_OK )
+	if ( !IsStaticInitialized() )
 	{
-		MessageBox( nullptr, "Error with DX11: " + result, "Error", MB_OK );
-		exit( 0 );
+		struct Vertex
+		{
+			DirectX::XMFLOAT3 position;
+		};
+
+		auto model = Cube::Make<Vertex>();
+		model.Transform( DirectX::XMMatrixScaling( 1.0f, 1.0f, 1.2f ) );
+
+		AddStaticBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
+
+		auto pVertexShader = std::make_unique<VertexShader>( renderer, L"ColorIndexVertexShader.cso" );
+		auto pvsbc = pVertexShader->GetBytecode();
+		AddStaticBind( std::move( pVertexShader ) );
+
+		AddStaticBind( std::make_unique<PixelShader>( renderer, L"ColorIndexPixelShader.cso" ) );
+
+		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
+
+		struct PixelShaderConstants
+		{
+			struct
+			{
+				float r;
+				float g;
+				float b;
+				float a;
+			} face_colors[8];
+		};
+
+		const PixelShaderConstants constantBuffer =
+		{
+			{
+				{ 1.0f,1.0f,1.0f },
+				{ 1.0f,0.0f,0.0f },
+				{ 0.0f,1.0f,0.0f },
+				{ 0.0f,0.0f,1.0f },
+				{ 1.0f,1.0f,0.0f },
+				{ 0.0f,1.0f,1.0f },
+			}
+		};
+
+		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderConstants>>( renderer, constantBuffer ) );
+
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
+		{
+			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		};
+
+		AddStaticBind( std::make_unique<InputLayout>( renderer, inputDesc, pvsbc ) );
+
+		AddStaticBind( std::make_unique<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+	}
+	else
+	{
+		SetIndexFromStatic();
 	}
 
-	// create constant buffer
-	D3D11_BUFFER_DESC cBufferDesc;
-	ZeroMemory( &cBufferDesc, sizeof( cBufferDesc ) );
+	AddBind( std::make_unique<TransformConstantBuffer>( renderer, *this ) );
 
-	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	cBufferDesc.ByteWidth = 16;
-	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
-	result = renderer.GetDevice()->CreateBuffer( &cBufferDesc, NULL, &m_cBuffer );
-
-	// Error handling
-	if ( result != S_OK )
-	{
-		MessageBox( nullptr, "Error with DX11: " + result, "Error", MB_OK );
-		exit( 0 );
-	}
+	// model deformation - per instance
+	DirectX::XMStoreFloat3x3( &modelTransform, DirectX::XMMatrixScaling( 1.0f, 1.0f, bdist( rng ) ) );
 }
 
-void Cube::CreateShaders( Renderer& renderer )
+void Cube::Update( float dt ) noexcept
 {
-	// Create shaders
-	std::ifstream vsFile( "TriangleVertexShader.cso", std::ios::binary );
-	std::ifstream psFile( "TrianglePixelShader.cso", std::ios::binary );
+	roll += droll * dt;
+	pitch += dpitch * dt;
+	yaw += dyaw * dt;
+	theta += dtheta * dt;
+	phi += dphi * dt;
+	chi += dchi * dt;
+}
 
-	std::vector<char> vsData = { std::istreambuf_iterator<char>( vsFile ), std::istreambuf_iterator<char>() };
-	std::vector<char> psData = { std::istreambuf_iterator<char>( psFile ), std::istreambuf_iterator<char>() };
-
-	renderer.GetDevice()->CreateVertexShader( vsData.data(), vsData.size(), nullptr, &m_vertexShader );
-	renderer.GetDevice()->CreatePixelShader( psData.data(), psData.size(), nullptr, &m_pixelShader );
-
-	// Create input layouts
-	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	renderer.GetDevice()->CreateInputLayout( layout, 2, vsData.data(), vsData.size(), &m_inputLayout );
+DirectX::XMMATRIX Cube::GetTransformXM() const noexcept
+{
+	return DirectX::XMLoadFloat3x3( &modelTransform ) *
+		DirectX::XMMatrixRotationRollPitchYaw( pitch, yaw, roll ) *
+		DirectX::XMMatrixTranslation( r, 0.0f, 0.0f ) *
+		DirectX::XMMatrixRotationRollPitchYaw( theta, phi, chi ) *
+		DirectX::XMMatrixTranslation( 0.0f, 0.0f, 20.0f );
 }

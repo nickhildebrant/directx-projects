@@ -1,19 +1,32 @@
 #pragma once
-#include "Renderer.h"
+#include "DrawableBase.h"
+#include <random>
 
-class Cube {
+class Cube : public DrawableBase<Cube> {
 public:
-	Cube( Renderer& renderer );
-	~Cube();
-	void Draw( Renderer& renderer );
+	Cube( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist,
+		std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, std::uniform_real_distribution<float>& bdist );
+
+	void Update( float dt ) override;
+	DirectX::XMMATRIX GetTransformXM() const override;
 
 private:
-	void CreateMesh( Renderer& renderer );
-	void CreateShaders( Renderer& renderer );
+	// positional
+	float r;
+	float roll = 0.0f;
+	float pitch = 0.0f;
+	float yaw = 0.0f;
+	float theta;
+	float phi;
+	float chi;
 
-	ID3D11Buffer* m_vertexBuffer = nullptr;
-	ID3D11VertexShader* m_vertexShader = nullptr;
-	ID3D11PixelShader* m_pixelShader = nullptr;
-	ID3D11InputLayout* m_inputLayout = nullptr;
-	ID3D11Buffer* m_cBuffer = nullptr;
+	// speed (delta/s)
+	float droll;
+	float dpitch;
+	float dyaw;
+	float dtheta;
+	float dphi;
+	float dchi;
+
+	DirectX::XMFLOAT3X3 modelTransform;
 };

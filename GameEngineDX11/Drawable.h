@@ -14,7 +14,7 @@ public:
 	Drawable( const Drawable& );
 	virtual ~Drawable();
 
-	virtual DirectX::XMMATRIX GetTransformXM();
+	virtual DirectX::XMMATRIX GetTransformXM() const;
 
 	void Draw( Renderer& renderer ) const;
 	virtual void Update( float dt );

@@ -1,5 +1,4 @@
 #include <cassert>
-#include <typeinfo>
 
 #include "Drawable.h"
 #include "IndexBuffer.h"
