@@ -1,3 +1,5 @@
+#pragma comment(lib,"d3d11.lib")
+
 #include "Renderer.h"
 
 Renderer::Renderer( Window& window )
@@ -120,5 +122,9 @@ void Renderer::ClearBuffer( float r, float g, float b, float a )
 void Renderer::DrawIndexed( UINT count ) { m_deviceContext->DrawIndexed( count, 0u, 0u ); }
 
 void Renderer::SetProjection( DirectX::FXMMATRIX projection ) { m_projection = projection; }
+
+ID3D11Device* Renderer::getDevice() { return m_device.Get(); }
+
+ID3D11DeviceContext* Renderer::getDeviceContext() { return m_deviceContext.Get(); }
 
 DirectX::XMMATRIX Renderer::GetProjection() { return m_projection; }

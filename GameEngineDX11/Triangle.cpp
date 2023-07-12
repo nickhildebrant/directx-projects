@@ -1,3 +1,5 @@
+#pragma comment(lib,"d3d11.lib")
+
 #include "Triangle.h"
 #include <fstream>
 #include <vector>
