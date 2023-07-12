@@ -1,7 +1,7 @@
 #pragma once
-#include "Renderer.h"
+#include "Bindable.h"
 
-class IndexBuffer {
+class IndexBuffer : public Bindable {
 public:
 	IndexBuffer( Renderer& renderer, const std::vector<unsigned short>& indices );
 	void Bind( Renderer& renderer );
