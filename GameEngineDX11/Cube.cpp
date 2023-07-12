@@ -1,6 +1,6 @@
 #pragma comment(lib,"d3d11.lib")
 
-#include "Triangle.h"
+#include "Cube.h"
 #include <fstream>
 #include <vector>
 
@@ -17,13 +17,13 @@ struct PositionOffset {
 	float X, Y, Z, D;
 };
 
-Triangle::Triangle( Renderer& renderer )
+Cube::Cube( Renderer& renderer )
 {
-	createMesh( renderer );
-	createShaders( renderer );
+	CreateMesh( renderer );
+	CreateShaders( renderer );
 }
 
-Triangle::~Triangle()
+Cube::~Cube()
 {
 	m_vertexBuffer->Release();
 	m_vertexShader->Release();
@@ -32,7 +32,7 @@ Triangle::~Triangle()
 	m_cBuffer->Release();
 }
 
-void Triangle::draw( Renderer& renderer )
+void Cube::Draw( Renderer& renderer )
 {
 	// create ColorMod struct for constant buffer
 	ColorMod Colors;
@@ -70,7 +70,7 @@ void Triangle::draw( Renderer& renderer )
 	deviceContext->Draw( 3, 0 );
 }
 
-void Triangle::createMesh( Renderer& renderer )
+void Cube::CreateMesh( Renderer& renderer )
 {
 	// Defining vertices, holds position and rgb color
 	Vertex vertices[] = {
@@ -118,7 +118,7 @@ void Triangle::createMesh( Renderer& renderer )
 	}
 }
 
-void Triangle::createShaders( Renderer& renderer )
+void Cube::CreateShaders( Renderer& renderer )
 {
 	// Create shaders
 	std::ifstream vsFile( "TriangleVertexShader.cso", std::ios::binary );
