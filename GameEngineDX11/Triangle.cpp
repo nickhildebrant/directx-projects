@@ -119,8 +119,8 @@ void Triangle::createMesh( Renderer& renderer )
 void Triangle::createShaders( Renderer& renderer )
 {
 	// Create shaders
-	std::ifstream vsFile( "triangleVertexShader.cso", std::ios::binary );
-	std::ifstream psFile( "trianglePixelShader.cso", std::ios::binary );
+	std::ifstream vsFile( "TriangleVertexShader.cso", std::ios::binary );
+	std::ifstream psFile( "TrianglePixelShader.cso", std::ios::binary );
 
 	std::vector<char> vsData = { std::istreambuf_iterator<char>( vsFile ), std::istreambuf_iterator<char>() };
 	std::vector<char> psData = { std::istreambuf_iterator<char>( psFile ), std::istreambuf_iterator<char>() };

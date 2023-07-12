@@ -1,8 +1,6 @@
 #include "Renderer.h"
 #include "RendererErrorMacros.h"
 #include <sstream>
-#include <d3dcompiler.h>
-#include <DirectXMath.h>
 
 Renderer::Renderer(HWND handle)
 {

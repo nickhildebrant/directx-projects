@@ -8,7 +8,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 {
 	Window window( 640, 480, "My Game Engine" );
 	Renderer renderer( window );
-	Triangle triangle;
+	Triangle triangle( renderer );
 
 	MSG msg = { 0 };
 	while ( true )
