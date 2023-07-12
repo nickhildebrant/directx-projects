@@ -74,9 +74,8 @@ void Cube::CreateMesh( Renderer& renderer )
 {
 	// Defining vertices, holds position and rgb color
 	Vertex vertices[] = {
-		{ -.5f, -.5f, 0, 0, 1 },
-		{ 0, .5f, 1, 0, 0 },
-		{ .5f, -.5f, 0, 1, 0 },
+		{ -10, 10, 10, 1, 1, 1f },
+		{ -10, 10, 10, 1, 1, 1 },
 	};
 
 	// Creating vertex buffer, putting verticies in VRAM
