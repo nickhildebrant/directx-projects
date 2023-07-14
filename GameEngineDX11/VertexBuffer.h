@@ -17,13 +17,13 @@ public:
 		D3D11_SUBRESOURCE_DATA subresourceData = {};
 		subresourceData.pSysMem = vertices.data();
 
-		renderer.GetDevice()->CreateBuffer(&bufferDescription, &subresourceData, &pVertexBuffer) );
+		renderer.GetDevice()->CreateBuffer( &bufferDescription, &subresourceData, &pVertexBuffer );
 	}
 
 	void Bind( Renderer& renderer ) override
 	{
 		const UINT offset = 0u;
-		renderer.GetDeviceContext()->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+		renderer.GetDeviceContext()->IASetVertexBuffers( 0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset );
 	}
 
 protected:
