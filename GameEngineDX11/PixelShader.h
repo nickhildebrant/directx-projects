@@ -7,5 +7,5 @@ public:
 	void Bind( Renderer& renderer ) override;
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
 };

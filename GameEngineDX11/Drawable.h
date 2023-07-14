@@ -11,8 +11,8 @@ class Drawable {
 
 public:
 	Drawable() = default;
-	Drawable( const Drawable& );
-	virtual ~Drawable();
+	Drawable( const Drawable& ) = delete;
+	virtual ~Drawable() = default;
 
 	virtual DirectX::XMMATRIX GetTransformXM() const;
 

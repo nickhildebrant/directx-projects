@@ -18,6 +18,12 @@ void Drawable::Draw( Renderer& renderer ) const
 	renderer.DrawIndexed( pIndexBuffer->GetCount() );
 }
 
+DirectX::XMMATRIX Drawable::GetTransformXM() const { return DirectX::XMMATRIX(); }
+
+void Drawable::Update( float dt ) {}
+
+const std::vector<std::unique_ptr<Bindable>>& Drawable::GetStaticBinds() const { return binds; }
+
 void Drawable::AddBind( std::unique_ptr<Bindable> bind )
 {
 	assert( "*Must* use AddIndexBuffer to bind index buffer" && typeid( *bind ) != typeid( IndexBuffer ) );

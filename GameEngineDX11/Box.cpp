@@ -1,6 +1,8 @@
 #include "Bindable.h"
 #include "BindableBase.h"
 
+#pragma comment(lib,"d3d11.lib")
+
 #include "Box.h"
 #include "Cube.h"
 
