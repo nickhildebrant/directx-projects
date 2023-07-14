@@ -158,9 +158,6 @@
     <ClInclude Include="IndexBuffer.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="ConstantBuffers.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="ExceptionHandler.h">
       <Filter>Header Files\Error and Macros</Filter>
     </ClInclude>
@@ -177,6 +174,9 @@
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="InputLayout.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffers.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
   </ItemGroup>
