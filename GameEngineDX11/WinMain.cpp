@@ -3,12 +3,16 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "Triangle.h"
+#include "Box.h"
+
+#include <random>
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdCount )
 {
 	Window window( 640, 480, "My Game Engine" );
 	Renderer renderer( window );
-	Triangle triangle( renderer );
+	//Triangle triangle( renderer );
+	Box box( renderer );
 
 	MSG msg = { 0 };
 	while ( true )
@@ -25,8 +29,10 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 
 		// Draw
 		renderer.BeginFrame();
+
 		// Render polygons
-		triangle.draw( renderer );
+		//triangle.draw( renderer );
+
 		renderer.EndFrame();
 	}
 
