@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Drawables">
       <UniqueIdentifier>{9a282852-4136-415e-a916-fe5d8fad4afb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Drawables\Primitives">
+      <UniqueIdentifier>{dc438afa-2c87-476e-b728-2bcb5fa7214c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Drawables\Primitives">
+      <UniqueIdentifier>{2160bf36-bb58-4b68-9c2b-445e2c960a7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -51,7 +57,7 @@
     <ClCompile Include="IndexBuffer.cpp">
       <Filter>Source Files\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
+    <ClCompile Include="Box.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Drawable.cpp">
@@ -83,7 +89,7 @@
     <ClInclude Include="IndexBuffer.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
+    <ClInclude Include="Box.h">
       <Filter>Header Files\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="Drawable.h">
@@ -118,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="BindableBase.h">
       <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files\Drawables\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexedTriangleList.h">
+      <Filter>Header Files\Drawables\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
