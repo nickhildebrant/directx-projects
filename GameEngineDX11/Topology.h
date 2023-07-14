@@ -3,12 +3,9 @@
 
 class Topology : public Bindable {
 public:
-	Topology( Renderer& renderer, D3D11_PRIMITIVE_TOPOLOGY type ) : type( type ) {}
+	Topology( Renderer& renderer, D3D11_PRIMITIVE_TOPOLOGY type );
 
-	void Bind( Renderer& renderer ) override
-	{
-		renderer.GetDeviceContext()->IASetPrimitiveTopology( type );
-	}
+	void Bind( Renderer& renderer ) override;
 
 protected:
 	D3D11_PRIMITIVE_TOPOLOGY type;

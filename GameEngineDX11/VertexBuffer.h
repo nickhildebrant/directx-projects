@@ -20,11 +20,7 @@ public:
 		renderer.GetDevice()->CreateBuffer( &bufferDescription, &subresourceData, &pVertexBuffer );
 	}
 
-	void Bind( Renderer& renderer ) override
-	{
-		const UINT offset = 0u;
-		renderer.GetDeviceContext()->IASetVertexBuffers( 0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset );
-	}
+	void Bind( Renderer& renderer ) override;
 
 protected:
 	UINT stride;
