@@ -18,23 +18,23 @@ protected:
 
 	void AddStaticIndexBuffer( std::unique_ptr<IndexBuffer> ibuf )
 	{
-		assert( "Attempting to add index buffer a second time" && m_indexBuffer == nullptr );
-		m_indexBuffer = ibuf.get();
+		assert( "Attempting to add index buffer a second time" && pIndexBuffer == nullptr );
+		pIndexBuffer = ibuf.get();
 		staticBinds.push_back( std::move( ibuf ) );
 	}
 
 	void SetIndexFromStatic()
 	{
-		assert( "Attempting to add index buffer a second time" && m_indexBuffer == nullptr );
+		assert( "Attempting to add index buffer a second time" && pIndexBuffer == nullptr );
 		for ( const auto& b : staticBinds )
 		{
 			if ( const auto p = dynamic_cast<IndexBuffer*>( b.get() ) )
 			{
-				m_indexBuffer = p;
+				pIndexBuffer = p;
 				return;
 			}
 		}
-		assert( "Failed to find index buffer in static binds" && m_indexBuffer != nullptr );
+		assert( "Failed to find index buffer in static binds" && pIndexBuffer != nullptr );
 	}
 
 private:
