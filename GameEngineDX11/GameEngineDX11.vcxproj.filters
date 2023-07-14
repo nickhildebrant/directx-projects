@@ -19,6 +19,12 @@
     <Filter Include="Header Files\Drawables">
       <UniqueIdentifier>{180d0bca-576b-497f-aaaa-2adf771ea28a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Bindables">
+      <UniqueIdentifier>{6ae40374-d20b-462c-b0af-0e81f6843f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Drawables">
+      <UniqueIdentifier>{9a282852-4136-415e-a916-fe5d8fad4afb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -36,20 +42,23 @@
     <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Bindable.cpp">
+      <Filter>Source Files\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="InputLayout.cpp">
+      <Filter>Source Files\Bindables</Filter>
     </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Source Files\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Drawable.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="Bindable.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Source Files\Drawables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +114,9 @@
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="PixelShader.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="BindableBase.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
   </ItemGroup>
