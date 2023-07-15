@@ -20,7 +20,7 @@ LRESULT CALLBACK WinProc( HWND handle, UINT msg, WPARAM wparam, LPARAM lparam )
 	return DefWindowProc( handle, msg, wparam, lparam );
 }
 
-Window::Window( int width, int height, const char* title ) : m_width(width), m_height(height)
+Window::Window( int width, int height, const char* title ) : m_width( width ), m_height( height )
 {
 	// Defining the window style
 	WNDCLASS windowClass = { 0 };
@@ -126,32 +126,32 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		// ****************************************************************************** //
 
 	//	// ******************************* Mouse **************************************** //
-	//case WM_MOUSEMOVE:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	// if the cursor is in the window client
-	//	if ( pt.x >= 0 && pt.x < m_width && pt.y >= 0 && pt.y < m_height )
-	//	{
-	//		mouse.OnMouseMove( pt.x, pt.y );
-	//		if ( !mouse.IsInWindow() )
-	//		{
-	//			// capture and log mouse position
-	//			SetCapture( m_handle );
-	//			mouse.OnMouseEnter();
-	//		}
-	//	}
-	//	else // if the cursor is outside the window client
-	//	{
-	//		if ( wParam & ( MK_LBUTTON | MK_RBUTTON ) ) mouse.OnMouseMove( pt.x, pt.y );
-	//		else
-	//		{
-	//			// Release the mouse from the window when it leaves
-	//			ReleaseCapture();
-	//			mouse.OnMouseLeave();
-	//		}
-	//	}
-	//	break;
-	//}
+	case WM_MOUSEMOVE:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		// if the cursor is in the window client
+		if ( pt.x >= 0 && pt.x < m_width && pt.y >= 0 && pt.y < m_height )
+		{
+			mouse.OnMouseMove( pt.x, pt.y );
+			if ( !mouse.IsInWindow() )
+			{
+				// capture and log mouse position
+				SetCapture( m_handle );
+				mouse.OnMouseEnter();
+			}
+		}
+		else // if the cursor is outside the window client
+		{
+			if ( wParam & ( MK_LBUTTON | MK_RBUTTON ) ) mouse.OnMouseMove( pt.x, pt.y );
+			else
+			{
+				// Release the mouse from the window when it leaves
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
+		}
+		break;
+	}
 
 	//case WM_LBUTTONDOWN:
 	//{
