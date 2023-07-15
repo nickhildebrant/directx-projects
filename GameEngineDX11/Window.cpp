@@ -1,3 +1,5 @@
+#include <optional>
+
 #include "Window.h"
 
 LRESULT CALLBACK WinProc( HWND handle, UINT msg, WPARAM wparam, LPARAM lparam )
@@ -49,6 +51,23 @@ int Window::getHeight() { return m_height; }
 HWND Window::getHandle() { return m_handle; }
 
 // *** Message Handling **************************************************************************
+std::optional<int> Window::ProcessMessages()
+{
+	MSG msg = { 0 };
+	while ( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
+	{
+		// Quit and shutdown window
+		if ( msg.message == WM_QUIT ) return msg.wParam;
+
+		TranslateMessage( &msg );
+		DispatchMessage( &msg );
+	}
+
+	// return empty when not quitting
+	// allowed by C++17
+	return {};
+}
+
 LRESULT WINAPI Window::HandleMsgSetup( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	if ( msg == WM_NCCREATE )

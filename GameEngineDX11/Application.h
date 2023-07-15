@@ -12,14 +12,14 @@ public:
 
 	class ModelFactory {
 	public:
-		ModelFactory( Renderer& renderer ) : renderer( renderer ) {}
+		ModelFactory( Renderer& renderer ) : factoryRenderer( renderer ) {}
 
 		std::unique_ptr<Drawable> operator()()
 		{
 			switch ( typedist( rng ) )
 			{
 			case 0:
-				return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist );
+				return std::make_unique<Box>( factoryRenderer, rng, adist, ddist, odist, rdist, bdist );
 				break;
 
 			default:
@@ -32,7 +32,7 @@ public:
 	private:
 		const float PI = 3.14159265f;
 
-		Renderer& renderer;
+		Renderer& factoryRenderer;
 		std::mt19937 rng{ std::random_device{}( ) };
 		std::uniform_real_distribution<float> adist{ 0.0f, PI * 2.0f };
 		std::uniform_real_distribution<float> ddist{ 0.0f, PI * 0.5f };
@@ -41,7 +41,7 @@ public:
 		std::uniform_real_distribution<float> bdist{ 0.4f, 3.0f };
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
-		std::uniform_int_distribution<int> typedist{ 0, 2 };
+		std::uniform_int_distribution<int> typedist{ 0, 0 };
 	};
 
 private:
@@ -51,5 +51,5 @@ private:
 
 	std::vector<std::unique_ptr<class Drawable>> m_models;
 
-	void DoFrame();
+	void RenderFrame();
 };

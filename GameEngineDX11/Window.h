@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <optional>
 
 #include "Keyboard.h"
 #include "Mouse.h"
@@ -12,6 +13,8 @@ public:
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
+
+	static std::optional<int> ProcessMessages();
 
 	Keyboard keyboard;
 	Mouse mouse;
