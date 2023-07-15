@@ -1,8 +1,8 @@
 cbuffer ConstantBuffer {
-	float4 face_colors[8];
+	matrix transform;
 };
 
-float4 main( uint triangleID : SV_PrimitiveID ) : SV_Target
+float4 main( float3 position : Position ) : SV_POSITION
 {
-	return face_colors[( triangleID / 2 ) % 8];
+	return mul( float4( position, 1.0f ), transform );
 }
