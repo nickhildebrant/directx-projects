@@ -14,12 +14,13 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 	//Triangle triangle( renderer );
 
     // Random cube
+	const float PI = 3.14159265f;
 	std::mt19937 rng( std::random_device{}( ) );
-	std::uniform_real_distribution<float> adist( 0.0f, 3.1415f * 2.0f );
-	std::uniform_real_distribution<float> ddist( 0.0f, 3.1415f * 2.0f );
-	std::uniform_real_distribution<float> odist( 0.0f, 3.1415f * 0.3f );
+	std::uniform_real_distribution<float> adist( 0.0f, PI * 2.0f );
+	std::uniform_real_distribution<float> ddist( 0.0f, PI * 2.0f );
+	std::uniform_real_distribution<float> odist( 0.0f, PI * 0.3f );
 	std::uniform_real_distribution<float> rdist( 6.0f, 20.0f );
-	std::uniform_real_distribution<float> bdist( 0.0f, 1.0f );
+	std::uniform_real_distribution<float> bdist( 0.4f, 3.0f );
 	Box box( renderer, rng, adist, ddist, odist, rdist, bdist );
 
 	MSG msg = { 0 };
