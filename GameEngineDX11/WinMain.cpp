@@ -2,7 +2,7 @@
 
 #include "Window.h"
 #include "Renderer.h"
-#include "Triangle.h"
+#include "Timer.h"
 #include "Box.h"
 
 #include <random>
@@ -11,7 +11,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 {
 	Window window( 640, 480, "My Game Engine" );
 	Renderer renderer( window );
-	//Triangle triangle( renderer );
+	Timer timer;
 
     // Random cube
 	const float PI = 3.14159265f;
@@ -22,6 +22,8 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 	std::uniform_real_distribution<float> rdist( 6.0f, 20.0f );
 	std::uniform_real_distribution<float> bdist( 0.4f, 3.0f );
 	Box box( renderer, rng, adist, ddist, odist, rdist, bdist );
+
+	renderer.SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f, 3.0f / 4.0f, 0.5f, 45.0f ) );
 
 	MSG msg = { 0 };
 	while ( true )
@@ -36,11 +38,13 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, LPSTR cmdLine
 			if ( msg.message == WM_QUIT ) break;
 		}
 
+		float deltaTime = timer.DeltaTime();
+
 		// Draw
 		renderer.BeginFrame();
 
 		// Render polygons
-		//triangle.draw( renderer );
+		box.Update( deltaTime );
 		box.Draw( renderer );
 		renderer.EndFrame();
 	}

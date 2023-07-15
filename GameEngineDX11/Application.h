@@ -46,6 +46,7 @@ public:
 
 private:
 	Window m_window;
+	Renderer m_renderer;
 	Timer m_timer;
 
 	std::vector<std::unique_ptr<class Drawable>> m_models;
