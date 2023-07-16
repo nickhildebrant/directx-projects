@@ -20,7 +20,7 @@ LRESULT CALLBACK WinProc( HWND handle, UINT msg, WPARAM wparam, LPARAM lparam )
 	return DefWindowProc( handle, msg, wparam, lparam );
 }
 
-// *** Windows Class *********************************************************************
+// *** Window Class *********************************************************************
 Window::WindowClass Window::WindowClass::wndClass;
 
 Window::WindowClass::WindowClass()
@@ -116,31 +116,31 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	switch ( msg )
 	{
 	// ***************************** Keyboard *************************************** //
-	//case WM_KEYDOWN:
-	//case WM_SYSKEYDOWN: // sys key is for things like the ALT key
-	//	// lParam's 30th bit is set to 1 when held down, 0 if up before message
-	//	// check that bit or check if autorepeat is set to true
-	//	if ( !( lParam & 0x40000000 ) || keyboard.GetAutorepeatStatus() )
-	//	{
-	//		keyboard.OnKeyPressed( static_cast<unsigned char>( wParam ) );
-	//	}
-	//	break;
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN: // sys key is for things like the ALT key
+		// lParam's 30th bit is set to 1 when held down, 0 if up before message
+		// check that bit or check if autorepeat is set to true
+		if ( !( lParam & 0x40000000 ) || keyboard.GetAutorepeatStatus() )
+		{
+			keyboard.OnKeyPressed( static_cast<unsigned char>( wParam ) );
+		}
+		break;
 
-	//case WM_KEYUP:
-	//case WM_SYSKEYUP: // sys key is for things like the ALT key
-	//	keyboard.OnKeyReleased( static_cast<unsigned char>( wParam ) );
-	//	break;
+	case WM_KEYUP:
+	case WM_SYSKEYUP: // sys key is for things like the ALT key
+		keyboard.OnKeyReleased( static_cast<unsigned char>( wParam ) );
+		break;
 
-	//case WM_CHAR:
-	//	keyboard.OnChar( static_cast<unsigned char>( wParam ) );
-	//	break;
+	case WM_CHAR:
+		keyboard.OnChar( static_cast<unsigned char>( wParam ) );
+		break;
 
-	//case WM_KILLFOCUS:
-	//	keyboard.ClearState();
-	//	break;
-		// ****************************************************************************** //
+	case WM_KILLFOCUS:
+		keyboard.ClearState();
+		break;
+	// ****************************************************************************** //
 
-	//	// ******************************* Mouse **************************************** //
+	// ******************************* Mouse **************************************** //
 	case WM_MOUSEMOVE:
 	{
 		const POINTS pt = MAKEPOINTS( lParam );
@@ -168,56 +168,56 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		break;
 	}
 
-	//case WM_LBUTTONDOWN:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	mouse.OnLeftPressed( pt.x, pt.y );
-	//	break;
-	//}
+	case WM_LBUTTONDOWN:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		mouse.OnLeftPressed( pt.x, pt.y );
+		break;
+	}
 
-	//case WM_LBUTTONUP:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	mouse.OnLeftReleased( pt.x, pt.y );
-	//	break;
-	//}
+	case WM_LBUTTONUP:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		mouse.OnLeftReleased( pt.x, pt.y );
+		break;
+	}
 
-	//case WM_RBUTTONDOWN:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	mouse.OnRightPressed( pt.x, pt.y );
-	//	break;
-	//}
+	case WM_RBUTTONDOWN:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		mouse.OnRightPressed( pt.x, pt.y );
+		break;
+	}
 
-	//case WM_RBUTTONUP:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	mouse.OnRightReleased( pt.x, pt.y );
-	//	break;
-	//}
+	case WM_RBUTTONUP:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		mouse.OnRightReleased( pt.x, pt.y );
+		break;
+	}
 
-	//case WM_MBUTTONDOWN:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	mouse.OnMiddlePressed( pt.x, pt.y );
-	//	break;
-	//}
+	case WM_MBUTTONDOWN:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		mouse.OnMiddlePressed( pt.x, pt.y );
+		break;
+	}
 
-	//case WM_MBUTTONUP:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	mouse.OnMiddleReleased( pt.x, pt.y );
-	//	break;
-	//}
+	case WM_MBUTTONUP:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		mouse.OnMiddleReleased( pt.x, pt.y );
+		break;
+	}
 
-	//case WM_MOUSEWHEEL:
-	//{
-	//	const POINTS pt = MAKEPOINTS( lParam );
-	//	const int delta = GET_WHEEL_DELTA_WPARAM( wParam );
-	//	mouse.OnWheelDelta( pt.x, pt.y, delta );
-	//	break;
-	//}
-	//// ****************************************************************************** //
+	case WM_MOUSEWHEEL:
+	{
+		const POINTS pt = MAKEPOINTS( lParam );
+		const int delta = GET_WHEEL_DELTA_WPARAM( wParam );
+		mouse.OnWheelDelta( pt.x, pt.y, delta );
+		break;
+	}
+	// ****************************************************************************** //
 
 	case WM_CLOSE:
 		PostQuitMessage( 0 );
