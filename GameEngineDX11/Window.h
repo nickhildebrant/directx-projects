@@ -26,4 +26,20 @@ private:
 	static LRESULT WINAPI HandleMsgSetup( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 	static LRESULT WINAPI HandleMsgThunk( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 	LRESULT HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+
+	// Singleton for window management
+	class WindowClass {
+	public:
+		static const char* GetName();
+		static HINSTANCE GetInstance();
+
+	private:
+		WindowClass();
+		~WindowClass();
+		WindowClass( const WindowClass& ) = delete;
+		WindowClass& operator=( const WindowClass& ) = delete;
+		static constexpr const char* wndClassName = "My Game Engine";
+		static WindowClass wndClass;
+		HINSTANCE hInst;
+	};
 };
