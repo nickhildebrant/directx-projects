@@ -1,9 +1,10 @@
 #pragma once
 #include "DrawableBase.h"
+#include <random>
 
 class Ball : public DrawableBase<Ball> {
 public:
-	Ball( Renderer& renderer, float radius, int latitudeSize, int longitutSize );
+	Ball( Renderer& renderer, float rad, std::uniform_int_distribution<int>& latitudeSize, std::uniform_int_distribution<int>& longitudeSize );
 
 	void Update( float dt ) override;
 	DirectX::XMMATRIX GetTransformXM() const override;

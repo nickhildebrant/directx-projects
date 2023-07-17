@@ -8,21 +8,21 @@ cbuffer LightConstantBuffer : register( b1 ) {
 	float4 lightPostion;
 };
 
-cbuffer VertexShaderInput {
+struct VertexShaderInput {
 	float4 Position : POSITION;
 	float4 Normal : NORMAL;
 };
 
 struct PixelShaderInput {
-	float4 Position : POSITION;
+	float4 Position : SV_POSITION;
 	float4 Color : COLOR;
 	float4 Normal : TEXCOORD0;
 	float4 WorldPosition : TEXCOORD1;
 };
 
-VertexShaderOutput main( VertexShaderInput input )
+PixelShaderInput main( VertexShaderInput input )
 {
-	VertexShaderOutput output;
+	PixelShaderInput output;
 
 	float4 worldPosition = mul( input.Position, World );
 	float4 viewPosition = mul( worldPosition, View );

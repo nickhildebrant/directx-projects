@@ -4,7 +4,7 @@
 #include "Sphere.h"
 #include "Ball.h"
 
-Ball::Ball( Renderer& renderer, float radius, int latitudeSize, int longitudeSize ) : radius(radius)
+Ball::Ball( Renderer& renderer, float rad, std::uniform_int_distribution<int>& latitudeSize, std::uniform_int_distribution<int>& longitudeSize ) : radius(rad)
 {
 	if ( !IsStaticInitialized() )
 	{
@@ -22,11 +22,11 @@ Ball::Ball( Renderer& renderer, float radius, int latitudeSize, int longitudeSiz
 
 		AddStaticBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
 
-		auto pVertexShader = std::make_unique<VertexShader>( renderer, L"PhongVertexShader.cso" );
+		auto pVertexShader = std::make_unique<VertexShader>( renderer, L"ColorIndexVertexShader.cso" );
 		auto pvsbc = pVertexShader->GetBytecode();
 		AddStaticBind( std::move( pVertexShader ) );
 
-		AddStaticBind( std::make_unique<PixelShader>( renderer, L"PhongPixelShader.cso" ) );
+		AddStaticBind( std::make_unique<PixelShader>( renderer, L"ColorIndexPixelShader.cso" ) );
 
 		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
 
@@ -58,7 +58,7 @@ Ball::Ball( Renderer& renderer, float radius, int latitudeSize, int longitudeSiz
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
 		{
 			{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			//{ "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
 		AddStaticBind( std::make_unique<InputLayout>( renderer, inputDesc, pvsbc ) );
@@ -73,7 +73,7 @@ Ball::Ball( Renderer& renderer, float radius, int latitudeSize, int longitudeSiz
 	AddBind( std::make_unique<TransformConstantBuffer>( renderer, *this ) );
 
 	// model deformation - per instance
-	DirectX::XMStoreFloat3x3( &modelTransform, DirectX::XMMatrixScaling( 1.0f, 1.0f, bdist( rng ) ) );
+	DirectX::XMStoreFloat3x3( &modelTransform, DirectX::XMMatrixScaling( radius, radius, radius ) );
 }
 
 void Ball::Update( float dt )

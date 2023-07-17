@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Timer.h"
 #include "Box.h"
+#include "Ball.h"
 
 class Application {
 public:
@@ -20,6 +21,10 @@ public:
 			{
 			case 0:
 				return std::make_unique<Box>( factoryRenderer, rng, adist, ddist, odist, rdist, bdist );
+				break;
+
+			case 1:
+				return std::make_unique<Ball>( factoryRenderer, 1, latdist, longdist );
 				break;
 
 			default:
@@ -41,7 +46,7 @@ public:
 		std::uniform_real_distribution<float> bdist{ 0.4f, 3.0f };
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
-		std::uniform_int_distribution<int> typedist{ 0, 0 };
+		std::uniform_int_distribution<int> typedist{ 0, 1 };
 	};
 
 private:

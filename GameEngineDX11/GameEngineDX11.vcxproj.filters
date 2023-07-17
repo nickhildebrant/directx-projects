@@ -87,6 +87,9 @@
     <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ball.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -167,6 +170,9 @@
     <ClInclude Include="Cone.h">
       <Filter>Header Files\Drawables\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Ball.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="TrianglePixelShader.hlsl">
@@ -185,6 +191,12 @@
       <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="ColorIndexVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongPixelShader.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>
