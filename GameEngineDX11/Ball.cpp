@@ -4,7 +4,7 @@
 #include "Sphere.h"
 #include "Ball.h"
 
-Ball::Ball( Renderer& renderer, float rad, std::uniform_int_distribution<int>& latitudeSize, std::uniform_int_distribution<int>& longitudeSize ) : radius(rad)
+Ball::Ball( Renderer& renderer, float rad, int latitudeSize, int longitudeSize ) : radius(rad)
 {
 	if ( !IsStaticInitialized() )
 	{

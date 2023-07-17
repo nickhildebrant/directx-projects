@@ -10,6 +10,8 @@ Application::Application() : m_window( 640, 480, "My Game Engine" ), m_renderer(
 
 	std::generate_n( std::back_inserter( m_models ), numberOfModels, factory );
 
+	ballModel = new Ball( m_renderer, 1, 16, 8 );
+
 	m_renderer.SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f, 3.0f / 4.0f, 0.5f, 45.0f ) );
 }
 
@@ -35,9 +37,12 @@ void Application::RenderFrame()
 	float deltaTime = m_timer.DeltaTime();
 	for ( auto& model : m_models )
 	{
-		model->Update( deltaTime );
-		model->Draw( m_renderer );
+		//model->Update( deltaTime );
+		//model->Draw( m_renderer );
 	}
+
+	ballModel->Update( deltaTime );
+	ballModel->Draw( m_renderer );
 
 	m_renderer.EndFrame();
 }

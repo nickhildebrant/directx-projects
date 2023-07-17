@@ -4,7 +4,7 @@
 
 class Ball : public DrawableBase<Ball> {
 public:
-	Ball( Renderer& renderer, float rad, std::uniform_int_distribution<int>& latitudeSize, std::uniform_int_distribution<int>& longitudeSize );
+	Ball( Renderer& renderer, float rad, int latitudeSize, int longitudeSize );
 
 	void Update( float dt ) override;
 	DirectX::XMMATRIX GetTransformXM() const override;
