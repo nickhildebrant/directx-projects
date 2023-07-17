@@ -13,7 +13,7 @@ public:
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
-
+	
 	static std::optional<int> ProcessMessages();
 
 	Keyboard keyboard;
