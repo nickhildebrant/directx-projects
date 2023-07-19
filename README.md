@@ -1,6 +1,5 @@
 # DirectX11 Projects
->Here is my newest development in Computer Graphics programming. After learning a lot about game engines and computer graphics, I am taking a second shot at DirectX. Programming for the WinAPI and using the DirectX library
-is a lot and will take a lot of time, but I look forward to implementing the graphics rendering techniques I learned in my Graphics for Games class such as shadow mapping, SSAO, and the Catmull-Clark Subdivision algorithm.
+>Here is my newest development in Computer Graphics programming. After learning a lot about game engines and computer graphics, I am continuing my learning with DirectX. Programming for the WinAPI and using the DirectX library is a lot and will take a lot of time, but I look forward to implementing the graphics rendering techniques I learned in my Graphics for Games class such as shadow mapping, SSAO, and the Catmull-Clark Subdivision algorithm.
 
 ![image](https://github.com/nickhildebrant/directx-projects/assets/78184238/ab0643e9-6d27-4c74-baad-ec1f0e3db580)
 
