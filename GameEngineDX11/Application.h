@@ -24,7 +24,7 @@ public:
 				break;
 
 			case 1:
-				return std::make_unique<Ball>( factoryRenderer, 1, 16, 8 );
+				//return std::make_unique<Ball>( factoryRenderer, 1, 16, 8 );
 				break;
 
 			default:
@@ -54,7 +54,7 @@ private:
 	Renderer m_renderer;
 	Timer m_timer;
 
-	Ball* ballModel;
+	Ball* ball;
 	std::vector<std::unique_ptr<class Drawable>> m_models;
 
 	void RenderFrame();
