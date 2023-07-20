@@ -1,6 +1,7 @@
 #include <optional>
 
 #include "Window.h"
+#include <iostream>
 
 LRESULT CALLBACK WinProc( HWND handle, UINT msg, WPARAM wparam, LPARAM lparam )
 {
@@ -120,7 +121,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( msg )
 	{
-	// ***************************** Keyboard *************************************** //
+		// ***************************** Keyboard *************************************** //
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN: // sys key is for things like the ALT key
 		// lParam's 30th bit is set to 1 when held down, 0 if up before message
@@ -143,9 +144,9 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	case WM_KILLFOCUS:
 		keyboard.ClearState();
 		break;
-	// ****************************************************************************** //
+		// ****************************************************************************** //
 
-	// ******************************* Mouse **************************************** //
+		// ******************************* Mouse **************************************** //
 	case WM_MOUSEMOVE:
 	{
 		const POINTS pt = MAKEPOINTS( lParam );

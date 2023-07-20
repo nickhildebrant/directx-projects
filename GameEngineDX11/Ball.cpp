@@ -4,6 +4,10 @@
 #include "Sphere.h"
 #include "Ball.h"
 
+std::unique_ptr<VertexBuffer> vertexBuffer;
+std::unique_ptr<PixelShader> pixelShader;
+std::unique_ptr<VertexShader> vertexShader;
+
 Ball::Ball( Renderer& renderer, float rad, int latitudeSize, int longitudeSize ) : radius(rad)
 {
 	if ( !IsStaticInitialized() )
@@ -20,7 +24,8 @@ Ball::Ball( Renderer& renderer, float rad, int latitudeSize, int longitudeSize )
 		auto model = Sphere::Make<Vertex>();
 		model.Transform( DirectX::XMMatrixScaling( radius, radius, radius ) );
 
-		AddStaticBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
+		vertexBuffer = std::make_unique<VertexBuffer>( renderer, model.vertices );
+		vertexBuffer->Bind( renderer );
 
 		auto pVertexShader = std::make_unique<VertexShader>( renderer, L"ColorIndexVertexShader.cso" );
 		auto pvsbc = pVertexShader->GetBytecode();

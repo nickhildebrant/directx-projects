@@ -3,7 +3,10 @@
 
 int Mouse::GetMouseX() { return x; }
 int Mouse::GetMouseY() { return y; }
+int Mouse::GetPrevX() { return prevX; }
+int Mouse::GetPrevY() { return prevY; }
 std::pair<int, int> Mouse::GetPos() { return { x, y }; }
+std::pair<int, int> Mouse::GetPrevPos() { return { prevX, prevY }; }
 
 bool Mouse::IsInWindow() { return isInWindow; }
 
@@ -34,6 +37,9 @@ void Mouse::TrimBuffer()
 
 void Mouse::OnMouseMove( int mouseX, int mouseY )
 {
+	prevX = x;
+	prevY = y;
+
 	x = mouseX;
 	y = mouseY;
 

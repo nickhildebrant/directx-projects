@@ -52,7 +52,10 @@ public:
 
 	int GetMouseX();
 	int GetMouseY();
+	int GetPrevX();
+	int GetPrevY();
 	std::pair<int, int> GetPos();
+	std::pair<int, int> GetPrevPos();
 
 	bool IsInWindow();
 
@@ -91,6 +94,9 @@ private:
 
 	int x;
 	int y;
+
+	int prevX;
+	int prevY;
 
 	int wheelDeltaCry = 0;
 
