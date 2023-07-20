@@ -51,7 +51,6 @@ public:
 
 private:
 	Window m_window;
-	Renderer m_renderer;
 	Timer m_timer;
 
 	Ball* ballModel;

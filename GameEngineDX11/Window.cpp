@@ -56,6 +56,9 @@ Window::Window( int width, int height, const char* title ) : m_width( width ), m
 		nullptr, nullptr, WindowClass::GetInstance(), this );									// parent window, menu, application handle, for multiple windows
 
 	ShowWindow( m_handle, SW_SHOWDEFAULT );
+
+	// Creating Renderer
+	m_renderer = std::make_unique<Renderer>( m_handle );
 }
 
 Window::~Window() { DestroyWindow( m_handle ); }
@@ -64,6 +67,8 @@ int Window::getWidth() { return m_width; }
 int Window::getHeight() { return m_height; }
 
 HWND Window::getHandle() { return m_handle; }
+
+Renderer& Window::getRenderer() { return *m_renderer; }
 
 // *** Message Handling **************************************************************************
 std::optional<int> Window::ProcessMessages()

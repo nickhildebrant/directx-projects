@@ -2,9 +2,9 @@
 
 #include "Renderer.h"
 
-Renderer::Renderer( Window& window )
+Renderer::Renderer( HWND handle )
 {
-	CreateDevice( window );
+	CreateDevice( handle );
 	CreateRenderTarget();
 	CreateDepthStencil();
 
@@ -22,7 +22,7 @@ Renderer::Renderer( Window& window )
 	m_deviceContext->RSSetViewports( 1, &viewPort );
 }
 
-void Renderer::CreateDevice( Window& window )
+void Renderer::CreateDevice( HWND handle )
 {
 	// Define the swap chain and clear out struct
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -30,10 +30,10 @@ void Renderer::CreateDevice( Window& window )
 
 	swapChainDesc.BufferCount = 1u;									// Double buffering = 1, Triple = 2 (# of back buffers)
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 32-bit Color, 8 per channel
-	swapChainDesc.BufferDesc.Width = window.getWidth();
-	swapChainDesc.BufferDesc.Height = window.getHeight();
+	swapChainDesc.BufferDesc.Width = 0;
+	swapChainDesc.BufferDesc.Height = 0;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// how the swapchain is to be used
-	swapChainDesc.OutputWindow = window.getHandle();				// window to be used
+	swapChainDesc.OutputWindow = handle;				// window to be used
 	swapChainDesc.SampleDesc.Count = 1u;							// Anti-Aliasing, currently using 4x
 	swapChainDesc.Windowed = true;									// Windowed, false = fullscreen
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// Allow full-screen switching

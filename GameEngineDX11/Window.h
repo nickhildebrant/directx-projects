@@ -1,7 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <optional>
+#include <memory>
 
+#include "Renderer.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
@@ -13,6 +15,7 @@ public:
 	int getWidth();
 	int getHeight();
 	HWND getHandle();
+	Renderer& getRenderer();
 	
 	static std::optional<int> ProcessMessages();
 
@@ -22,6 +25,8 @@ public:
 private:
 	int m_width, m_height;
 	HWND m_handle;
+
+	std::unique_ptr<Renderer> m_renderer;
 
 	static LRESULT WINAPI HandleMsgSetup( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 	static LRESULT WINAPI HandleMsgThunk( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );

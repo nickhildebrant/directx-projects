@@ -1,7 +1,6 @@
 #pragma once
 #include "Renderer.h"
 #include <DirectXMath.h>
-#include <memory>
 
 class Bindable;
 

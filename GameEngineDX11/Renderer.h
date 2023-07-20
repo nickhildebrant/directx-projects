@@ -1,14 +1,16 @@
 #pragma once
+#include <Windows.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include <wrl.h>
-
-#include "Window.h"
+#include <memory>
+#include <vector>
+#include <string>
 
 class Renderer {
 public:
-	Renderer( Window& window );
+	Renderer( HWND handle );
 
 	void BeginFrame();			// Clear frame at start
 	void EndFrame();			// Swap buffer
@@ -23,7 +25,7 @@ public:
 	ID3D11DeviceContext* GetDeviceContext();
 
 private:
-	void CreateDevice( Window& window );
+	void CreateDevice( HWND handle );
 	void CreateRenderTarget();
 	void CreateDepthStencil();
 
