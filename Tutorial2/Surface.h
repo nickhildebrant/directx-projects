@@ -2,6 +2,8 @@
 #include <assert.h>
 #include <memory>
 
+#include "ExceptionHandler.h"
+
 class Surface {
 public:
 	class Color {
@@ -30,7 +32,6 @@ public:
 	};
 
 public:
-	Surface(unsigned int width, unsigned int height, unsigned int pitch) noexcept;
 	Surface(unsigned int width, unsigned int height) noexcept;
 	Surface(Surface&& source) noexcept;
 	Surface(Surface&) = delete;
@@ -60,7 +61,7 @@ private:
 	Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[]> pBufferParam) noexcept;
 
 private:
-	std::unique_ptr<Color[]> m_buffer;
+	std::unique_ptr<Color[]> pBuffer;
 
 	unsigned int width;
 	unsigned int height;
