@@ -30,7 +30,8 @@ ID3D11ShaderResourceView* TextureMgr::CreateTexture( std::wstring filename )
 	}
 	else
 	{
-		HR( D3DX11CreateShaderResourceViewFromFile( md3dDevice, filename.c_str(), 0, 0, &srv, 0 ) );
+		//md3dDevice, filename.c_str(), 0, 0, & srv, 0 )
+		HR( DirectX::CreateDDSTextureFromFileEx( md3dDevice, filename.c_str(), 8, D3D11_USAGE_DEFAULT, 0, 0, 0, 0, nullptr, &srv, nullptr ) );
 
 		mTextureSRV[filename] = srv;
 	}
