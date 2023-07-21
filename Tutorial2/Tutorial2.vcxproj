@@ -171,6 +171,7 @@
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindableBase.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="ChiliWin.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="Cube.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="GDIPlusManager.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IndexedTriangleList.h" />
     <ClInclude Include="InputLayout.h" />

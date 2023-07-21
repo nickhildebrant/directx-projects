@@ -1,4 +1,6 @@
 #pragma once
+#include "ChiliWin.h"
+#include <string>
 #include <assert.h>
 #include <memory>
 

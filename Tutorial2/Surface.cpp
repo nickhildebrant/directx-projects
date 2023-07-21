@@ -150,7 +150,7 @@ void Surface::Save( const std::string& filename ) const
 		UINT  num = 0;          // number of image encoders
 		UINT  size = 0;         // size of the image encoder array in bytes
 
-		ImageCodecInfo* pImageCodecInfo = nullptr;
+		Gdiplus::ImageCodecInfo* pImageCodecInfo = nullptr;
 
 		Gdiplus::GetImageEncodersSize( &num, &size );
 		if ( size == 0 )
@@ -160,7 +160,7 @@ void Surface::Save( const std::string& filename ) const
 			throw Exception( __LINE__, __FILE__, ss.str() );
 		}
 
-		pImageCodecInfo = (ImageCodecInfo*) ( malloc( size ) );
+		pImageCodecInfo = (Gdiplus::ImageCodecInfo*) ( malloc( size ) );
 		if ( pImageCodecInfo == nullptr )
 		{
 			std::stringstream ss;
