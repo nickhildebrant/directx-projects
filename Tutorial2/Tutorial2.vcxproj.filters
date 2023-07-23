@@ -253,4 +253,9 @@
       <UniqueIdentifier>{033bc4b1-9b7e-4dbd-afed-c582c95069af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\kappa50.png">
+      <Filter>Source Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
