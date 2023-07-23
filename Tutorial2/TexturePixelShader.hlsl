@@ -1,4 +1,4 @@
-Texture2D text;
+Texture2D tex;
 
 SamplerState smplr;
 

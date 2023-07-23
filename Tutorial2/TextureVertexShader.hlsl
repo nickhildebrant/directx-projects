@@ -4,7 +4,7 @@ cbuffer CBuf {
 
 struct VertexShaderOutput {
 	float2 tex : TexCoord;
-	float4 position : SV_Position;
+	float4 pos : SV_Position;
 };
 
 VertexShaderOutput main( float3 position : Position, float2 texCord : TexCoord )

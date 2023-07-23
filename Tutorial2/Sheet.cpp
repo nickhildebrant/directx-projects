@@ -15,11 +15,10 @@ Sheet::Sheet( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribut
 
 	if ( !IsStaticInitialized() )
 	{
-		struct Vertex
-		{
+		struct Vertex {
 			DirectX::XMFLOAT3 position;
-			struct
-			{
+
+			struct {
 				float u;
 				float v;
 			} texture;
@@ -37,12 +36,12 @@ Sheet::Sheet( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribut
 
 		AddStaticBind( std::make_unique<Sampler>( renderer ) );
 
-		auto pvs = std::make_unique<VertexShader>( renderer, L"TextureVS.cso" );
+		auto pvs = std::make_unique<VertexShader>( renderer, L"TextureVertexShader.cso" );
 		auto pvsbc = pvs->GetBytecode();
 
 		AddStaticBind( std::move( pvs ) );
 
-		AddStaticBind( std::make_unique<PixelShader>( renderer, L"TexturePS.cso" ) );
+		AddStaticBind( std::make_unique<PixelShader>( renderer, L"TexturePixelShader.cso" ) );
 
 		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
 

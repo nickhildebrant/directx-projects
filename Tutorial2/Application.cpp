@@ -41,7 +41,7 @@ void Application::DoFrame()
 	float deltaTime = m_timer.DeltaTime();
 	for (auto& model : m_models)
 	{
-		model->Update(deltaTime);
+		model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime);
 		model->Draw(m_window.getRenderer());
 	}
 
