@@ -1,4 +1,5 @@
 #pragma once
+#include "GUIManager.h"
 #include "Window.h"
 #include "Timer.h"
 #include "Box.h"
@@ -59,6 +60,7 @@ public:
 	};
 
 private:
+	GUIManager m_guiManager;
 	Window m_window;
 	Timer m_timer;
 

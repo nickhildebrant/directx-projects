@@ -2,6 +2,10 @@
 #include <memory>
 #include <algorithm>
 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_win32.h"
+#include "ImGUI/imgui_impl_dx11.h"
+
 #include "Surface.h"
 #include "GDIPlusManager.h"
 
@@ -42,6 +46,16 @@ void Application::DoFrame()
 		model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime );
 		model->Draw( m_window.getRenderer() );
 	}
+
+	// GUI update
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	static bool show_demo_window = true;
+	if ( show_demo_window ) ImGui::ShowDemoWindow( &show_demo_window );
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
 
 	m_window.getRenderer().EndFrame();
 }

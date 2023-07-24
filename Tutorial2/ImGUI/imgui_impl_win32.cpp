@@ -9,10 +9,6 @@
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
 #include <XInput.h>
 #include <tchar.h>
 
@@ -46,7 +42,7 @@ static bool                 g_HasGamepad = false;
 static bool                 g_WantUpdateHasGamepad = true;
 
 // Functions
-bool    ImGui_ImplWin32_Init(void* hwnd)
+bool    ImGui_ImplWin32_Init(HWND hwnd)
 {
     if (!::QueryPerformanceFrequency((LARGE_INTEGER *)&g_TicksPerSecond))
         return false;
@@ -54,7 +50,7 @@ bool    ImGui_ImplWin32_Init(void* hwnd)
         return false;
 
     // Setup back-end capabilities flags
-    g_hWnd = (HWND)hwnd;
+    g_hWnd = hwnd;
     ImGuiIO& io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;          // We can honor io.WantSetMousePos requests (optional, rarely used)

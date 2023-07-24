@@ -105,6 +105,27 @@
     <ClCompile Include="TexturedBox.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="ImGUI\imgui.cpp">
+      <Filter>ImGUI\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_demo.cpp">
+      <Filter>ImGUI\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_draw.cpp">
+      <Filter>ImGUI\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_impl_dx11.cpp">
+      <Filter>ImGUI\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_impl_win32.cpp">
+      <Filter>ImGUI\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_widgets.cpp">
+      <Filter>ImGUI\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -224,6 +245,33 @@
     <ClInclude Include="TexturedBox.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
+    <ClInclude Include="ImGUI\imconfig.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui_impl_dx11.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui_impl_win32.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui_internal.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imstb_rectpack.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imstb_textedit.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imstb_truetype.h">
+      <Filter>ImGUI\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl" />
@@ -261,16 +309,25 @@
     <Filter Include="Header Files\Drawable\Primitives">
       <UniqueIdentifier>{32f541b4-a2c9-44b5-af6f-8768ee94244f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Images">
+    <Filter Include="ImGUI">
+      <UniqueIdentifier>{854f8ad9-3c33-482b-954e-a96f265406f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI\Headers">
+      <UniqueIdentifier>{b478c0c1-99fd-4bf5-bfda-f40edfd9ec0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI\Source">
+      <UniqueIdentifier>{7a3bb7c5-2808-4744-9cd7-6007fb9bb8a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
       <UniqueIdentifier>{52ae32c5-09d6-4b2f-829e-19685382ef53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\cube.png">
-      <Filter>Source Files\Images</Filter>
+      <Filter>Images</Filter>
     </Image>
     <Image Include="Images\kappa50.png">
-      <Filter>Source Files\Images</Filter>
+      <Filter>Images</Filter>
     </Image>
   </ItemGroup>
 </Project>

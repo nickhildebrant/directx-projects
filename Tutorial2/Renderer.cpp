@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "RendererErrorMacros.h"
+#include "ImGUI/imgui_impl_dx11.h"
 #include <sstream>
 
 Renderer::Renderer(HWND handle)
@@ -20,6 +21,9 @@ Renderer::Renderer(HWND handle)
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
 	m_deviceContext->RSSetViewports(1, &viewPort);
+
+	// init GUI
+	ImGui_ImplDX11_Init( m_device.Get(), m_deviceContext.Get() );
 }
 
 void Renderer::CreateDevice(HWND handle)

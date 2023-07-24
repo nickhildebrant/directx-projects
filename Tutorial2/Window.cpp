@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "WindowsErrorMacros.h"
+#include "ImGUI/imgui_impl_win32.h"
 #include <sstream>
 
 // *** Windows Class *********************************************************************
@@ -56,6 +57,8 @@ LRESULT WINAPI Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if ( ImGui_ImplWin32_WndProcHandler( hWnd, msg, wParam, lParam ) ) return true;
+
 	switch (msg)
 	{
 	// ***************************** Keyboard *************************************** //
@@ -210,13 +213,16 @@ Window::Window(int width, int height, const char* name) : m_width(width), m_heig
 	// check for error creating window
 	if (m_handle == nullptr) throw HWND_LAST_EXCEPT();
 
+	// intialize the GUI
+	ImGui_ImplWin32_Init( m_handle );
+
 	ShowWindow(m_handle, SW_SHOWDEFAULT);
 
 	// Creating Renderer
 	m_renderer = std::make_unique<Renderer>(m_handle);
 }
 
-Window::~Window() { DestroyWindow(m_handle); }
+Window::~Window() { ImGui_ImplWin32_Shutdown(); DestroyWindow( m_handle ); }
 
 void Window::SetTitle(const std::string title)
 {
