@@ -102,6 +102,9 @@
     <ClCompile Include="GDIPlusManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TexturedBox.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -218,6 +221,9 @@
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\Drawable\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="TexturedBox.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl" />
@@ -255,10 +261,16 @@
     <Filter Include="Header Files\Drawable\Primitives">
       <UniqueIdentifier>{32f541b4-a2c9-44b5-af6f-8768ee94244f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Images">
+      <UniqueIdentifier>{52ae32c5-09d6-4b2f-829e-19685382ef53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Images\cube.png">
+      <Filter>Source Files\Images</Filter>
+    </Image>
     <Image Include="Images\kappa50.png">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Images</Filter>
     </Image>
   </ItemGroup>
 </Project>
