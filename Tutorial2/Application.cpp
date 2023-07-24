@@ -9,13 +9,11 @@ GDIPlusManager gdipm;
 
 Application::Application() : m_window(640, 480, "3D Renderer")
 {
-	const size_t numberOfModels = 1;
+	const size_t numberOfModels = 180;
 	ModelFactory factory(m_window.getRenderer());
 	m_models.reserve(numberOfModels);
 
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
-
-	const auto s = Surface::FromFile( "Images\\kappa50.png" );
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
 }
@@ -41,8 +39,7 @@ void Application::DoFrame()
 	float deltaTime = m_timer.DeltaTime();
 	for (auto& model : m_models)
 	{
-		model->Update( deltaTime );
-		//model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime );
+		model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime );
 		model->Draw( m_window.getRenderer() );
 	}
 
