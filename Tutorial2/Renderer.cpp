@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "RendererErrorMacros.h"
 #include "ImGUI/imgui_impl_dx11.h"
+#include "ImGUI/imgui_impl_win32.h"
 #include <sstream>
 
 Renderer::Renderer(HWND handle)
@@ -105,8 +106,20 @@ void Renderer::CreateDepthStencil()
 	GFX_THROW_INFO(m_device->CreateDepthStencilView(depthStencilTexture.Get(), &stencilViewDescription, &m_depthStencilView));
 }
 
-void Renderer::BeginFrame()
+void Renderer::EnableUI() noexcept { uiEnabled = true; }
+void Renderer::DisableUI() noexcept { uiEnabled = false; }
+bool Renderer::IsUIEnabled() const noexcept { return uiEnabled; }
+
+void Renderer::BeginFrame( float r, float g, float b, float a )
 {
+	// update UI frame
+	if ( uiEnabled )
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
 	// binding of render target and depth stencil to Output Merger
 	m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
@@ -117,11 +130,21 @@ void Renderer::BeginFrame()
 	// Setting the background color
 	//const float color[]{ 0.0f, 0.2f, 0.4f, 1.0f };
 	//m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
-	ClearBuffer(0.0f, 0.2f, 0.4f, 1.0f);
+
+	const float color[] = { r, g, b, a };
+	m_deviceContext->ClearRenderTargetView( m_renderTargetView.Get(), color );
+	m_deviceContext->ClearDepthStencilView( m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u );
 }
 
 void Renderer::EndFrame()
 {
+	// update UI frame
+	if ( uiEnabled )
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
+	}
+
 #ifndef NDEBUG
 	infoManager.Set();
 #endif
@@ -133,13 +156,6 @@ void Renderer::EndFrame()
 		if (hr == DXGI_ERROR_DEVICE_REMOVED) throw GFX_DEVICE_REMOVED_EXCEPT(m_device->GetDeviceRemovedReason());
 		else throw GFX_EXCEPT(hr);
 	}
-}
-
-void Renderer::ClearBuffer(float r, float g, float b, float a)
-{
-	const float color[] = { r, g, b , a };
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
-	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void Renderer::DrawIndexed(UINT count)

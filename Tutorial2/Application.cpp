@@ -38,7 +38,9 @@ int Application::Run()
 
 void Application::DoFrame()
 {
-	m_window.getRenderer().ClearBuffer(0.07f, 0.0f, 0.12f, 1.0f);	// sets background color
+	showUI = m_window.keyboard.isKeyPressed( VK_ESCAPE ) ? false : true;
+
+	m_window.getRenderer().BeginFrame( 0.07f, 0.0f, 0.12f, 1.0f );	// sets background color
 	
 	float deltaTime = m_timer.DeltaTime();
 	for (auto& model : m_models)
@@ -47,15 +49,7 @@ void Application::DoFrame()
 		model->Draw( m_window.getRenderer() );
 	}
 
-	// GUI update
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	static bool show_demo_window = true;
-	if ( show_demo_window ) ImGui::ShowDemoWindow( &show_demo_window );
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
+	if ( showUI ) ImGui::ShowDemoWindow( &showUI );
 
 	m_window.getRenderer().EndFrame();
 }

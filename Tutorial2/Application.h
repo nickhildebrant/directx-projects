@@ -64,6 +64,8 @@ private:
 	Window m_window;
 	Timer m_timer;
 
+	bool showUI = true;
+
 	std::vector<std::unique_ptr<class Drawable>> m_models;
 
 	void DoFrame();

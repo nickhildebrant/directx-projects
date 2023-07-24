@@ -62,8 +62,12 @@ public:
 	Renderer& operator=(const Renderer&) = delete;
 	~Renderer() = default;
 
-	void BeginFrame();			// Clear frame at start
-	void EndFrame();			// Swap buffer
+	void EnableUI() noexcept;
+	void DisableUI() noexcept;
+	bool IsUIEnabled() const noexcept;
+
+	void BeginFrame( float r, float g, float b, float a );	// Clear frame at start
+	void EndFrame();								// Swap buffer
 
 	void ClearBuffer(float r, float g, float b, float a);
 
@@ -72,6 +76,8 @@ public:
 	DirectX::XMMATRIX GetProjection() const noexcept;
 
 private:
+	bool uiEnabled = true;
+
 	DirectX::XMMATRIX m_projection;
 
 	void CreateDevice(HWND handle);
