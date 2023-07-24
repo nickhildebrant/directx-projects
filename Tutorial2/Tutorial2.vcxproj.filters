@@ -134,12 +134,6 @@
     <ClInclude Include="Box.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="Cone.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="Drawable.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
@@ -147,12 +141,6 @@
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Melon.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="Prism.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Pyramid.h">
@@ -191,9 +179,6 @@
     <ClInclude Include="RendererErrorMacros.h">
       <Filter>Header Files\Error and Macros</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="InputLayout.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
@@ -217,6 +202,21 @@
     </ClInclude>
     <ClInclude Include="ChiliWin.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cone.h">
+      <Filter>Header Files\Drawable\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files\Drawable\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Header Files\Drawable\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Prism.h">
+      <Filter>Header Files\Drawable\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\Drawable\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +251,9 @@
     </Filter>
     <Filter Include="Source Files\Errors">
       <UniqueIdentifier>{033bc4b1-9b7e-4dbd-afed-c582c95069af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Drawable\Primitives">
+      <UniqueIdentifier>{32f541b4-a2c9-44b5-af6f-8768ee94244f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

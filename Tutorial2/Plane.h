@@ -52,7 +52,12 @@ public:
 			{
 				for (size_t x = 0; x < xDivisions; x++)
 				{
-					const std::array<unsigned short, 4> indexArray = { vertices2i(x, y), vertices2i(x + 1, y), vertices2i(x, y + 1), vertices2i(x, y + 1) };
+					const std::array<unsigned short, 4> indexArray = 
+					{ 
+						vertices2i(x, y), vertices2i(x + 1, y), 
+						vertices2i(x, y + 1), vertices2i(x + 1, y + 1) 
+					};
+
 					indices.push_back(indexArray[0]);
 					indices.push_back(indexArray[2]);
 					indices.push_back(indexArray[1]);
