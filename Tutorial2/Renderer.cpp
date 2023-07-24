@@ -163,6 +163,16 @@ void Renderer::DrawIndexed(UINT count)
 	GFX_THROW_INFO_ONLY(m_deviceContext->DrawIndexed(count, 0u, 0u));
 }
 
+void Renderer::SetCameraView( DirectX::FXMMATRIX view ) noexcept
+{
+	m_view = view;
+}
+
+DirectX::XMMATRIX Renderer::GetView() const noexcept 
+{
+	return m_view;
+}
+
 void Renderer::SetProjection(DirectX::FXMMATRIX projection) noexcept
 {
 	m_projection = projection;

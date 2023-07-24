@@ -8,6 +8,6 @@ TransformConstantBuffer::TransformConstantBuffer(Renderer& renderer, const Drawa
 
 void TransformConstantBuffer::Bind(Renderer& renderer) noexcept
 {
-	vertexConstantBuffer.Update(renderer, DirectX::XMMatrixTranspose(parent.GetTransformXM() * renderer.GetProjection()));
+	vertexConstantBuffer.Update(renderer, DirectX::XMMatrixTranspose(parent.GetTransformXM() * renderer.GetView() * renderer.GetProjection()));
 	vertexConstantBuffer.Bind(renderer);
 }

@@ -20,6 +20,7 @@ Application::Application() : m_window(640, 480, "3D Renderer")
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
+	m_window.getRenderer().SetCameraView( DirectX::XMMatrixTranslation( 0.0f, 0.0f, 20.0f ) );
 }
 
 Application::~Application() {}
@@ -49,12 +50,12 @@ void Application::DoFrame()
 		model->Draw( m_window.getRenderer() );
 	}
 
-	//if ( showUI ) ImGui::ShowDemoWindow( &showUI );
-	static char buffer[1024];
+	//if ( showUI ) ImGui::ShowDemoWindow( &showUI ); // Demo UI
 	if ( ImGui::Begin( "Simulation Speed" ) )
 	{
 		ImGui::SliderFloat( "Simulation Speed", &simulationSpeed, 0.0f, 5.0f );
 		ImGui::Text( "Application average %.2f ms/frame (%.0f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
+		ImGui::Text( "Status: %s", m_window.keyboard.isKeyPressed( VK_SPACE ) ? "PAUSED" : "RUNNING" );
 	}
 	ImGui::End();
 

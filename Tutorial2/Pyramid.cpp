@@ -76,8 +76,7 @@ void Pyramid::Update(float dt) noexcept
 
 DirectX::XMMATRIX Pyramid::GetTransformXM() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi) *
-		DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
+	return DirectX::XMMatrixRotationRollPitchYaw( pitch, yaw, roll ) *
+		DirectX::XMMatrixTranslation( r, 0.0f, 0.0f ) *
+		DirectX::XMMatrixRotationRollPitchYaw( theta, phi, chi );
 }

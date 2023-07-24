@@ -72,12 +72,17 @@ public:
 	void ClearBuffer(float r, float g, float b, float a);
 
 	void DrawIndexed(UINT count);
+
+	void SetCameraView( DirectX::FXMMATRIX view ) noexcept;
+	DirectX::XMMATRIX GetView() const noexcept;
+
 	void SetProjection(DirectX::FXMMATRIX projection) noexcept;
 	DirectX::XMMATRIX GetProjection() const noexcept;
 
 private:
 	bool uiEnabled = true;
 
+	DirectX::XMMATRIX m_view;
 	DirectX::XMMATRIX m_projection;
 
 	void CreateDevice(HWND handle);
