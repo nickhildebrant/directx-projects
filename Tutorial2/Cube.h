@@ -65,23 +65,23 @@ public:
 		vertices[7].pos = { side, side, side };
 		vertices[7].tex = { 1.0f / 3.0f, 2.0f / 4.0f };
 
-		vertices[8].pos = { -side,-side,-side };
+		vertices[8].pos = { -side, -side, -side };
 		vertices[8].tex = { 2.0f / 3.0f,4.0f / 4.0f };
 
-		vertices[9].pos = { side,-side,-side };
-		vertices[9].tex = { 1.0f / 3.0f,4.0f / 4.0f };
+		vertices[9].pos = { side, -side, -side };
+		vertices[9].tex = { 1.0f / 3.0f, 4.0f / 4.0f };
 
-		vertices[10].pos = { -side,-side,-side };
-		vertices[10].tex = { 3.0f / 3.0f,1.0f / 4.0f };
+		vertices[10].pos = { -side, -side, -side };
+		vertices[10].tex = { 3.0f / 3.0f, 1.0f / 4.0f };
 
-		vertices[11].pos = { -side,-side,side };
-		vertices[11].tex = { 3.0f / 3.0f,2.0f / 4.0f };
+		vertices[11].pos = { -side, -side, side };
+		vertices[11].tex = { 3.0f / 3.0f, 2.0f / 4.0f };
 
-		vertices[12].pos = { side,-side,-side };
-		vertices[12].tex = { 0.0f / 3.0f,1.0f / 4.0f };
+		vertices[12].pos = { side, -side, -side };
+		vertices[12].tex = { 0.0f / 3.0f, 1.0f / 4.0f };
 
-		vertices[13].pos = { side,-side,side };
-		vertices[13].tex = { 0.0f / 3.0f,2.0f / 4.0f };
+		vertices[13].pos = { side, -side, side };
+		vertices[13].tex = { 0.0f / 3.0f, 2.0f / 4.0f };
 
 		return
 		{

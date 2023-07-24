@@ -25,10 +25,10 @@ Sheet::Sheet( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribut
 		};
 
 		auto model = Plane::Make<Vertex>();
-		model.vertices[0].texture = { 0.0f,0.0f };
-		model.vertices[1].texture = { 1.0f,0.0f };
-		model.vertices[2].texture = { 0.0f,1.0f };
-		model.vertices[3].texture = { 1.0f,1.0f };
+		model.vertices[0].texture = { 0.0f, 0.0f };
+		model.vertices[1].texture = { 1.0f, 0.0f };
+		model.vertices[2].texture = { 0.0f, 1.0f };
+		model.vertices[3].texture = { 1.0f, 1.0f };
 
 		AddStaticBind( std::make_unique<Texture>( renderer, Surface::FromFile( "Images\\kappa50.png" ) ) );
 

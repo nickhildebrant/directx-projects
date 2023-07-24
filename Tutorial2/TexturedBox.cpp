@@ -4,6 +4,7 @@
 #include "Cube.h"
 #include "Surface.h"
 #include "Texture.h"
+#include "Sampler.h"
 
 
 TexturedBox::TexturedBox( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist,
@@ -26,9 +27,11 @@ TexturedBox::TexturedBox( Renderer& renderer, std::mt19937& rng, std::uniform_re
 
 		const auto model = Cube::MakeSkinned<Vertex>();
 
+		AddStaticBind( std::make_unique<Texture>( renderer, Surface::FromFile( "Images\\cube.png" ) ) );
+
 		AddStaticBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
 
-		AddStaticBind( std::make_unique<Texture>( renderer, Surface::FromFile( "Images\\cube.png" ) ) );
+		AddStaticBind( std::make_unique<Sampler>( renderer ) );
 
 		auto pvs = std::make_unique<VertexShader>( renderer, L"TextureVertexShader.cso" );
 		auto pvsbc = pvs->GetBytecode();

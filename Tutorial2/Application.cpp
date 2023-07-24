@@ -9,7 +9,7 @@ GDIPlusManager gdipm;
 
 Application::Application() : m_window(640, 480, "3D Renderer")
 {
-	const size_t numberOfModels = 180;
+	const size_t numberOfModels = 1;
 	ModelFactory factory(m_window.getRenderer());
 	m_models.reserve(numberOfModels);
 
@@ -41,8 +41,9 @@ void Application::DoFrame()
 	float deltaTime = m_timer.DeltaTime();
 	for (auto& model : m_models)
 	{
-		model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime);
-		model->Draw(m_window.getRenderer());
+		model->Update( deltaTime );
+		//model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime );
+		model->Draw( m_window.getRenderer() );
 	}
 
 	m_window.getRenderer().EndFrame();
