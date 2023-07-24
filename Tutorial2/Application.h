@@ -65,6 +65,7 @@ private:
 	Timer m_timer;
 
 	bool showUI = true;
+	float simulationSpeed = 1.0f;
 
 	std::vector<std::unique_ptr<class Drawable>> m_models;
 

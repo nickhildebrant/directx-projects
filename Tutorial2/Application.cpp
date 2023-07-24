@@ -42,14 +42,21 @@ void Application::DoFrame()
 
 	m_window.getRenderer().BeginFrame( 0.07f, 0.0f, 0.12f, 1.0f );	// sets background color
 	
-	float deltaTime = m_timer.DeltaTime();
+	float deltaTime = simulationSpeed * m_timer.DeltaTime();
 	for (auto& model : m_models)
 	{
 		model->Update( m_window.keyboard.isKeyPressed( VK_SPACE ) ? 0.0f : deltaTime );
 		model->Draw( m_window.getRenderer() );
 	}
 
-	if ( showUI ) ImGui::ShowDemoWindow( &showUI );
+	//if ( showUI ) ImGui::ShowDemoWindow( &showUI );
+	static char buffer[1024];
+	if ( ImGui::Begin( "Simulation Speed" ) )
+	{
+		ImGui::SliderFloat( "Simulation Speed", &simulationSpeed, 0.0f, 5.0f );
+		ImGui::Text( "Application average %.2f ms/frame (%.0f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
+	}
+	ImGui::End();
 
 	m_window.getRenderer().EndFrame();
 }
