@@ -11,14 +11,14 @@ public:
 		constexpr float side = 1.0f / 2.0f;
 
 		std::vector<V> vertices( 8 );
-		vertices[0].position = { -side,-side,-side };
-		vertices[1].position = { side,-side,-side };
-		vertices[2].position = { -side,side,-side };
-		vertices[3].position = { side,side,-side };
-		vertices[4].position = { -side,-side,side };
-		vertices[5].position = { side,-side,side };
-		vertices[6].position = { -side,side,side };
-		vertices[7].position = { side,side,side };
+		vertices[0].position = { -side,	-side,	-side };
+		vertices[1].position = {  side,	-side,	-side };
+		vertices[2].position = { -side,	 side,	-side };
+		vertices[3].position = {  side,	 side,	-side };
+		vertices[4].position = { -side,	-side,	 side };
+		vertices[5].position = {  side,	-side,	 side };
+		vertices[6].position = { -side,	 side,	 side };
+		vertices[7].position = {  side,	 side,	 side };
 
 		return
 		{
@@ -41,29 +41,29 @@ public:
 
 		std::vector<V> vertices( 14 );
 
-		vertices[0].pos = { -side,-side,-side };
-		vertices[0].tex = { 2.0f / 3.0f,0.0f / 4.0f };
+		vertices[0].pos = { -side, -side, -side };
+		vertices[0].tex = { 2.0f / 3.0f, 0.0f / 4.0f };
 
-		vertices[1].pos = { side,-side,-side };
-		vertices[1].tex = { 1.0f / 3.0f,0.0f / 4.0f };
+		vertices[1].pos = { side, -side, -side };
+		vertices[1].tex = { 1.0f / 3.0f, 0.0f / 4.0f };
 
-		vertices[2].pos = { -side,side,-side };
+		vertices[2].pos = { -side, side, -side };
 		vertices[2].tex = { 2.0f / 3.0f,1.0f / 4.0f };
 
-		vertices[3].pos = { side,side,-side };
-		vertices[3].tex = { 1.0f / 3.0f,1.0f / 4.0f };
+		vertices[3].pos = { side, side, -side };
+		vertices[3].tex = { 1.0f / 3.0f, 1.0f / 4.0f };
 
-		vertices[4].pos = { -side,-side,side };
-		vertices[4].tex = { 2.0f / 3.0f,3.0f / 4.0f };
+		vertices[4].pos = { -side, -side, side };
+		vertices[4].tex = { 2.0f / 3.0f, 3.0f / 4.0f };
 
-		vertices[5].pos = { side,-side,side };
-		vertices[5].tex = { 1.0f / 3.0f,3.0f / 4.0f };
+		vertices[5].pos = { side, -side, side };
+		vertices[5].tex = { 1.0f / 3.0f, 3.0f / 4.0f };
 
-		vertices[6].pos = { -side,side,side };
-		vertices[6].tex = { 2.0f / 3.0f,2.0f / 4.0f };
+		vertices[6].pos = { -side, side, side };
+		vertices[6].tex = { 2.0f / 3.0f, 2.0f / 4.0f };
 
-		vertices[7].pos = { side,side,side };
-		vertices[7].tex = { 1.0f / 3.0f,2.0f / 4.0f };
+		vertices[7].pos = { side, side, side };
+		vertices[7].tex = { 1.0f / 3.0f, 2.0f / 4.0f };
 
 		vertices[8].pos = { -side,-side,-side };
 		vertices[8].tex = { 2.0f / 3.0f,4.0f / 4.0f };

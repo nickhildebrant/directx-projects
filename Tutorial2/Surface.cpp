@@ -209,7 +209,7 @@ Surface::Exception::Exception( int line, const char* file, std::string note ) no
 const char* Surface::Exception::what() const noexcept
 {
 	std::ostringstream oss;
-	oss << Exception::what() << std::endl
+	oss << ExceptionHandler::what() << std::endl
 		<< "[Note] " << GetNote();
 	_buffer = oss.str();
 	return _buffer.c_str();
