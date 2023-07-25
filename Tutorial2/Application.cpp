@@ -11,7 +11,7 @@
 
 GDIPlusManager gdipm;
 
-Application::Application() : m_window(800, 600, "3D Renderer")
+Application::Application() : m_window(800, 600, "3D Renderer"), light(m_window.getRenderer())
 {
 	const size_t numberOfModels = 180;
 	ModelFactory factory(m_window.getRenderer());
@@ -32,6 +32,7 @@ int Application::Run()
 		if (const auto errorCode = Window::ProcessMessages()) return *errorCode;
 
 		m_window.getRenderer().SetCameraView( camera.GetMatrix() );
+		light.Bind( m_window.getRenderer() );
 
 		/// --- Main Loop ---
 		RenderFrame();
@@ -51,6 +52,8 @@ void Application::RenderFrame()
 		model->Draw( m_window.getRenderer() );
 	}
 
+	light.Draw( m_window.getRenderer() );
+
 	//if ( showUI ) ImGui::ShowDemoWindow( &showUI ); // Demo UI
 	if ( ImGui::Begin( "Simulation Speed" ) )
 	{
@@ -61,6 +64,7 @@ void Application::RenderFrame()
 	ImGui::End();
 
 	camera.SpawnControlWindow();
+	light.SpawnControlWindow();
 
 	m_window.getRenderer().EndFrame();
 }

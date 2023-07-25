@@ -7,6 +7,7 @@
 #include "Sheet.h"
 #include "TexturedBox.h"
 #include "Camera.h"
+#include "Light.h"
 
 class Application {
 public:
@@ -21,7 +22,9 @@ public:
 
 		std::unique_ptr<Drawable> operator()()
 		{
-			switch (typedist(rng))
+			return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist );
+
+			/*switch (typedist(rng))
 			{
 			case 0:
 				return std::make_unique<Pyramid>( renderer, rng, adist, ddist, odist, rdist );
@@ -38,7 +41,7 @@ public:
 			default:
 				assert(false && "No available Types");
 				return {};
-			}
+			}*/
 		}
 
 	private:
@@ -63,6 +66,7 @@ private:
 	Timer m_timer;
 
 	Camera camera;
+	Light light;
 
 	bool showUI = true;
 	float simulationSpeed = 1.0f;

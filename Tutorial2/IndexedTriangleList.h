@@ -42,9 +42,9 @@ public:
 
 			const normal = DirectX::XMVector3Normalize( DirectX::XMVector3Cross( ( p1 - p0 ), ( p2 - p0 ) ) );
 
-			DirectX::XMStoreFloat3( &v0.normal, n );
-			DirectX::XMStoreFloat3( &v1.normal, n );
-			DirectX::XMStoreFloat3( &v2.normal, n );
+			DirectX::XMStoreFloat3( &v0.normal, normal );
+			DirectX::XMStoreFloat3( &v1.normal, normal );
+			DirectX::XMStoreFloat3( &v2.normal, normal );
 		}
 	}
 };

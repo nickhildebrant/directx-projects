@@ -8,52 +8,55 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 {
 	if ( !IsStaticInitialized() )
 	{
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 pos;
+		struct Vertex {
+			DirectX::XMFLOAT3 position;
 		};
+
 		auto model = Sphere::Make<Vertex>();
 		model.Transform( DirectX::XMMatrixScaling( radius, radius, radius ) );
+
 		AddBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
+
 		AddIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
 
 		auto pvs = std::make_unique<VertexShader>( renderer, L"SolidVertexShader.cso" );
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind( std::move( pvs ) );
 
-		AddStaticBind( std::make_unique<PixelShader>( gfx, L"SolidPixelShader.cso" ) );
+		AddStaticBind( std::make_unique<PixelShader>( renderer, L"SolidPixelShader.cso" ) );
 
-		struct PSColorConstant
-		{
-			dx::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
+		struct PSColorConstant {
+			DirectX::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
 			float padding;
 		} colorConst;
-		AddStaticBind( std::make_unique<PixelConstantBuffer<PSColorConstant>>( gfx, colorConst ) );
+
+		AddStaticBind( std::make_unique<PixelConstantBuffer<PSColorConstant>>( renderer, colorConst ) );
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
-		AddStaticBind( std::make_unique<InputLayout>( gfx, ied, pvsbc ) );
 
-		AddStaticBind( std::make_unique<Topology>( gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+		AddStaticBind( std::make_unique<InputLayout>( renderer, ied, pvsbc ) );
+
+		AddStaticBind( std::make_unique<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 	}
 	else
 	{
 		SetIndexFromStatic();
 	}
 
-	AddBind( std::make_unique<TransformCbuf>( gfx, *this ) );
+	AddBind( std::make_unique<TransformConstantBuffer>( renderer, *this ) );
 }
 
 void SolidSphere::Update( float dt ) noexcept {}
 
-void SolidSphere::SetPos( DirectX::XMFLOAT3 pos ) noexcept
+void SolidSphere::SetPosition( DirectX::XMFLOAT3 pos ) noexcept
 {
-	this->pos = pos;
+	this->position = pos;
 }
 
 DirectX::XMMATRIX SolidSphere::GetTransformXM() const noexcept
 {
-	return DirectX::XMMatrixTranslation( pos.x, pos.y, pos.z );
+	return DirectX::XMMatrixTranslation( position.x, position.y, position.z );
 }
