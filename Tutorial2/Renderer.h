@@ -57,7 +57,7 @@ public:
 	};
 
 public:
-	Renderer(HWND handle);
+	Renderer(HWND handle, int width, int height);
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
 	~Renderer() = default;
@@ -80,6 +80,8 @@ public:
 	DirectX::XMMATRIX GetProjection() const noexcept;
 
 private:
+	int m_width, m_height;
+
 	bool uiEnabled = true;
 
 	DirectX::XMMATRIX m_view;

@@ -4,7 +4,7 @@
 #include "ImGUI/imgui_impl_win32.h"
 #include <sstream>
 
-Renderer::Renderer(HWND handle)
+Renderer::Renderer(HWND handle, int width, int height) : m_width(width), m_height(height)
 {
 	CreateDevice(handle);
 	CreateRenderTarget();
@@ -15,8 +15,8 @@ Renderer::Renderer(HWND handle)
 
 	// configure viewport
 	D3D11_VIEWPORT viewPort;
-	viewPort.Width = 640;
-	viewPort.Height = 480;
+	viewPort.Width = m_width;
+	viewPort.Height = m_height;
 	viewPort.MinDepth = 0;
 	viewPort.MaxDepth = 1;
 	viewPort.TopLeftX = 0;
@@ -85,8 +85,8 @@ void Renderer::CreateDepthStencil()
 	// create the depth stencil texture
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
 	D3D11_TEXTURE2D_DESC depthTextureDescription = {};
-	depthTextureDescription.Width = 640u;
-	depthTextureDescription.Height = 480u;
+	depthTextureDescription.Width = m_width;
+	depthTextureDescription.Height = m_height;
 	depthTextureDescription.MipLevels = 1u;
 	depthTextureDescription.ArraySize = 1u;
 	depthTextureDescription.Format = DXGI_FORMAT_D32_FLOAT;

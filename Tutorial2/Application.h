@@ -7,6 +7,7 @@
 #include "Melon.h"
 #include "Sheet.h"
 #include "TexturedBox.h"
+#include "Camera.h"
 
 class Application {
 public:
@@ -61,13 +62,16 @@ public:
 
 private:
 	GUIManager m_guiManager;
+
 	Window m_window;
 	Timer m_timer;
+
+	Camera camera;
 
 	bool showUI = true;
 	float simulationSpeed = 1.0f;
 
 	std::vector<std::unique_ptr<class Drawable>> m_models;
 
-	void DoFrame();
+	void RenderFrame();
 };

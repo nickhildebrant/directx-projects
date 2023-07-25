@@ -11,7 +11,7 @@
 
 GDIPlusManager gdipm;
 
-Application::Application() : m_window(640, 480, "3D Renderer")
+Application::Application() : m_window(800, 600, "3D Renderer")
 {
 	const size_t numberOfModels = 180;
 	ModelFactory factory(m_window.getRenderer());
@@ -20,7 +20,6 @@ Application::Application() : m_window(640, 480, "3D Renderer")
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
-	m_window.getRenderer().SetCameraView( DirectX::XMMatrixTranslation( 0.0f, 0.0f, 20.0f ) );
 }
 
 Application::~Application() {}
@@ -32,12 +31,14 @@ int Application::Run()
 		// processes all pending messages, checks if error
 		if (const auto errorCode = Window::ProcessMessages()) return *errorCode;
 
+		m_window.getRenderer().SetCameraView( camera.GetMatrix() );
+
 		/// --- Main Loop ---
-		DoFrame();
+		RenderFrame();
 	}
 }
 
-void Application::DoFrame()
+void Application::RenderFrame()
 {
 	showUI = m_window.keyboard.isKeyPressed( VK_ESCAPE ) ? false : true;
 
@@ -55,9 +56,11 @@ void Application::DoFrame()
 	{
 		ImGui::SliderFloat( "Simulation Speed", &simulationSpeed, 0.0f, 5.0f );
 		ImGui::Text( "Application average %.2f ms/frame (%.0f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
-		ImGui::Text( "Status: %s", m_window.keyboard.isKeyPressed( VK_SPACE ) ? "PAUSED" : "RUNNING" );
+		ImGui::Text( "(Hold Space to Pause) Status: %s", m_window.keyboard.isKeyPressed( VK_SPACE ) ? "PAUSED" : "RUNNING" );
 	}
 	ImGui::End();
+
+	camera.SpawnControlWindow();
 
 	m_window.getRenderer().EndFrame();
 }

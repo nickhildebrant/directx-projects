@@ -241,7 +241,7 @@ Window::Window(int width, int height, const char* name) : m_width(width), m_heig
 	ShowWindow(m_handle, SW_SHOWDEFAULT);
 
 	// Creating Renderer
-	m_renderer = std::make_unique<Renderer>(m_handle);
+	m_renderer = std::make_unique<Renderer>(m_handle, width, height);
 }
 
 Window::~Window() { ImGui_ImplWin32_Shutdown(); DestroyWindow( m_handle ); }

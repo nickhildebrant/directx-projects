@@ -142,6 +142,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectXErrors.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindableBase.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliWin.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="ConstantBuffers.h" />
