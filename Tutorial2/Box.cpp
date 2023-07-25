@@ -30,13 +30,6 @@ Box::Box(Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<f
 
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
 
-		struct PixelShaderLightConstants
-		{
-			DirectX::XMVECTOR position;
-		};
-
-		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderLightConstants>>( renderer ) );
-
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },

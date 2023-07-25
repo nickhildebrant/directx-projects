@@ -3,9 +3,7 @@
 #include "Window.h"
 #include "Timer.h"
 #include "Box.h"
-#include "Pyramid.h"
-#include "Sheet.h"
-#include "TexturedBox.h"
+
 #include "Camera.h"
 #include "Light.h"
 

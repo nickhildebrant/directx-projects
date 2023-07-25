@@ -32,5 +32,6 @@ void Light::Reset() noexcept
 
 void Light::Bind( Renderer& renderer ) const noexcept
 {
+	constantBuffer.Update( renderer, LightConstantBuffer{ position } );
 	constantBuffer.Bind( renderer );
 }
