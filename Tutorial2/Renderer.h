@@ -60,7 +60,7 @@ public:
 	Renderer(HWND handle, int width, int height);
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
-	~Renderer() = default;
+	~Renderer();
 
 	void EnableUI() noexcept;
 	void DisableUI() noexcept;

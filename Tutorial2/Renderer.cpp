@@ -27,6 +27,11 @@ Renderer::Renderer(HWND handle, int width, int height) : m_width(width), m_heigh
 	ImGui_ImplDX11_Init( m_device.Get(), m_deviceContext.Get() );
 }
 
+Renderer::~Renderer()
+{
+	ImGui_ImplDX11_Shutdown();
+}
+
 void Renderer::CreateDevice(HWND handle)
 {
 	// Define the swap chain and clear out struct
