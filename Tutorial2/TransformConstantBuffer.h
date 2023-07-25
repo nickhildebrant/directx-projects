@@ -9,6 +9,11 @@ public:
 	void Bind(Renderer& renderer) noexcept override;
 
 private:
-	VertexConstantBuffer<DirectX::XMMATRIX> vertexConstantBuffer;
+	struct Transforms {
+		DirectX::XMMATRIX worldViewProjection;
+		DirectX::XMMATRIX world;
+	};
+
+	static std::unique_ptr<VertexConstantBuffer<Transforms>> pVertexConstantBuffer;
 	const Drawable& parent;
 };
