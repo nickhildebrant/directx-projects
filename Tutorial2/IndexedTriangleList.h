@@ -13,6 +13,10 @@ public:
 		assert(indices.size() % 3 == 0);
 	}
 
+
+	std::vector<T> vertices;
+	std::vector<unsigned short> indices;
+
 	void Transform(DirectX::FXMMATRIX matrix)
 	{
 		for (auto& vertex : vertices)
@@ -22,7 +26,25 @@ public:
 		}
 	}
 
-public:
-	std::vector<T> vertices;
-	std::vector<unsigned short> indices;
+	void SetNormalsIndependentFlat() noexcept
+	{
+		assert( indices.size() % 3 == 0 && indices.size() > 0 );
+
+		for ( size_t i = 0; i < indices.size(); i += 3 )
+		{
+			auto& v0 = vertices[indices[i]];
+			auto& v1 = vertices[indices[i + 1]];
+			auto& v2 = vertices[indices[i + 2]];
+
+			const auto p0 = DirectX::XMLoadFloat3( &v0.position );
+			const auto p1 = DirectX::XMLoadFloat3( &v1.position );
+			const auto p2 = DirectX::XMLoadFloat3( &v2.position );
+
+			const normal = DirectX::XMVector3Normalize( DirectX::XMVector3Cross( ( p1 - p0 ), ( p2 - p0 ) ) );
+
+			DirectX::XMStoreFloat3( &v0.normal, n );
+			DirectX::XMStoreFloat3( &v1.normal, n );
+			DirectX::XMStoreFloat3( &v2.normal, n );
+		}
+	}
 };
