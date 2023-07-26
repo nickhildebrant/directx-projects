@@ -30,6 +30,12 @@ void Light::Reset() noexcept
 	position = { 0.0f,0.0f,0.0f };
 }
 
+void Light::Draw( Renderer& renderer ) const noexcept
+{
+	sphereMesh.SetPosition( position );
+	sphereMesh.Draw( renderer );
+}
+
 void Light::Bind( Renderer& renderer ) const noexcept
 {
 	constantBuffer.Update( renderer, LightConstantBuffer{ position } );
