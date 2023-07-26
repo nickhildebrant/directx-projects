@@ -32,7 +32,6 @@ int Application::Run()
 		if (const auto errorCode = Window::ProcessMessages()) return *errorCode;
 
 		m_window.getRenderer().SetCameraView( camera.GetMatrix() );
-		light.Bind( m_window.getRenderer() );
 
 		/// --- Main Loop ---
 		RenderFrame();
@@ -41,6 +40,8 @@ int Application::Run()
 
 void Application::RenderFrame()
 {
+	light.Bind( m_window.getRenderer() );
+
 	showUI = m_window.keyboard.isKeyPressed( VK_ESCAPE ) ? false : true;
 
 	m_window.getRenderer().BeginFrame( 0.07f, 0.0f, 0.12f, 1.0f );	// sets background color
