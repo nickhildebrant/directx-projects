@@ -17,12 +17,12 @@ TexturedBox::TexturedBox( Renderer& renderer, std::mt19937& rng, std::uniform_re
 	if ( !IsStaticInitialized() )
 	{
 		struct Vertex {
-			DirectX::XMFLOAT3 pos;
+			DirectX::XMFLOAT3 position;
 
 			struct {
 				float u;
 				float v;
-			} tex;
+			} texture;
 		};
 
 		const auto model = Cube::MakeSkinned<Vertex>();

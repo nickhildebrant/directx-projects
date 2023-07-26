@@ -13,10 +13,6 @@ public:
 		assert(indices.size() % 3 == 0);
 	}
 
-
-	std::vector<T> vertices;
-	std::vector<unsigned short> indices;
-
 	void Transform(DirectX::FXMMATRIX matrix)
 	{
 		for (auto& vertex : vertices)
@@ -40,11 +36,15 @@ public:
 			const auto p1 = DirectX::XMLoadFloat3( &v1.position );
 			const auto p2 = DirectX::XMLoadFloat3( &v2.position );
 
-			const normal = DirectX::XMVector3Normalize( DirectX::XMVector3Cross( ( p1 - p0 ), ( p2 - p0 ) ) );
+			const auto normal = DirectX::XMVector3Normalize( DirectX::XMVector3Cross( DirectX::XMVectorSubtract( p1, p0 ), DirectX::XMVectorSubtract( p2, p0 ) ) );
 
 			DirectX::XMStoreFloat3( &v0.normal, normal );
 			DirectX::XMStoreFloat3( &v1.normal, normal );
 			DirectX::XMStoreFloat3( &v2.normal, normal );
 		}
 	}
+
+public:
+	std::vector<T> vertices;
+	std::vector<unsigned short> indices;
 };
