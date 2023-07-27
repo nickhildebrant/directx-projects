@@ -51,7 +51,7 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 
 void SolidSphere::Update( float dt ) noexcept {}
 
-void SolidSphere::SetPosition( DirectX::XMFLOAT3 pos ) noexcept
+void SolidSphere::SetPosition( DirectX::XMFLOAT4 pos ) noexcept
 {
 	this->position = pos;
 }

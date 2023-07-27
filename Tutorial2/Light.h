@@ -15,11 +15,19 @@ public:
 
 private:
 	struct LightConstantBuffer {
-		DirectX::XMFLOAT3 position;
-		float padding;
+		DirectX::XMFLOAT4 position;
+
+		DirectX::XMFLOAT4 materialColor;
+		DirectX::XMFLOAT4 ambientColor;
+		DirectX::XMFLOAT4 diffuseColor;
+
+		float diffuseIntensity;
+		float attenuationConstant;
+		float attenuationLinear;
+		float attenuationQuadradic;
 	};
 
-	DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };;
+	LightConstantBuffer bufferData;
 	mutable SolidSphere sphereMesh;
 	mutable PixelConstantBuffer<LightConstantBuffer> constantBuffer;
 };

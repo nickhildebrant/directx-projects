@@ -6,10 +6,10 @@ public:
 	SolidSphere( Renderer& renderer, float radius );
 
 	void Update( float dt ) noexcept override;
-	void SetPosition( DirectX::XMFLOAT3 pos ) noexcept;
+	void SetPosition( DirectX::XMFLOAT4 pos ) noexcept;
 
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 
 private:
-	DirectX::XMFLOAT3 position = { 1.0f,1.0f,1.0f };
+	DirectX::XMFLOAT4 position = { 1.0f,1.0f,1.0f,0.0f };
 };

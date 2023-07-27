@@ -1,28 +1,48 @@
 cbuffer LightConstantBuffer {
-    float3 lightPosition;
+    float4 lightPosition;
+    
+    float4 materialColor;
+    float4 ambientColor;
+    float4 diffuseColor;
+    
+    float diffuseIntensity;
+    float attenuationConstant;
+    float attenuationLinear;
+    float attenuationQuadradic;
 };
 
-static const float3 materialColor = { 0.7f, 0.7f, 0.9f };
-static const float3 ambientColor = { 0.05f, 0.05f, 0.05f };
-static const float3 diffuseColor = { 0.7f, 0.7f, 0.9f };
-static const float diffuseIntensity = 1.0f;
-static const float lightIntensity = 1.0f;
+static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-static const float attConst = 0.045f;
-static const float attQuad = 0.0075f;
+static const float3 cameraPosition = { 0.0f, 0.0f, 20.0f };
+
+static const float ambientIntensity = 1.0f;
+static const float lightIntensity = 1.0f;
+static const float specularIntensity = 1.0f;
+
+static const float shininess = 2.0f;
 
 float4 main( float3 worldPosition : Position, float3 normal : Normal) : SV_Target
 {
     // light vector data
-    const float3 L = lightPosition - worldPosition;
-    const float distance = length(L);
-    const float3 lightDirection = L / distance;
+    const float distance = length(lightPosition - worldPosition);
+    const float3 L = normalize(lightPosition - worldPosition);
+    const float3 N = normalize(normal);
+    const float3 V = normalize(cameraPosition - worldPosition);
+    const float3 R = reflect(-L, N);
     
     // diffuse attenuation
-    const float att = 1.0f / (attConst + lightIntensity * lightDirection + attQuad * (distance * distance));
+    const float att = 1.0f / (attenuationConstant + attenuationLinear * distance + attenuationQuadradic * pow(distance, 2));
     
     // diffuse intensity
-    const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(lightDirection, normal));
+    const float4 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(L, N));
     
-    return float4(saturate(diffuse + ambientColor), 1.0f);
+    float4 ambient = ambientColor * ambientIntensity;
+    //float4 diffuse = diffuseIntensity * diffuseColor * max(0, dot(N, L));
+    //float4 specular = pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
+    //float4 color = saturate(ambient + diffuse + specular);
+    
+    return saturate(diffuse + ambient);
+   // +specular);
+    //color.a = 1;
+    //return color;
 }
