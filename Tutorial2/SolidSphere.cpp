@@ -12,7 +12,7 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 			DirectX::XMFLOAT4 position;
 		};
 
-		auto model = Sphere::Make<Vertex>();
+		auto model = Sphere::MakeTesselated<Vertex>(3, 3);
 		model.Transform( DirectX::XMMatrixScaling( radius, radius, radius ) );
 
 		AddBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );

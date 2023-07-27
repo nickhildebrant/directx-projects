@@ -4,93 +4,66 @@
 
 class Sphere {
 public:
-	template<class V>
-	static IndexedTriangleList<V> MakeTesselated(int latitudeDivisions, int longitudeDivisions)
-	{
-		const float PI = 3.14159265f;
+    template<class V>
+    static IndexedTriangleList<V> MakeTesselated( int latitudeDivisions, int longitudeDivisions )
+    {
+        const float PI = 3.14159265f;
 
-		assert(latitudeDivisions >= 3);
-		assert(longitudeDivisions >= 3);
+        assert( latitudeDivisions >= 3 );
+        assert( longitudeDivisions >= 3 );
 
-		constexpr float radius = 1.0f;
-		const auto base = DirectX::XMVectorSet(0.0f, 0.0f, radius, 0.0f);
-		const float latitudeAngle = PI / latitudeDivisions;
-		const float longitudeAngle = 2.0f * PI / longitudeDivisions;
+        constexpr float radius = 1.0f;
+        const float latitudeAngle = PI / latitudeDivisions;
+        const float longitudeAngle = 2.0f * PI / longitudeDivisions;
 
-		std::vector<V> vertices;
-		for (int iLatitude = 1; iLatitude < latitudeDivisions; iLatitude++)
-		{
-			const auto latitudeBase = DirectX::XMVector4Transform(base, DirectX::XMMatrixRotationX(latitudeAngle * iLatitude));
-			 
-			for (int iLongitude = 0; iLongitude < longitudeDivisions; iLongitude++)
-			{
-				vertices.emplace_back();
-				auto vec = DirectX::XMVector4Transform(latitudeBase, DirectX::XMMatrixRotationZ(longitudeAngle * iLongitude));
-				DirectX::XMStoreFloat4(&vertices.back().position, vec);
-			}
-		}
+        std::vector<V> vertices;
+        std::vector<unsigned short> indices;
 
-		// add the cap vertices
-		const auto iNorthPole = (unsigned short)vertices.size();
-		vertices.emplace_back();
+        // Generate vertices for the sphere
+        for ( int iLatitude = 0; iLatitude <= latitudeDivisions; iLatitude++ )
+        {
+            const float theta = iLatitude * latitudeAngle;
+            const float sinTheta = std::sin( theta );
+            const float cosTheta = std::cos( theta );
 
-		DirectX::XMStoreFloat4(&vertices.back().position, base);
-		const auto iSouthPole = (unsigned short)vertices.size();
-		vertices.emplace_back();
+            for ( int iLongitude = 0; iLongitude <= longitudeDivisions; iLongitude++ )
+            {
+                const float phi = iLongitude * longitudeAngle;
+                const float sinPhi = std::sin( phi );
+                const float cosPhi = std::cos( phi );
 
-		DirectX::XMStoreFloat4(&vertices.back().position, DirectX::XMVectorNegate(base));
+                V vertex;
+                vertex.position.x = radius * sinTheta * cosPhi;
+                vertex.position.y = radius * cosTheta;
+                vertex.position.z = radius * sinTheta * sinPhi;
+                vertex.position.w = 1.0f;
+                vertices.push_back( vertex );
+            }
+        }
 
-		const auto calcIdx = [latitudeDivisions, longitudeDivisions](unsigned short iLatitude, unsigned short iLongitude){ return iLatitude * longitudeDivisions + iLongitude; };
+        // Generate indices for the sphere
+        for ( unsigned short iLatitude = 0; iLatitude < latitudeDivisions; iLatitude++ )
+        {
+            for ( unsigned short iLongitude = 0; iLongitude < longitudeDivisions; iLongitude++ )
+            {
+                unsigned short topLeft = iLatitude * ( longitudeDivisions + 1 ) + iLongitude;
+                unsigned short topRight = topLeft + 1;
+                unsigned short bottomLeft = ( iLatitude + 1 ) * ( longitudeDivisions + 1 ) + iLongitude;
+                unsigned short bottomRight = bottomLeft + 1;
 
-		std::vector<unsigned short> indices;
-		for (unsigned short iLatitude = 0; iLatitude < latitudeDivisions - 2; iLatitude++)
-		{
-			for (unsigned short iLongitude = 0; iLongitude < longitudeDivisions - 1; iLongitude++)
-			{
-				indices.push_back(calcIdx(iLatitude, iLongitude));
-				indices.push_back(calcIdx(iLatitude + 1, iLongitude));
-				indices.push_back(calcIdx(iLatitude, iLongitude + 1));
-				indices.push_back(calcIdx(iLatitude, iLongitude + 1));
-				indices.push_back(calcIdx(iLatitude + 1, iLongitude));
-				indices.push_back(calcIdx(iLatitude + 1, iLongitude + 1));
-			}
+                indices.push_back( topLeft );
+                indices.push_back( bottomLeft );
+                indices.push_back( topRight );
 
-			// wrap band
-			indices.push_back(calcIdx(iLatitude, longitudeDivisions - 1));
-			indices.push_back(calcIdx(iLatitude + 1, longitudeDivisions - 1));
-			indices.push_back(calcIdx(iLatitude, 0));
-			indices.push_back(calcIdx(iLatitude, 0));
-			indices.push_back(calcIdx(iLatitude + 1, longitudeDivisions - 1));
-			indices.push_back(calcIdx(iLatitude + 1, 0));
-		}
+                indices.push_back( topRight );
+                indices.push_back( bottomLeft );
+                indices.push_back( bottomRight );
+            }
+        }
 
-		// cap fans
-		for (unsigned short iLongitude = 0; iLongitude < longitudeDivisions - 1; iLongitude++)
-		{
-			// north
-			indices.push_back(iNorthPole);
-			indices.push_back(calcIdx(0, iLongitude));
-			indices.push_back(calcIdx(0, iLongitude + 1));
+        return { std::move( vertices ), std::move( indices ) };
+    }
 
-			// south
-			indices.push_back(calcIdx(latitudeDivisions - 2, iLongitude + 1));
-			indices.push_back(calcIdx(latitudeDivisions - 2, iLongitude));
-			indices.push_back(iSouthPole);
-		}
-
-		// wrap triangles
-		// north
-		indices.push_back(iNorthPole);
-		indices.push_back(calcIdx(0, longitudeDivisions - 1));
-		indices.push_back(calcIdx(0, 0));
-
-		// south
-		indices.push_back(calcIdx(latitudeDivisions - 2, 0));
-		indices.push_back(calcIdx(latitudeDivisions - 2, longitudeDivisions - 1));
-		indices.push_back(iSouthPole);
-
-		return { std::move(vertices),std::move(indices) };
-	}
 
 	template<class V>
 	static IndexedTriangleList<V> Make()
