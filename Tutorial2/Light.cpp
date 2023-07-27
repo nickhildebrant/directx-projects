@@ -55,8 +55,13 @@ void Light::Draw( Renderer& renderer ) const noexcept
 	sphereMesh.Draw( renderer );
 }
 
-void Light::Bind( Renderer& renderer ) const noexcept
+void Light::Bind( Renderer& renderer, DirectX::FXMMATRIX view ) const noexcept
 {
-	constantBuffer.Update( renderer, LightConstantBuffer{ bufferData } );
+	auto bufferCopy = bufferData;
+	const auto position = DirectX::XMLoadFloat4( &bufferData.position );
+
+	DirectX::XMStoreFloat4( &bufferCopy.position, DirectX::XMVector4Transform( position, view ) );
+
+	constantBuffer.Update( renderer, bufferCopy );
 	constantBuffer.Bind( renderer );
 }

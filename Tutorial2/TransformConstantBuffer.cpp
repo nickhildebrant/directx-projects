@@ -7,12 +7,12 @@ TransformConstantBuffer::TransformConstantBuffer(Renderer& renderer, const Drawa
 
 void TransformConstantBuffer::Bind(Renderer& renderer) noexcept
 {
-	const auto model = parent.GetTransformXM();
+	const auto modelView = parent.GetTransformXM() * renderer.GetView();
 
 	const Transforms transforms =
 	{
-		DirectX::XMMatrixTranspose( model ),
-		DirectX::XMMatrixTranspose( model * renderer.GetView() * renderer.GetProjection() )
+		DirectX::XMMatrixTranspose( modelView ),
+		DirectX::XMMatrixTranspose( modelView * renderer.GetProjection() )
 	};
 
 	pVertexConstantBuffer->Update(renderer, transforms );

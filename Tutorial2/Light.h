@@ -11,7 +11,7 @@ public:
 	void Reset() noexcept;
 
 	void Draw( Renderer& renderer ) const noexcept;
-	void Bind( Renderer& renderer ) const noexcept;
+	void Bind( Renderer& renderer, DirectX::FXMMATRIX view ) const noexcept;
 
 private:
 	struct LightConstantBuffer {

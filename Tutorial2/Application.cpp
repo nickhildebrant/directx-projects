@@ -32,7 +32,7 @@ int Application::Run()
 		if (const auto errorCode = Window::ProcessMessages()) return *errorCode;
 
 		m_window.getRenderer().SetCameraView( camera.GetMatrix() );
-		light.Bind( m_window.getRenderer() );
+		light.Bind( m_window.getRenderer(), camera.GetMatrix() );
 
 		/// --- Main Loop ---
 		RenderFrame();

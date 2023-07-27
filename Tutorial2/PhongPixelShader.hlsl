@@ -36,13 +36,13 @@ float4 main( float4 worldPosition : Position, float4 normal : Normal) : SV_Targe
     float4 ambient = ambientColor * ambientIntensity;
     
     // diffuse attenuation
-    float att = 1.0f / (attenuationConstant + attenuationLinear * distance + attenuationQuadradic * pow(distance, 2));
+    float attenuation = 1.0f / (attenuationConstant + attenuationLinear * distance + attenuationQuadradic * pow(distance, 2));
     
     // diffuse intensity
-    float4 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(L, N));
+    float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0.0f, dot(L, N));
 
-    float4 specular = pow(max(0, dot(normalize(worldPosition), R)), shininess) * specularColor * specularIntensity;
-    float4 color = saturate(ambient + diffuse + specular);
+    float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
+    float4 color = saturate(ambient + diffuse + specular) * materialColor;
 
     color.a = 1;
     return color;

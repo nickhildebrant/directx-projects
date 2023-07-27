@@ -1,5 +1,5 @@
 cbuffer ConstantBuffer {
-    matrix world;
+    matrix modelView;
     matrix worldViewProjection;
 }
 
@@ -12,8 +12,8 @@ struct VertexShaderOutput {
 VertexShaderOutput main( float4 pos : POSITION, float4 n : Normal )
 {
     VertexShaderOutput output;
-    output.worldPosition = mul(pos, world);
-    output.normal = mul(n, world);
+    output.worldPosition = mul(pos, modelView);
+    output.normal = mul(n, modelView);
     output.position = mul(pos, worldViewProjection);
     return output;
 }
