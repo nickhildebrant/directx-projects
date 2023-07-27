@@ -9,8 +9,8 @@ public:
     {
         const float PI = 3.14159265f;
 
-        assert( latitudeDivisions >= 3 );
-        assert( longitudeDivisions >= 3 );
+        if( latitudeDivisions < 3 ) latitudeDivisions = 3;
+        if( longitudeDivisions < 3 ) longitudeDivisions = 3;
 
         constexpr float radius = 1.0f;
         const float latitudeAngle = PI / latitudeDivisions;
