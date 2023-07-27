@@ -41,46 +41,46 @@ public:
 
 		std::vector<V> vertices( 14 );
 
-		vertices[0].position = { -side, -side, -side };
+		vertices[0].position = { -side, -side, -side, 1.0f };
 		vertices[0].texture = { 2.0f / 3.0f, 0.0f / 4.0f };
 
-		vertices[1].position = { side, -side, -side };
+		vertices[1].position = { side, -side, -side, 1.0f };
 		vertices[1].texture = { 1.0f / 3.0f, 0.0f / 4.0f };
 
-		vertices[2].position = { -side, side, -side };
+		vertices[2].position = { -side, side, -side, 1.0f };
 		vertices[2].texture = { 2.0f / 3.0f,1.0f / 4.0f };
 
-		vertices[3].position = { side, side, -side };
+		vertices[3].position = { side, side, -side, 1.0f };
 		vertices[3].texture = { 1.0f / 3.0f, 1.0f / 4.0f };
 
-		vertices[4].position = { -side, -side, side };
+		vertices[4].position = { -side, -side, side, 1.0f };
 		vertices[4].texture = { 2.0f / 3.0f, 3.0f / 4.0f };
 
-		vertices[5].position = { side, -side, side };
+		vertices[5].position = { side, -side, side, 1.0f };
 		vertices[5].texture = { 1.0f / 3.0f, 3.0f / 4.0f };
 
-		vertices[6].position = { -side, side, side };
+		vertices[6].position = { -side, side, side, 1.0f };
 		vertices[6].texture = { 2.0f / 3.0f, 2.0f / 4.0f };
 
-		vertices[7].position = { side, side, side };
+		vertices[7].position = { side, side, side, 1.0f };
 		vertices[7].texture = { 1.0f / 3.0f, 2.0f / 4.0f };
 
-		vertices[8].position = { -side, -side, -side };
+		vertices[8].position = { -side, -side, -side, 1.0f };
 		vertices[8].texture = { 2.0f / 3.0f,4.0f / 4.0f };
 
-		vertices[9].position = { side, -side, -side };
+		vertices[9].position = { side, -side, -side, 1.0f };
 		vertices[9].texture = { 1.0f / 3.0f, 4.0f / 4.0f };
 
-		vertices[10].position = { -side, -side, -side };
+		vertices[10].position = { -side, -side, -side, 1.0f };
 		vertices[10].texture = { 3.0f / 3.0f, 1.0f / 4.0f };
 
-		vertices[11].position = { -side, -side, side };
+		vertices[11].position = { -side, -side, side, 1.0f };
 		vertices[11].texture = { 3.0f / 3.0f, 2.0f / 4.0f };
 
-		vertices[12].position = { side, -side, -side };
+		vertices[12].position = { side, -side, -side, 1.0f };
 		vertices[12].texture = { 0.0f / 3.0f, 1.0f / 4.0f };
 
-		vertices[13].position = { side, -side, side };
+		vertices[13].position = { side, -side, side, 1.0f };
 		vertices[13].texture = { 0.0f / 3.0f, 2.0f / 4.0f };
 
 		return
@@ -103,35 +103,35 @@ public:
 		constexpr float side = 1.0f / 2.0f;
 
 		std::vector<V> vertices( 24 );
-		vertices[0].position = { -side,-side,-side };// 0 near side
-		vertices[1].position = { side,-side,-side };// 1
-		vertices[2].position = { -side,side,-side };// 2
-		vertices[3].position = { side,side,-side };// 3
+		vertices[0].position = { -side,-side,-side,1.0f };// 0 near side
+		vertices[1].position = { side,-side,-side,1.0f };// 1
+		vertices[2].position = { -side,side,-side,1.0f };// 2
+		vertices[3].position = { side,side,-side,1.0f };// 3
 
-		vertices[4].position = { -side,-side,side };// 4 far side
-		vertices[5].position = { side,-side,side };// 5
-		vertices[6].position = { -side,side,side };// 6
-		vertices[7].position = { side,side,side };// 7
+		vertices[4].position = { -side,-side,side,1.0f };// 4 far side
+		vertices[5].position = { side,-side,side,1.0f };// 5
+		vertices[6].position = { -side,side,side,1.0f };// 6
+		vertices[7].position = { side,side,side,1.0f };// 7
 
-		vertices[8].position = { -side,-side,-side };// 8 left side
-		vertices[9].position = { -side,side,-side };// 9
-		vertices[10].position = { -side,-side,side };// 10
-		vertices[11].position = { -side,side,side };// 11
+		vertices[8].position = { -side,-side,-side,1.0f };// 8 left side
+		vertices[9].position = { -side,side,-side,1.0f };// 9
+		vertices[10].position = { -side,-side,side,1.0f };// 10
+		vertices[11].position = { -side,side,side,1.0f };// 11
 
-		vertices[12].position = { side,-side,-side };// 12 right side
-		vertices[13].position = { side,side,-side };// 13
-		vertices[14].position = { side,-side,side };// 14
-		vertices[15].position = { side,side,side };// 15
+		vertices[12].position = { side,-side,-side,1.0f };// 12 right side
+		vertices[13].position = { side,side,-side,1.0f };// 13
+		vertices[14].position = { side,-side,side,1.0f };// 14
+		vertices[15].position = { side,side,side,1.0f };// 15
 
-		vertices[16].position = { -side,-side,-side };// 16 bottom side
-		vertices[17].position = { side,-side,-side };// 17
-		vertices[18].position = { -side,-side,side };// 18
-		vertices[19].position = { side,-side,side };// 19
+		vertices[16].position = { -side,-side,-side,1.0f };// 16 bottom side
+		vertices[17].position = { side,-side,-side,1.0f };// 17
+		vertices[18].position = { -side,-side,side,1.0f };// 18
+		vertices[19].position = { side,-side,side,1.0f };// 19
 
-		vertices[20].position = { -side,side,-side };// 20 top side
-		vertices[21].position = { side,side,-side };// 21
-		vertices[22].position = { -side,side,side };// 22
-		vertices[23].position = { side,side,side };// 23
+		vertices[20].position = { -side,side,-side,1.0f };// 20 top side
+		vertices[21].position = { side,side,-side,1.0f };// 21
+		vertices[22].position = { -side,side,side,1.0f };// 22
+		vertices[23].position = { side,side,side,1.0f };// 23
 
 		return
 		{

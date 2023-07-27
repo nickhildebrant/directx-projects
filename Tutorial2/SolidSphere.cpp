@@ -9,7 +9,7 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 	if ( !IsStaticInitialized() )
 	{
 		struct Vertex {
-			DirectX::XMFLOAT3 position;
+			DirectX::XMFLOAT4 position;
 		};
 
 		auto model = Sphere::Make<Vertex>();
@@ -26,15 +26,14 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 		AddStaticBind( std::make_unique<PixelShader>( renderer, L"SolidPixelShader.cso" ) );
 
 		struct PSColorConstant {
-			DirectX::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
-			float padding;
+			DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 		} colorConst;
 
 		AddStaticBind( std::make_unique<PixelConstantBuffer<PSColorConstant>>( renderer, colorConst ) );
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
 		AddStaticBind( std::make_unique<InputLayout>( renderer, ied, pvsbc ) );

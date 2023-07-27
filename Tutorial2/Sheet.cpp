@@ -16,7 +16,7 @@ Sheet::Sheet( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribut
 	if ( !IsStaticInitialized() )
 	{
 		struct Vertex {
-			DirectX::XMFLOAT3 position;
+			DirectX::XMFLOAT4 position;
 
 			struct {
 				float u;
@@ -47,8 +47,8 @@ Sheet::Sheet( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribut
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
 		AddStaticBind( std::make_unique<InputLayout>( renderer, ied, pvsbc ) );

@@ -32,5 +32,5 @@ private:
 	float dphi;
 	float dchi;
 
-	DirectX::XMFLOAT3X3 modelTransform;
+	DirectX::XMFLOAT4X4 modelTransform;
 };

@@ -14,8 +14,8 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 	{
 		struct Vertex
 		{
-			DirectX::XMFLOAT3 position;
-			DirectX::XMFLOAT3 normal;
+			DirectX::XMFLOAT4 position;
+			DirectX::XMFLOAT4 normal;
 		};
 
 		auto model = Cube::MakeIndependent<Vertex>();
@@ -33,8 +33,8 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
 		AddStaticBind(std::make_unique<InputLayout>(renderer, inputDesc, pvsbc));
@@ -57,7 +57,7 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 	AddBind( std::make_unique<PixelConstantBuffer<MaterialConstant>>( renderer, colorConstant, 1u ) );
 
 	// model deformation - per instance
-	DirectX::XMStoreFloat3x3(&modelTransform, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng)));
+	DirectX::XMStoreFloat4x4(&modelTransform, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng)));
 }
 
 void Box::Update(float dt) noexcept
@@ -72,7 +72,7 @@ void Box::Update(float dt) noexcept
 
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
-	return DirectX::XMLoadFloat3x3( &modelTransform ) *
+	return DirectX::XMLoadFloat4x4( &modelTransform ) *
 		DirectX::XMMatrixRotationRollPitchYaw( pitch, yaw, roll ) *
 		DirectX::XMMatrixTranslation( r, 0.0f, 0.0f ) *
 		DirectX::XMMatrixRotationRollPitchYaw( theta, phi, chi );

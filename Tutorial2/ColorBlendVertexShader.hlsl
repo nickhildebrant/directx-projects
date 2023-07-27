@@ -7,10 +7,10 @@ struct VertexShaderOutput {
 	float4 position : SV_Position;
 };
 
-VertexShaderOutput main(float3 position : Position, float4 color : Color)
+VertexShaderOutput main(float4 position : Position, float4 color : Color)
 {
 	VertexShaderOutput vertexOutput;
-	vertexOutput.position = mul(float4(position, 1.0f), transform);
+	vertexOutput.position = mul(position, transform);
 	vertexOutput.color = color;
 	return vertexOutput;
 }

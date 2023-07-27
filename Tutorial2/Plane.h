@@ -34,7 +34,7 @@ public:
 				for (int x = 0; x < numberVerticesX; x++, i++)
 				{
 					const auto vec = DirectX::XMVectorAdd(bottomLeft, DirectX::XMVectorSet(float(x) * xDivisionSize, yPosition, 0.0f, 0.0f));
-					DirectX::XMStoreFloat3(&vertices[i].position , vec);
+					DirectX::XMStoreFloat4(&vertices[i].position , vec);
 				}
 			}
 		}

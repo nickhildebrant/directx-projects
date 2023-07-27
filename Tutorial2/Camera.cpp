@@ -3,7 +3,7 @@
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 {
-	const auto position = DirectX::XMVector3Transform( DirectX::XMVectorSet( 0.0f, 0.0f, -r, 0.0f ), DirectX::XMMatrixRotationRollPitchYaw( phi, -theta, 0.0f ) );
+	const auto position = DirectX::XMVector4Transform( DirectX::XMVectorSet( 0.0f, 0.0f, -r, 0.0f ), DirectX::XMMatrixRotationRollPitchYaw( phi, -theta, 0.0f ) );
 
 	return DirectX::XMMatrixLookAtLH( position, DirectX::XMVectorZero(), DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) ) * DirectX::XMMatrixRotationRollPitchYaw( pitch, -yaw, roll );
 }

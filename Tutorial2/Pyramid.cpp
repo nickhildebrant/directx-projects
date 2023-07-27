@@ -13,25 +13,19 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 	{
 		struct Vertex
 		{
-			DirectX::XMFLOAT3 position;
-			struct
-			{
-				unsigned char r;
-				unsigned char g;
-				unsigned char b;
-				unsigned char a;
-			} color;
+			DirectX::XMFLOAT4 position;
+			DirectX::XMFLOAT4 color;
 		};
 
 		auto model = Cone::MakeTesselated<Vertex>(4);
 
 		// set vertex colors for mesh
-		model.vertices[0].color = { 255,255,0 };
-		model.vertices[1].color = { 255,255,0 };
-		model.vertices[2].color = { 255,255,0 };
-		model.vertices[3].color = { 255,255,0 };
-		model.vertices[4].color = { 255,255,80 };
-		model.vertices[5].color = { 255,10,0 };
+		model.vertices[0].color = { 1.0f,	1.0f,	0.0f,	1.0f };
+		model.vertices[1].color = { 1.0f,	1.0f,	0.0f,	1.0f };
+		model.vertices[2].color = { 1.0f,	1.0f,	0.0f,	1.0f };
+		model.vertices[3].color = { 1.0f,	1.0f,	0.0f,	1.0f };
+		model.vertices[4].color = { 1.0f,	1.0f,	0.8f,	1.0f };
+		model.vertices[5].color = { 1.0f,	0.1f,	0.0f,	1.0f };
 
 		// deform mesh linearly
 		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 0.7f));
@@ -48,8 +42,8 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Color",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
 		AddStaticBind(std::make_unique<InputLayout>(renderer, ied, pvsbc));

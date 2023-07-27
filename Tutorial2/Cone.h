@@ -18,18 +18,18 @@ public:
 		for (int iLong = 0; iLong < longitudeDivisions; iLong++)
 		{
 			vertices.emplace_back();
-			auto vec = DirectX::XMVector3Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
-			DirectX::XMStoreFloat3(&vertices.back().position, vec);
+			auto vec = DirectX::XMVector4Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
+			DirectX::XMStoreFloat4(&vertices.back().position, vec);
 		}
 
 		// the center
 		vertices.emplace_back();
-		vertices.back().position = { 0.0f,0.0f,-1.0f };
+		vertices.back().position = { 0.0f,0.0f,-1.0f,1.0f };
 		const auto iCenter = (unsigned short)(vertices.size() - 1);
 
 		// the tip :darkness:
 		vertices.emplace_back();
-		vertices.back().position = { 0.0f,0.0f,1.0f };
+		vertices.back().position = { 0.0f,0.0f,1.0f,1.0f };
 		const auto iTip = (unsigned short)(vertices.size() - 1);
 
 

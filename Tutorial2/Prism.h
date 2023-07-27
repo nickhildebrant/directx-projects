@@ -30,16 +30,16 @@ public:
 			// near base
 			{
 				vertices.emplace_back();
-				auto vec = DirectX::XMVector3Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
-				DirectX::XMStoreFloat3(&vertices.back().position, vec);
+				auto vec = DirectX::XMVector4Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
+				DirectX::XMStoreFloat4(&vertices.back().position, vec);
 			}
 
 			// far base
 			{
 				vertices.emplace_back();
-				auto vec = DirectX::XMVector3Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
+				auto vec = DirectX::XMVector4Transform(base, DirectX::XMMatrixRotationZ(longitudeAngle * iLong));
 				vec = DirectX::XMVectorAdd(vec, offset);
-				DirectX::XMStoreFloat3(&vertices.back().position, vec);
+				DirectX::XMStoreFloat4(&vertices.back().position, vec);
 			}
 		}
 

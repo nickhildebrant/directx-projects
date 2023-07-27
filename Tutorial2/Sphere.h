@@ -20,13 +20,13 @@ public:
 		std::vector<V> vertices;
 		for (int iLatitude = 1; iLatitude < latitudeDivisions; iLatitude++)
 		{
-			const auto latitudeBase = DirectX::XMVector3Transform(base, DirectX::XMMatrixRotationX(latitudeAngle * iLatitude));
+			const auto latitudeBase = DirectX::XMVector4Transform(base, DirectX::XMMatrixRotationX(latitudeAngle * iLatitude));
 			 
 			for (int iLongitude = 0; iLongitude < longitudeDivisions; iLongitude++)
 			{
 				vertices.emplace_back();
-				auto vec = DirectX::XMVector3Transform(latitudeBase, DirectX::XMMatrixRotationZ(longitudeAngle * iLongitude));
-				DirectX::XMStoreFloat3(&vertices.back().position, vec);
+				auto vec = DirectX::XMVector4Transform(latitudeBase, DirectX::XMMatrixRotationZ(longitudeAngle * iLongitude));
+				DirectX::XMStoreFloat4(&vertices.back().position, vec);
 			}
 		}
 
@@ -34,11 +34,11 @@ public:
 		const auto iNorthPole = (unsigned short)vertices.size();
 		vertices.emplace_back();
 
-		DirectX::XMStoreFloat3(&vertices.back().position, base);
+		DirectX::XMStoreFloat4(&vertices.back().position, base);
 		const auto iSouthPole = (unsigned short)vertices.size();
 		vertices.emplace_back();
 
-		DirectX::XMStoreFloat3(&vertices.back().position, DirectX::XMVectorNegate(base));
+		DirectX::XMStoreFloat4(&vertices.back().position, DirectX::XMVectorNegate(base));
 
 		const auto calcIdx = [latitudeDivisions, longitudeDivisions](unsigned short iLatitude, unsigned short iLongitude){ return iLatitude * longitudeDivisions + iLongitude; };
 
