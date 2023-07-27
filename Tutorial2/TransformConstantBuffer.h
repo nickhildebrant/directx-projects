@@ -5,7 +5,7 @@
 
 class TransformConstantBuffer : public Bindable {
 public:
-	TransformConstantBuffer(Renderer& renderer, const Drawable& parent);
+	TransformConstantBuffer(Renderer& renderer, const Drawable& parent, UINT slot = 0);
 	void Bind(Renderer& renderer) noexcept override;
 
 private:

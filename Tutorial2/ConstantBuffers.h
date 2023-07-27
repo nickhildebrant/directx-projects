@@ -15,7 +15,7 @@ public:
 		GetContext(renderer)->Unmap(m_constantBuffer.Get(), 0u);
 	}
 
-	ConstantBuffer(Renderer& renderer, const C& consts)
+	ConstantBuffer(Renderer& renderer, const C& consts, UINT slot = 0 ) : slot( slot )
 	{
 		INFO_MANAGER(renderer);
 
@@ -32,7 +32,7 @@ public:
 		GFX_THROW_INFO(GetDevice(renderer)->CreateBuffer(&bufferDescription, &subresourceData, &m_constantBuffer));
 	}
 
-	ConstantBuffer(Renderer& renderer)
+	ConstantBuffer(Renderer& renderer, UINT slot = 0) : slot(slot)
 	{
 		INFO_MANAGER(renderer);
 
@@ -46,11 +46,13 @@ public:
 		GFX_THROW_INFO(GetDevice(renderer)->CreateBuffer(&bufferDescription, nullptr, &m_constantBuffer));
 	}
 protected:
+	UINT slot;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
 };
 
 template<typename C>
 class VertexConstantBuffer : public ConstantBuffer<C> {
+	using ConstantBuffer<C>::slot;
 	using ConstantBuffer<C>::m_constantBuffer;
 	using Bindable::GetContext;
 
@@ -59,12 +61,13 @@ public:
 
 	void Bind(Renderer& renderer) noexcept override
 	{
-		GetContext(renderer)->VSSetConstantBuffers(0u, 1u, m_constantBuffer.GetAddressOf());
+		GetContext(renderer)->VSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 	}
 };
 
 template<typename C>
 class PixelConstantBuffer : public ConstantBuffer<C> {
+	using ConstantBuffer<C>::slot;
 	using ConstantBuffer<C>::m_constantBuffer;
 	using Bindable::GetContext;
 
@@ -73,6 +76,6 @@ public:
 
 	void Bind(Renderer& renderer) noexcept override
 	{
-		GetContext(renderer)->PSSetConstantBuffers(0u, 1u, m_constantBuffer.GetAddressOf());
+		GetContext(renderer)->PSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 	}
 };

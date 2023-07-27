@@ -20,7 +20,6 @@ void Light::SpawnControlWindow() noexcept
 		ImGui::SliderFloat( "Intensity", &bufferData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2 );
 		ImGui::ColorEdit3( "Diffuse Color", &bufferData.diffuseColor.x );
 		ImGui::ColorEdit3( "Ambient", &bufferData.ambientColor.x );
-		ImGui::ColorEdit3( "Material", &bufferData.materialColor.x );
 
 		ImGui::Text( "Falloff" );
 		ImGui::SliderFloat( "Constant", &bufferData.attenuationConstant, 0.05f, 10.0f, "%.2f", 4 );
@@ -41,7 +40,6 @@ void Light::Reset() noexcept
 	bufferData =
 	{
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
-		{ 0.7f, 0.7f, 0.9f, 1.0f },
 		{ 0.05f, 0.05f, 0.05f, 1.0f },
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		1.0f,

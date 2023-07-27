@@ -20,7 +20,9 @@ public:
 
 		std::unique_ptr<Drawable> operator()()
 		{
-			return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist );
+			const DirectX::XMFLOAT4 mat{ cdist( rng ), cdist( rng ), cdist( rng ), 1.0f };
+
+			return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist, mat );
 
 			/*switch (typedist(rng))
 			{
@@ -54,6 +56,7 @@ public:
 		std::uniform_real_distribution<float> bdist{ 0.4f, 3.0f };
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
+		std::uniform_real_distribution<float> cdist{ 0.0f, 1.0f };
 		std::uniform_int_distribution<int> typedist{ 0, 0 };
 	};
 

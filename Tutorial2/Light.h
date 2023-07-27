@@ -17,7 +17,6 @@ private:
 	struct LightConstantBuffer {
 		DirectX::XMFLOAT4 position;
 
-		DirectX::XMFLOAT4 materialColor;
 		DirectX::XMFLOAT4 ambientColor;
 		DirectX::XMFLOAT4 diffuseColor;
 

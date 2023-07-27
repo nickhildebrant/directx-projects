@@ -1,7 +1,6 @@
 cbuffer LightConstantBuffer {
     float4 lightPosition;
     
-    float4 materialColor;
     float4 ambientColor;
     float4 diffuseColor;
     
@@ -9,6 +8,11 @@ cbuffer LightConstantBuffer {
     float attenuationConstant;
     float attenuationLinear;
     float attenuationQuadradic;
+};
+
+cbuffer ObjectConstantBuffer
+{
+    float3 materialColor;
 };
 
 static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };

@@ -1,8 +1,8 @@
 #include "TransformConstantBuffer.h"
 
-TransformConstantBuffer::TransformConstantBuffer(Renderer& renderer, const Drawable& parent) : parent(parent)
+TransformConstantBuffer::TransformConstantBuffer(Renderer& renderer, const Drawable& parent, UINT slot) : parent(parent)
 {
-	if ( !pVertexConstantBuffer ) pVertexConstantBuffer = std::make_unique<VertexConstantBuffer<Transforms>>( renderer );
+	if ( !pVertexConstantBuffer ) pVertexConstantBuffer = std::make_unique<VertexConstantBuffer<Transforms>>( renderer, slot );
 }
 
 void TransformConstantBuffer::Bind(Renderer& renderer) noexcept
