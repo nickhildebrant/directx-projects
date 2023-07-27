@@ -50,6 +50,9 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 
 	struct MaterialConstant {
 		DirectX::XMFLOAT4 color;
+		float specularIntensity = 1.0f;
+		float shininess = 20.f;
+		float padding[2];
 	} colorConstant;
 
 	colorConstant.color = materialColor;
