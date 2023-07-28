@@ -7,8 +7,7 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 	std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, std::uniform_real_distribution<float>& bdist,
 	DirectX::XMFLOAT4 materialColor ) 
 	:
-	r(rdist(rng)), droll(ddist(rng)), dpitch(ddist(rng)), dyaw(ddist(rng)), dphi(odist(rng)), dtheta(odist(rng)),
-	dchi(odist(rng)), chi(adist(rng)), theta(adist(rng)), phi(adist(rng))
+	TestPoly( renderer, rng, adist, ddist, odist, rdist )
 {
 	if (!IsStaticInitialized())
 	{
@@ -63,20 +62,7 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 	DirectX::XMStoreFloat4x4(&modelTransform, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng)));
 }
 
-void Box::Update(float dt) noexcept
-{
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
-}
-
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
-	return DirectX::XMLoadFloat4x4( &modelTransform ) *
-		DirectX::XMMatrixRotationRollPitchYaw( pitch, yaw, roll ) *
-		DirectX::XMMatrixTranslation( r, 0.0f, 0.0f ) *
-		DirectX::XMMatrixRotationRollPitchYaw( theta, phi, chi );
+	return DirectX::XMLoadFloat4x4( &modelTransform ) * TestPoly::GetTransformXM();
 }

@@ -219,6 +219,7 @@
     <ClInclude Include="SolidSphere.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TestPoly.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedBox.h" />
     <ClInclude Include="Timer.h" />
