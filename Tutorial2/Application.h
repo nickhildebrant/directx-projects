@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Timer.h"
 #include "Box.h"
+#include "Cylinder.h"
 
 #include "Camera.h"
 #include "Light.h"
@@ -22,26 +23,18 @@ public:
 		{
 			const DirectX::XMFLOAT4 mat{ cdist( rng ), cdist( rng ), cdist( rng ), 1.0f };
 
-			return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist, mat );
-
-			/*switch (typedist(rng))
+			switch (typedist(rng))
 			{
 			case 0:
-				return std::make_unique<Pyramid>( renderer, rng, adist, ddist, odist, rdist );
+				return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist, mat );
 
 			case 1:
-				return std::make_unique<Box>( renderer, rng, adist, ddist, odist, rdist, bdist );
-
-			case 2:
-				return std::make_unique<Sheet>( renderer, rng, adist, ddist, odist, rdist );
-
-			case 3:
-				return std::make_unique<TexturedBox>( renderer, rng, adist, ddist, odist, rdist );
+				return std::make_unique<Cylinder>( renderer, rng, adist, ddist, odist, rdist, bdist, tdist );
 
 			default:
 				assert(false && "No available Types");
 				return {};
-			}*/
+			}
 		}
 
 	private:
@@ -54,10 +47,11 @@ public:
 		std::uniform_real_distribution<float> odist{ 0.0f, PI * 0.08f };
 		std::uniform_real_distribution<float> rdist{ 6.0f, 20.0f };
 		std::uniform_real_distribution<float> bdist{ 0.4f, 3.0f };
+		std::uniform_int_distribution<int> tdist{ 3, 30 };
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
 		std::uniform_real_distribution<float> cdist{ 0.0f, 1.0f };
-		std::uniform_int_distribution<int> typedist{ 0, 0 };
+		std::uniform_int_distribution<int> typedist{ 0, 1 };
 	};
 
 private:
