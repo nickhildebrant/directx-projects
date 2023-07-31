@@ -119,6 +119,7 @@ public:
 			DirectX::XMStoreFloat4( &vertices.back().position, vertex );
 			vertices.back().normal = { 0.0f,0.0f,1.0f,1.0f };
 		}
+
 		// fusilage vertices
 		const auto iFusilage = (unsigned short) vertices.size();
 		for ( int iLong = 0; iLong < longDiv; iLong++ )
@@ -126,7 +127,7 @@ public:
 			// near base
 			{
 				vertices.emplace_back();
-				auto vertex = DirectX::XMVector3Transform( base, DirectX::XMMatrixRotationZ( longitudeAngle * iLong ) );
+				auto vertex = DirectX::XMVector4Transform( base, DirectX::XMMatrixRotationZ( longitudeAngle * iLong ) );
 				DirectX::XMStoreFloat4( &vertices.back().position, vertex );
 				vertices.back().normal = { vertices.back().position.x,vertices.back().position.y,0.0f,1.0f };
 			}
@@ -146,23 +147,25 @@ public:
 		// near base indices
 		for ( unsigned short iLong = 0; iLong < longDiv; iLong++ )
 		{
-			const auto i = iLong * 2;
-			const auto mod = longDiv * 2;
+			const auto i = iLong;
+			const auto mod = longDiv;
+
 			// near
 			indices.push_back( i + iBaseNear );
 			indices.push_back( iCenterNear );
-			indices.push_back( ( i + 2 ) % mod + iBaseNear );
+			indices.push_back( ( i + 1 ) % mod + iBaseNear );
 		}
 
 		// far base indices
 		for ( unsigned short iLong = 0; iLong < longDiv; iLong++ )
 		{
-			const auto i = iLong * 2;
-			const auto mod = longDiv * 2;
+			const auto i = iLong;
+			const auto mod = longDiv;
+
 			// far
 			indices.push_back( iCenterFar );
-			indices.push_back( i + 1 + iBaseFar );
-			indices.push_back( ( i + 3 ) % mod + iBaseFar );
+			indices.push_back( i + iBaseFar );
+			indices.push_back( ( i + 1 ) % mod + iBaseFar );
 		}
 
 		// fusilage indices

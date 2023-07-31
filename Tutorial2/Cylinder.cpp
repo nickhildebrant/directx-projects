@@ -39,7 +39,7 @@ Cylinder::Cylinder( Renderer& renderer, std::mt19937& rng, std::uniform_real_dis
 
 		struct PSMaterialConstant
 		{
-			DirectX::XMFLOAT4 colors[6] = {
+			alignas(16) DirectX::XMFLOAT4 colors[6] = {
 				{1.0f,0.0f,0.0f,1.0f},
 				{0.0f,1.0f,0.0f,1.0f},
 				{0.0f,0.0f,1.0f,1.0f},

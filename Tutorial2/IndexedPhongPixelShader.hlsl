@@ -28,7 +28,7 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, uint tid : 
     // light vector data
     float distance = length(lightPosition - worldPosition);
     float4 L = normalize(lightPosition - worldPosition);
-    float4 N = normalize(normal);
+    float4 N = normalize(-normal);
     float4 V = normalize(worldPosition);
     float4 R = reflect(-L, N);
     
