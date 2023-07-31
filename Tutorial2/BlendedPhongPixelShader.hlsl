@@ -13,9 +13,9 @@ cbuffer LightConstantBuffer
 
 cbuffer ObjectConstantBuffer
 {
-    float4 materialColors[6];
     float specularIntensity;
     float shininess;
+    float padding[2];
 };
 
 static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -23,7 +23,7 @@ static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 static const float ambientIntensity = 1.0f;
 static const float lightIntensity = 1.0f;
 
-float4 main(float4 worldPosition : Position, float4 normal : Normal, uint tid : SV_PrimitiveID) : SV_Target
+float4 main(float4 worldPosition : Position, float4 normal : Normal, float4 color : Color) : SV_Target
 {
     // light vector data
     float distance = length(lightPosition - worldPosition);
@@ -41,8 +41,8 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, uint tid : 
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
     float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
-    float4 color = saturate(ambient + diffuse + specular) * materialColors[(tid / 2) % 6];
+    float4 colorOut = saturate(ambient + diffuse + specular) * color;
 
-    color.a = 1;
-    return color;
+    colorOut.a = 1;
+    return colorOut;
 }

@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Box.h"
 #include "Cylinder.h"
+#include "Pyramid.h"
 
 #include "Camera.h"
 #include "Light.h"
@@ -31,6 +32,9 @@ public:
 			case 1:
 				return std::make_unique<Cylinder>( renderer, rng, adist, ddist, odist, rdist, bdist, tdist );
 
+			case 2:
+				return std::make_unique<Pyramid>( renderer, rng, adist, ddist, odist, rdist, tdist );
+
 			default:
 				assert(false && "No available Types");
 				return {};
@@ -51,7 +55,7 @@ public:
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
 		std::uniform_real_distribution<float> cdist{ 0.0f, 1.0f };
-		std::uniform_int_distribution<int> typedist{ 0, 1 };
+		std::uniform_int_distribution<int> typedist{ 0, 2 };
 	};
 
 private:
