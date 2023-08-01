@@ -21,12 +21,14 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 		auto model = Cone::MakeTesselatedIndependentFaces<Vertex>( tesselation );
 
 		// set vertex colors for mesh
-		model.vertices[0].color = { 1.0f,	1.0f,	0.0f,	1.0f };
-		model.vertices[1].color = { 1.0f,	1.0f,	0.0f,	1.0f };
-		model.vertices[2].color = { 1.0f,	1.0f,	0.0f,	1.0f };
-		model.vertices[3].color = { 1.0f,	1.0f,	0.0f,	1.0f };
-		model.vertices[4].color = { 1.0f,	1.0f,	0.8f,	1.0f };
-		model.vertices[5].color = { 1.0f,	0.1f,	0.0f,	1.0f };
+		for ( auto& v : model.vertices )
+		{
+			v.color = { 0.1f, 0.1f, 1.0f, 1.0f };
+		}
+		for ( int i = 0; i < tesselation; i++ )
+		{
+			model.vertices[i * 3].color = { 1.0f, 0.1f, 0.1f, 1.0f };
+		}
 
 		// deform mesh linearly
 		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 0.7f));
