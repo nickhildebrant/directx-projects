@@ -54,67 +54,66 @@ public:
 		return { std::move(vertices), std::move(indices) };
 	}
 
-	template<class V>
-	static IndexedTriangleList<V> MakeTesselatedIndependentFaces( int longDiv )
-	{
-		assert( longDiv >= 3 );
+    template<class V>
+    static IndexedTriangleList<V> MakeTesselatedIndependentFaces( int longDiv )
+    {
+        assert( longDiv >= 3 );
 
-		const auto base = DirectX::XMVectorSet( 1.0f, 0.0f, -1.0f, 0.0f );
-		const float longitudeAngle = 2.0f * PI / longDiv;
+        constexpr float radius = 1.0f;
+        const float longitudeAngle = 2.0f * PI / longDiv;
 
-		std::vector<V> vertices;
+        std::vector<V> vertices;
+        std::vector<unsigned short> indices;
 
-		// cone vertices
-		const auto iCone = (unsigned short) vertices.size();
-		for ( int iLong = 0; iLong < longDiv; iLong++ )
-		{
-			const float thetas[] = {
-				longitudeAngle * iLong,
-				longitudeAngle * ( ( ( iLong + 1 ) == longDiv ) ? 0 : ( iLong + 1 ) )
-			};
+        // Cone vertices
+        const unsigned short iConeTip = (unsigned short) vertices.size();
+        vertices.emplace_back(); // Tip vertex at (0, 0, 1)
+        vertices.back().position = { 0.0f, 0.0f, radius, 1.0f };
 
-			vertices.emplace_back();
-			vertices.back().position = { 0.0f,0.0f,1.0f,1.0f };
+        for ( int iLong = 0; iLong < longDiv; iLong++ )
+        {
+            const float theta0 = longitudeAngle * iLong;
+            const float theta1 = longitudeAngle * ( iLong + 1 );
 
-			for ( auto theta : thetas )
-			{
-				vertices.emplace_back();
-				const auto vec = DirectX::XMVector4Transform( base, DirectX::XMMatrixRotationZ( theta ) );
-				DirectX::XMStoreFloat4( &vertices.back().position, vec );
-			}
-		}
+            V vertex0, vertex1;
+            vertex0.position = { radius * std::cos( theta0 ), radius * std::sin( theta0 ), -radius, 1.0f };
+            vertex1.position = { radius * std::cos( theta1 ), radius * std::sin( theta1 ), -radius, 1.0f };
 
-		// base vertices
-		const auto iBaseCenter = (unsigned short) vertices.size();
-		vertices.emplace_back();
-		vertices.back().position = { 0.0f,0.0f,-1.0f,1.0f };
+            vertices.push_back( vertex0 );
+            vertices.push_back( vertex1 );
+        }
 
-		const auto iBaseEdge = (unsigned short) vertices.size();
-		for ( int iLong = 0; iLong < longDiv; iLong++ )
-		{
-			vertices.emplace_back();
-			auto vec = DirectX::XMVector4Transform( base, DirectX::XMMatrixRotationZ( longitudeAngle * iLong ) );
-			DirectX::XMStoreFloat4( &vertices.back().position, vec );
-		}
+        // Cone indices
+        for ( unsigned short iLong = 0; iLong < longDiv; iLong++ )
+        {
+            indices.push_back( iConeTip );
+            indices.push_back( iLong * 2 + 1 );
+            indices.push_back( ( iLong + 1 ) % longDiv * 2 + 1 );
+        }
 
-		std::vector<unsigned short> indices;
+        // Base vertices
+        const unsigned short iBaseCenter = (unsigned short) vertices.size();
+        vertices.emplace_back(); // Base center vertex at (0, 0, -1)
+        vertices.back().position = { 0.0f, 0.0f, -radius, 1.0f };
 
-		// cone indices
-		for ( unsigned short i = 0; i < longDiv * 3; i++ )
-		{
-			indices.push_back( i + iCone );
-		}
+        const unsigned short iBaseStart = (unsigned short) vertices.size();
+        for ( int iLong = 0; iLong < longDiv; iLong++ )
+        {
+            V vertex;
+            vertex.position = { radius * std::cos( longitudeAngle * iLong ), radius * std::sin( longitudeAngle * iLong ), -radius, 1.0f };
+            vertices.push_back( vertex );
+        }
 
-		// base indices
-		for ( unsigned short iLong = 0; iLong < longDiv; iLong++ )
-		{
-			indices.push_back( iBaseCenter );
-			indices.push_back( ( iLong + 1 ) % longDiv + iBaseEdge );
-			indices.push_back( iLong + iBaseEdge );
-		}
+        // Base indices
+        for ( unsigned short iLong = 0; iLong < longDiv; iLong++ )
+        {
+            indices.push_back( iBaseCenter );
+            indices.push_back( ( iLong + 1 ) % longDiv + iBaseStart );
+            indices.push_back( iLong + iBaseStart );
+        }
 
-		return { std::move( vertices ),std::move( indices ) };
-	}
+        return { std::move( vertices ), std::move( indices ) };
+    }
 
 	template<class V>
 	static IndexedTriangleList<V> Make()
