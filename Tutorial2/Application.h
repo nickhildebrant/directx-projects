@@ -5,6 +5,7 @@
 #include "Box.h"
 #include "Cylinder.h"
 #include "Pyramid.h"
+#include "TexturedBox.h"
 
 #include "Camera.h"
 #include "Light.h"
@@ -35,6 +36,9 @@ public:
 			case 2:
 				return std::make_unique<Pyramid>( renderer, rng, adist, ddist, odist, rdist, tdist );
 
+			case 3:
+				return std::make_unique<TexturedBox>( renderer, rng, adist, ddist, odist, rdist );
+
 			default:
 				assert(false && "No available Types");
 				return {};
@@ -55,7 +59,7 @@ public:
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
 		std::uniform_real_distribution<float> cdist{ 0.0f, 1.0f };
-		std::uniform_int_distribution<int> typedist{ 0, 2 };
+		std::uniform_int_distribution<int> typedist{ 0, 3 };
 	};
 
 private:

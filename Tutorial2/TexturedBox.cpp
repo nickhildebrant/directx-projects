@@ -10,46 +10,51 @@
 TexturedBox::TexturedBox( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist,
 	std::uniform_real_distribution<float>& ddist, std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist ) 
 	:
-	r( rdist( rng ) ), droll( ddist( rng ) ), dpitch( ddist( rng ) ), dyaw( ddist( rng ) ),
-	dphi( odist( rng ) ), dtheta( odist( rng ) ), dchi( odist( rng ) ), 
-	chi( adist( rng ) ), theta( adist( rng ) ), phi( adist( rng ) )
+	TestPoly( renderer, rng, adist, ddist, odist, rdist )
 {
 	if ( !IsStaticInitialized() )
 	{
 		struct Vertex {
 			DirectX::XMFLOAT4 position;
-
-			struct {
-				float u;
-				float v;
-			} texture;
+			DirectX::XMFLOAT4 normal;
+			DirectX::XMFLOAT2 texCoord;
 		};
 
-		const auto model = Cube::MakeSkinned<Vertex>();
+		auto model = Cube::MakeIndependentTextured<Vertex>();
+		model.SetNormalsIndependentFlat();
 
-		AddStaticBind( std::make_unique<Texture>( renderer, Surface::FromFile( "Images\\cube.png" ) ) );
+		AddStaticBind( std::make_unique<Texture>( renderer, Surface::FromFile( "Images\\walter.png" ) ) );
 
 		AddStaticBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
 
 		AddStaticBind( std::make_unique<Sampler>( renderer ) );
 
-		auto pvs = std::make_unique<VertexShader>( renderer, L"TextureVertexShader.cso" );
+		auto pvs = std::make_unique<VertexShader>( renderer, L"TexturePhongVertexShader.cso" );
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind( std::move( pvs ) );
 
-		AddStaticBind( std::make_unique<PixelShader>( renderer, L"TexturePixelShader.cso" ) );
+		AddStaticBind( std::make_unique<PixelShader>( renderer, L"TexturePhongPixelShader.cso" ) );
 
 		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,32,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 
 		AddStaticBind( std::make_unique<InputLayout>( renderer, ied, pvsbc ) );
 
 		AddStaticBind( std::make_unique<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+
+		struct PixelShaderConstant {
+			float specularIntensity = 0.6f;
+			float specularPower = 30.0f;
+			float padding[2];
+		} colorConstant;
+
+		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderConstant>>( renderer, colorConstant, 1u ) );
 	}
 	else
 	{
@@ -57,21 +62,4 @@ TexturedBox::TexturedBox( Renderer& renderer, std::mt19937& rng, std::uniform_re
 	}
 
 	AddBind( std::make_unique<TransformConstantBuffer>( renderer, *this ) );
-}
-
-void TexturedBox::Update( float dt ) noexcept
-{
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
-}
-
-DirectX::XMMATRIX TexturedBox::GetTransformXM() const noexcept
-{
-	return DirectX::XMMatrixRotationRollPitchYaw( pitch, yaw, roll ) *
-		DirectX::XMMatrixTranslation( r, 0.0f, 0.0f ) *
-		DirectX::XMMatrixRotationRollPitchYaw( theta, phi, chi );
 }
