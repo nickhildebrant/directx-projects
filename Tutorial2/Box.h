@@ -12,7 +12,7 @@ public:
 		std::uniform_real_distribution<float>& bdist,
 		DirectX::XMFLOAT4 materialColor);
 
-	void SpawnControlWindow( Renderer& renderer, int id ) noexcept;
+	bool SpawnControlWindow( Renderer& renderer, int id ) noexcept;
 
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 

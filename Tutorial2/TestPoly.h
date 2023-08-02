@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 #include "DrawableBase.h"
 
 template<class T>
@@ -11,14 +12,21 @@ public:
 		dtheta( odist( rng ) ), dchi( odist( rng ) ), chi( adist( rng ) ), theta( adist( rng ) ), phi( adist( rng ) )
 	{}
 
+	float wrap_angle( float theta )
+	{
+		const float PI = 3.1415926535897932f;
+		const float modded = fmod( theta, 2.0f * PI );
+		return modded >  PI ? ( modded - 2.0f * PI ) : modded;
+	}
+
 	void Update( float dt ) noexcept
 	{
-		roll += droll * dt;
-		pitch += dpitch * dt;
-		yaw += dyaw * dt;
-		theta += dtheta * dt;
-		phi += dphi * dt;
-		chi += dchi * dt;
+		roll = wrap_angle(roll + droll * dt);
+		pitch = wrap_angle( pitch + dpitch * dt );
+		yaw = wrap_angle( yaw + dyaw * dt );
+		theta = wrap_angle( theta + dtheta * dt );
+		phi = wrap_angle( phi + dphi * dt );
+		chi = wrap_angle( chi + dchi * dt );
 	}
 
 	DirectX::XMMATRIX GetTransformXM() const noexcept
@@ -28,7 +36,7 @@ public:
 			DirectX::XMMatrixRotationRollPitchYaw( theta, phi, chi );
 	}
 
-private:
+protected:
 	// positional
 	float r;
 	float roll = 0.0f;

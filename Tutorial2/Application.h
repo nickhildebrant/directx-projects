@@ -1,4 +1,6 @@
 #pragma once
+#include <set>
+
 #include "GUIManager.h"
 #include "Window.h"
 #include "Timer.h"
@@ -62,6 +64,10 @@ public:
 		std::uniform_int_distribution<int> typedist{ 0, 3 };
 	};
 
+	void SpawnSimulationWindow();
+	void SpawnBoxManagerWindow();
+	void SpawnBoxWindows();
+
 private:
 	GUIManager m_guiManager;
 
@@ -76,6 +82,9 @@ private:
 
 	std::vector<std::unique_ptr<class Drawable>> m_models;
 	std::vector<class Box*> boxes;
+
+	std::optional<int> comboBoxIndex;
+	std::set<int> boxIDs;
 
 	void RenderFrame();
 };

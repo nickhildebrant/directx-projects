@@ -55,19 +55,35 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 	DirectX::XMStoreFloat4x4(&modelTransform, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng)));
 }
 
-void Box::SpawnControlWindow( Renderer& renderer, int id ) noexcept
+bool Box::SpawnControlWindow( Renderer& renderer, int id ) noexcept
 {
-	bool dirty = false;
-	if ( ImGui::Begin( "Box" ) )
+	using namespace std::string_literals;
+
+	bool dirty = false, open = true;
+	if ( ImGui::Begin( ( "Box "s + std::to_string( id ) ).c_str(), &open ) )
 	{
-		dirty = dirty || ImGui::ColorEdit3( "Material Color", &m_materialConstants.color.x );
-		dirty = dirty || ImGui::SliderFloat( "Specular Intensity", &m_materialConstants.specularIntensity, 0.05f, 4.0f, "%.2f", 2 );
-		dirty = dirty || ImGui::SliderFloat( "Specular Power", &m_materialConstants.specularPower, 1.0f, 200.0f, "%.2f", 2 );
+		ImGui::Text( "Material Properties" );
+		const auto cd = ImGui::ColorEdit3( "Material Color", &m_materialConstants.color.x );
+		const auto sid = ImGui::SliderFloat( "Specular Intensity", &m_materialConstants.specularIntensity, 0.05f, 4.0f, "%.2f", 2 );
+		const auto spd = ImGui::SliderFloat( "Specular Power", &m_materialConstants.specularPower, 1.0f, 200.0f, "%.2f", 2 );
+		dirty = cd || sid || spd;
+
+		ImGui::Text( "Position" );
+		ImGui::SliderFloat( "R", &r, 0.0f, 80.0f, "%.1f" );
+		ImGui::SliderAngle( "Theta", &theta, -180.0f, 180.0f );
+		ImGui::SliderAngle( "Phi", &phi, -180.0f, 180.0f );
+
+		ImGui::Text( "Orientation" );
+		ImGui::SliderAngle( "Roll", &roll, -180.0f, 180.0f );
+		ImGui::SliderAngle( "Pitch", &pitch, -180.0f, 180.0f );
+		ImGui::SliderAngle( "Yaw", &yaw, -180.0f, 180.0f );
 	}
 
 	ImGui::End();
 
 	if ( dirty ) { SyncMaterial( renderer ); }
+
+	return open;
 }
 
 void Box::SyncMaterial( Renderer& renderer ) noexcept

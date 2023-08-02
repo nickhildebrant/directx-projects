@@ -63,6 +63,22 @@ void Application::RenderFrame()
 
 	light.Draw( m_window.getRenderer() );
 
+	// Sim speed UI
+	SpawnSimulationWindow();
+
+	// imgui windows for lights and camera
+	camera.SpawnControlWindow();
+	light.SpawnControlWindow();
+
+	// Box UI
+	SpawnBoxManagerWindow();
+	SpawnBoxWindows();
+
+	m_window.getRenderer().EndFrame();
+}
+
+void Application::SpawnSimulationWindow()
+{
 	//if ( showUI ) ImGui::ShowDemoWindow( &showUI ); // Demo UI
 	if ( ImGui::Begin( "Simulation Speed" ) )
 	{
@@ -70,14 +86,55 @@ void Application::RenderFrame()
 		ImGui::Text( "Application average %.2f ms/frame (%.0f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
 		ImGui::Text( "(Hold Space to Pause) Status: %s", m_window.keyboard.isKeyPressed( VK_SPACE ) ? "PAUSED" : "RUNNING" );
 	}
+
 	ImGui::End();
+}
 
-	// imgui windows for lights and camera
-	camera.SpawnControlWindow();
-	light.SpawnControlWindow();
+void Application::SpawnBoxManagerWindow()
+{
+	// imgui window to open box windows
+	if ( ImGui::Begin( "Boxes" ) )
+	{
+		using namespace std::string_literals;
+		const auto preview = comboBoxIndex ? std::to_string( *comboBoxIndex ) : "Choose a box..."s;
+		if ( ImGui::BeginCombo( "Box Number", preview.c_str() ) )
+		{
+			for ( int i = 0; i < boxes.size(); i++ )
+			{
+				const bool selected = true;
+				if ( ImGui::Selectable( std::to_string( i ).c_str(), selected ) )
+				{
+					comboBoxIndex = i;
+				}
 
-	// imgui window to adjust box instance parameters
-	boxes.front()->SpawnControlWindow( m_window.getRenderer(), 69 );
+				if ( selected ) { ImGui::SetItemDefaultFocus(); }
+			}
 
-	m_window.getRenderer().EndFrame();
+			ImGui::EndCombo();
+		}
+
+		if ( ImGui::Button( "Spawn Control Window" ) && comboBoxIndex )
+		{
+			boxIDs.insert( *comboBoxIndex );
+			comboBoxIndex.reset();
+		}
+	}
+
+	ImGui::End();
+}
+
+void Application::SpawnBoxWindows()
+{
+	// imgui box attribute control windows
+	for ( auto i = boxIDs.begin(); i != boxIDs.end(); )
+	{
+		if ( !boxes[*i]->SpawnControlWindow( m_window.getRenderer(), *i ) )
+		{
+			i = boxIDs.erase( i );
+		}
+		else
+		{
+			i++;
+		}
+	}
 }
