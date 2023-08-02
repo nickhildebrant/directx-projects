@@ -75,6 +75,7 @@ private:
 	float simulationSpeed = 1.0f;
 
 	std::vector<std::unique_ptr<class Drawable>> m_models;
+	std::vector<class Box*> boxes;
 
 	void RenderFrame();
 };

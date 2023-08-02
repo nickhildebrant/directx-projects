@@ -10,40 +10,11 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 {
 	if (!IsStaticInitialized())
 	{
-		struct Vertex
-		{
-			DirectX::XMFLOAT4 position;
-			DirectX::XMFLOAT4 normal;
-			DirectX::XMFLOAT4 color;
-		};
-
-		int tesselation = tdist( rng );
-		auto model = Cone::MakeTesselatedIndependentFaces<Vertex>( tesselation );
-
-		// set vertex colors for mesh
-		for ( auto& v : model.vertices )
-		{
-			v.color = { 0.1f, 0.1f, 1.0f, 1.0f };
-		}
-		for ( int i = 0; i < tesselation; i++ )
-		{
-			model.vertices[i * 3].color = { 1.0f, 0.1f, 0.1f, 1.0f };
-		}
-
-		// deform mesh linearly
-		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 0.7f));
-
-		model.SetNormalsIndependentFlat();
-
-		AddStaticBind(std::make_unique<VertexBuffer>(renderer, model.vertices));
-
 		auto pvs = std::make_unique<VertexShader>(renderer, L"BlendedPhongVertexShader.cso");
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind(std::move(pvs));
 
 		AddStaticBind(std::make_unique<PixelShader>(renderer, L"BlendedPhongPixelShader.cso"));
-
-		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
@@ -64,10 +35,31 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 
 		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderConstant>>( renderer, colorConstant, 1u ) );
 	}
-	else
+	
+	struct Vertex {
+		DirectX::XMFLOAT4 position;
+		DirectX::XMFLOAT4 normal;
+		DirectX::XMFLOAT4 color;
+	};
+
+	int tesselation = tdist( rng );
+	auto model = Cone::MakeTesselatedIndependentFaces<Vertex>( tesselation );
+
+	// set vertex colors for mesh
+	for ( auto& v : model.vertices )
 	{
-		SetIndexFromStatic();
+		v.color = { 0.1f, 0.1f, 1.0f, 1.0f };
 	}
+	model.vertices[0].color = { 1.0f, 0.1f, 0.1f, 1.0f };
+
+	// deform mesh linearly
+	model.Transform( DirectX::XMMatrixScaling( 1.0f, 1.0f, 0.7f ) );
+
+	model.SetNormalsIndependentFlat();
+
+	AddBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
+
+	AddIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
 
 	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
 }

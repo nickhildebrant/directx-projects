@@ -20,6 +20,15 @@ Application::Application() : m_window(800, 600, "3D Renderer"), light(m_window.g
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
+
+	// init box pointers for editing instance parameters
+	for ( auto& pDrawable : m_models )
+	{
+		if ( auto pBox = dynamic_cast<Box*>( pDrawable.get() ) )
+		{
+			boxes.push_back( pBox );
+		}
+	}
 }
 
 Application::~Application() {}
@@ -63,8 +72,12 @@ void Application::RenderFrame()
 	}
 	ImGui::End();
 
+	// imgui windows for lights and camera
 	camera.SpawnControlWindow();
 	light.SpawnControlWindow();
+
+	// imgui window to adjust box instance parameters
+	boxes.front()->SpawnControlWindow( m_window.getRenderer(), 69 );
 
 	m_window.getRenderer().EndFrame();
 }

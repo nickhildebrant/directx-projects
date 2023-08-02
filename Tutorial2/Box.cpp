@@ -2,6 +2,7 @@
 #include "BindableBase.h"
 #include "RendererErrorMacros.h"
 #include "Cube.h"
+#include "ImGUI/imgui.h"
 
 Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, std::uniform_real_distribution<float>& bdist,
@@ -11,8 +12,7 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 {
 	if (!IsStaticInitialized())
 	{
-		struct Vertex
-		{
+		struct Vertex {
 			DirectX::XMFLOAT4 position;
 			DirectX::XMFLOAT4 normal;
 		};
@@ -47,20 +47,33 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 
 	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
 
-	struct MaterialConstant {
-		DirectX::XMFLOAT4 color;
+	m_materialConstants.color = materialColor;
 
-		float specularIntensity = 1.0f;
-		float shininess = 20.f;
-		float padding[2];
-	} colorConstant;
-
-	colorConstant.color = materialColor;
-
-	AddBind( std::make_unique<PixelConstantBuffer<MaterialConstant>>( renderer, colorConstant, 1u ) );
+	AddBind( std::make_unique<PixelConstantBuffer<PSMaterialConstant>>( renderer, m_materialConstants, 1u ) );
 
 	// model deformation - per instance
 	DirectX::XMStoreFloat4x4(&modelTransform, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng)));
+}
+
+void Box::SpawnControlWindow( Renderer& renderer, int id ) noexcept
+{
+	bool dirty = false;
+	if ( ImGui::Begin( "Box" ) )
+	{
+		dirty = dirty || ImGui::ColorEdit3( "Material Color", &m_materialConstants.color.x );
+		dirty = dirty || ImGui::SliderFloat( "Specular Intensity", &m_materialConstants.specularIntensity, 0.05f, 4.0f, "%.2f", 2 );
+		dirty = dirty || ImGui::SliderFloat( "Specular Power", &m_materialConstants.specularPower, 1.0f, 200.0f, "%.2f", 2 );
+	}
+
+	ImGui::End();
+
+	if ( dirty ) { SyncMaterial( renderer ); }
+}
+
+void Box::SyncMaterial( Renderer& renderer ) noexcept
+{
+	auto pConstPS = SearchBindable<PixelConstantBuffer<PSMaterialConstant>>();
+	pConstPS->Update( renderer, m_materialConstants );
 }
 
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
