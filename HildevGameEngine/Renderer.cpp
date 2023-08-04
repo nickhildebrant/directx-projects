@@ -1,6 +1,6 @@
 #include "Renderer.h"
-//#include "ImGUI/imgui_impl_dx11.h"
-//#include "ImGUI/imgui_impl_win32.h"
+#include "ImGUI/imgui_impl_dx11.h"
+#include "ImGUI/imgui_impl_win32.h"
 #include <sstream>
 
 Renderer::Renderer( HWND handle, int width, int height ) : m_width( width ), m_height( height )
@@ -23,12 +23,12 @@ Renderer::Renderer( HWND handle, int width, int height ) : m_width( width ), m_h
 	pContext->RSSetViewports( 1, &viewPort );
 
 	// init GUI
-	//ImGui_ImplDX11_Init( pDevice.Get(), pContext.Get() );
+	ImGui_ImplDX11_Init( pDevice.Get(), pContext.Get() );
 }
 
 Renderer::~Renderer()
 {
-	//ImGui_ImplDX11_Shutdown();
+	ImGui_ImplDX11_Shutdown();
 }
 
 void Renderer::CreateDevice( HWND handle )
@@ -119,9 +119,9 @@ void Renderer::BeginFrame( float r, float g, float b, float a )
 	// update UI frame
 	if ( uiEnabled )
 	{
-		/*ImGui_ImplDX11_NewFrame();
+		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();*/
+		ImGui::NewFrame();
 	}
 
 	// binding of render target and depth stencil to Output Merger
@@ -137,13 +137,13 @@ void Renderer::EndFrame()
 	// update UI frame
 	if ( uiEnabled )
 	{
-		/*ImGui::Render();
-		ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );*/
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
 	}
 
 	// Swapping buffer
 	HRESULT hr;
-	if(FAILED(hr = pSwapChain->Present( 1u, 0u ) ) )// First param is V-sync, second is flag
+	if(FAILED(hr = pSwapChain->Present( 1u, 0u ) ) ) // First param is V-sync, second is flag
 	{
 		if ( hr == DXGI_ERROR_DEVICE_REMOVED ) throw ( pDevice->GetDeviceRemovedReason() );
 	}

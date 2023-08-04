@@ -1,5 +1,5 @@
 #include "Window.h"
-//#include "ImGUI/imgui_impl_win32.h"
+#include "ImGUI/imgui_impl_win32.h"
 #include <sstream>
 
 // *** Windows Class *********************************************************************
@@ -55,14 +55,14 @@ LRESULT WINAPI Window::HandleMsgThunk( HWND hWnd, UINT msg, WPARAM wParam, LPARA
 
 LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	//if ( ImGui_ImplWin32_WndProcHandler( hWnd, msg, wParam, lParam ) ) return true;
+	if ( ImGui_ImplWin32_WndProcHandler( hWnd, msg, wParam, lParam ) ) return true;
 
 	switch ( msg )
 	{
 		// ***************************** Keyboard *************************************** //
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN: // sys key is for things like the ALT key
-		//if ( ImGui::GetIO().WantCaptureKeyboard ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureKeyboard ) break; // Ignores UI/UX Intended Input
 
 		// lParam's 30th bit is set to 1 when held down, 0 if up before message
 		// check that bit or check if autorepeat is set to true
@@ -74,13 +74,13 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_KEYUP:
 	case WM_SYSKEYUP: // sys key is for things like the ALT key
-		//if ( ImGui::GetIO().WantCaptureKeyboard ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureKeyboard ) break; // Ignores UI/UX Intended Input
 
 		keyboard.OnKeyReleased( static_cast<unsigned char>( wParam ) );
 		break;
 
 	case WM_CHAR:
-		//if ( ImGui::GetIO().WantCaptureKeyboard ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureKeyboard ) break; // Ignores UI/UX Intended Input
 
 		keyboard.OnChar( static_cast<unsigned char>( wParam ) );
 		break;
@@ -93,7 +93,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		// ******************************* Mouse **************************************** //
 	case WM_MOUSEMOVE:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		// if the cursor is in the window client
@@ -122,7 +122,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_LBUTTONDOWN:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		mouse.OnLeftPressed( pt.x, pt.y );
@@ -131,7 +131,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_LBUTTONUP:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		mouse.OnLeftReleased( pt.x, pt.y );
@@ -140,7 +140,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_RBUTTONDOWN:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		mouse.OnRightPressed( pt.x, pt.y );
@@ -149,7 +149,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_RBUTTONUP:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		mouse.OnRightReleased( pt.x, pt.y );
@@ -158,7 +158,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_MBUTTONDOWN:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		mouse.OnMiddlePressed( pt.x, pt.y );
@@ -167,7 +167,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_MBUTTONUP:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		mouse.OnMiddleReleased( pt.x, pt.y );
@@ -176,7 +176,7 @@ LRESULT Window::HandleMsg( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 	case WM_MOUSEWHEEL:
 	{
-		//if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
+		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		const int delta = GET_WHEEL_DELTA_WPARAM( wParam );
@@ -236,7 +236,7 @@ Window::Window( int width, int height, const char* name ) : m_width( width ), m_
 	if ( m_handle == nullptr ) throw GetLastError();
 
 	// intialize the GUI
-	//ImGui_ImplWin32_Init( m_handle );
+	ImGui_ImplWin32_Init( m_handle );
 
 	ShowWindow( m_handle, SW_SHOWDEFAULT );
 
@@ -246,7 +246,7 @@ Window::Window( int width, int height, const char* name ) : m_width( width ), m_
 
 Window::~Window()
 { 
-	//ImGui_ImplWin32_Shutdown(); 
+	ImGui_ImplWin32_Shutdown(); 
 	DestroyWindow( m_handle ); 
 }
 

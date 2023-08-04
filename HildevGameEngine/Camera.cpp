@@ -1,5 +1,5 @@
 #include "Camera.h"
-//#include "ImGUI/imgui.h"
+#include "ImGUI/imgui.h"
 
 DirectX::XMMATRIX Camera::GetMatrix() const
 {
@@ -15,7 +15,7 @@ DirectX::XMVECTOR Camera::GetPosition() const
 
 void Camera::SpawnControlWindow()
 {
-	/*if ( ImGui::Begin( "Camera" ) )
+	if ( ImGui::Begin( "Camera" ) )
 	{
 		ImGui::Text( "Position" );
 		ImGui::SliderFloat( "R", &r, 0.1f, 80.0f, "%.1f" );
@@ -33,7 +33,7 @@ void Camera::SpawnControlWindow()
 		}
 	}
 
-	ImGui::End();*/
+	ImGui::End();
 }
 
 void Camera::ResetView()

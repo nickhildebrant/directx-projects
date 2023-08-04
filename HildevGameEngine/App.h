@@ -1,4 +1,5 @@
 #pragma once
+#include "GUIManager.h"
 #include "Window.h"
 #include "Camera.h"
 #include "PointLight.h"
@@ -11,7 +12,11 @@ public:
 
 	int Run();
 
+	void SpawnSimulationWindow();
+
 private:
+	GUIManager guiManager;
+
 	Window window;
 	Timer timer;
 
