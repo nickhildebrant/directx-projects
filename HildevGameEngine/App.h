@@ -16,7 +16,7 @@ private:
 	Timer timer;
 
 	Camera camera;
-	Light light;
+	//Light light;
 
 	void RenderFrame();
 };
