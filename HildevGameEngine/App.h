@@ -18,5 +18,8 @@ private:
 	Camera camera;
 	//Light light;
 
+	bool showUI = true;
+	float simulationSpeed = 1.0f;
+
 	void RenderFrame();
 };

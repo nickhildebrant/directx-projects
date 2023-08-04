@@ -5,8 +5,7 @@
 // *** Windows Class *********************************************************************
 Window::WindowClass Window::WindowClass::wndClass;
 
-Window::WindowClass::WindowClass()
-	: hInst( GetModuleHandle( nullptr ) )
+Window::WindowClass::WindowClass() : hInst( GetModuleHandle( nullptr ) )
 {
 	WNDCLASS wc = { 0 };
 	wc.style = CS_OWNDC;

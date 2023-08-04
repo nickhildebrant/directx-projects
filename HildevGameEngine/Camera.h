@@ -3,9 +3,10 @@
 
 class Camera {
 public:
-	DirectX::XMMATRIX GetMatrix() const noexcept;
-	void SpawnControlWindow() noexcept;
-	void ResetView() noexcept;
+	DirectX::XMMATRIX GetMatrix() const;
+	DirectX::XMVECTOR GetPosition() const;
+	void SpawnControlWindow();
+	void ResetView();
 
 private:
 	// distance and rotation
