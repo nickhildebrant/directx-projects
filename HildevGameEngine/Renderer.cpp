@@ -110,9 +110,9 @@ void Renderer::CreateDepthStencil()
 	pDevice->CreateDepthStencilView( depthStencilTexture.Get(), &stencilViewDescription, &pDepthStencil );
 }
 
-void Renderer::EnableUI() noexcept { uiEnabled = true; }
-void Renderer::DisableUI() noexcept { uiEnabled = false; }
-bool Renderer::IsUIEnabled() const noexcept { return uiEnabled; }
+void Renderer::EnableUI() { uiEnabled = true; }
+void Renderer::DisableUI() { uiEnabled = false; }
+bool Renderer::IsUIEnabled() const { return uiEnabled; }
 
 void Renderer::BeginFrame( float r, float g, float b, float a )
 {
