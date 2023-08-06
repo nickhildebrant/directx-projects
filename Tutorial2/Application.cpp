@@ -9,6 +9,10 @@
 #include "Surface.h"
 #include "GDIPlusManager.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 GDIPlusManager gdipm;
 
 Application::Application() : m_window(800, 600, "3D Renderer"), light(m_window.getRenderer())
