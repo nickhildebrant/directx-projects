@@ -9,10 +9,6 @@
 #include "Surface.h"
 #include "GDIPlusManager.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 GDIPlusManager gdipm;
 
 Application::Application() : m_window(800, 600, "3D Renderer"), light(m_window.getRenderer())
@@ -24,9 +20,6 @@ Application::Application() : m_window(800, 600, "3D Renderer"), light(m_window.g
 	std::generate_n(std::back_inserter(m_models), numberOfModels, factory);
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 45.0f));
-
-	Assimp::Importer importer;
-	auto model = importer.ReadFile( "models\\suzanne.obj", aiProcess_Triangulate | aiProcess_JoinIdenticalVertices );
 
 	// init box pointers for editing instance parameters
 	for ( auto& pDrawable : m_models )

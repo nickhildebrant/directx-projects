@@ -8,6 +8,7 @@
 #include "Cylinder.h"
 #include "Pyramid.h"
 #include "TexturedBox.h"
+#include "ModelTest.h"
 
 #include "Camera.h"
 #include "Light.h"
@@ -41,6 +42,9 @@ public:
 			case 3:
 				return std::make_unique<TexturedBox>( renderer, rng, adist, ddist, odist, rdist );
 
+			case 4:
+				return std::make_unique<ModelTest>( renderer, rng, adist, ddist, odist, rdist, mat, 1.5f );
+
 			default:
 				assert(false && "No available Types");
 				return {};
@@ -61,7 +65,7 @@ public:
 		std::uniform_int_distribution<int> latdist{ 5, 20 };
 		std::uniform_int_distribution<int> longdist{ 10, 40 };
 		std::uniform_real_distribution<float> cdist{ 0.0f, 1.0f };
-		std::uniform_int_distribution<int> typedist{ 0, 3 };
+		std::uniform_int_distribution<int> typedist{ 0, 4 };
 	};
 
 	void SpawnSimulationWindow();
