@@ -9,9 +9,9 @@
 #include "Surface.h"
 #include "GDIPlusManager.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 
 GDIPlusManager gdipm;
 
