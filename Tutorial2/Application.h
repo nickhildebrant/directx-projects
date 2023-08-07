@@ -13,12 +13,46 @@
 #include "Camera.h"
 #include "Light.h"
 
+#include "VertexLayout.h"
+
 class Application {
 public:
 	Application();
 	~Application();
 
 	int Run();
+
+	void F()
+	{
+		//VertexLayout vertexLayout;
+		//vertexLayout.Append<VertexLayout::Position3D>().Append<VertexLayout::Normal>();
+
+		//VertexBuffer vertexBuffer( std::move( vertexLayout ) );
+		//vertexBuffer.EmplaceBack( DirectX::XMFLOAT4 { 1.0f, 1.0f, 5.0f, 1.0f }, DirectX::XMFLOAT4 { 2.0f, 1.0f, 4.0f, 0.0f } );
+
+		VertexBuffer vertexBuffer( 
+			std::move( VertexLayout{}.Append<VertexLayout::Position3D>().Append<VertexLayout::Normal>().Append<VertexLayout::Texture2D>() ) 
+		);
+
+		vertexBuffer.EmplaceBack( 
+			DirectX::XMFLOAT4{ 1.0f, 1.0f, 5.0f, 1.0f },
+			DirectX::XMFLOAT4{ 2.0f, 1.0f, 4.0f, 0.0f },
+			DirectX::XMFLOAT2{ 6.0f, 9.0f }
+		);
+
+		vertexBuffer.EmplaceBack(
+			DirectX::XMFLOAT4{ 6.0f, 9.0f, 6.0f, 1.0f },
+			DirectX::XMFLOAT4{ 9.0f, 6.0f, 9.0f, 0.0f },
+			DirectX::XMFLOAT2{ 4.2f, 0.0f }
+		);
+
+		auto position = vertexBuffer[0].Attr<VertexLayout::Position3D>();
+		auto normal = vertexBuffer[0].Attr<VertexLayout::Normal>();
+		auto tex = vertexBuffer[1].Attr<VertexLayout::Texture2D>();
+
+		vertexBuffer.Back().Attr<VertexLayout::Position3D>().z = 420.0f;
+		position = vertexBuffer.Back().Attr<VertexLayout::Position3D>();
+	}
 
 	class ModelFactory {
 	public:
