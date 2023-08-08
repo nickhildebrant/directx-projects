@@ -3,6 +3,8 @@
 #include <DirectXMath.h>
 #include <type_traits>
 
+#include "Renderer.h"
+
 namespace VertexHandler
 {
 	struct RGBAColor {
@@ -22,6 +24,50 @@ namespace VertexHandler
 			Normal,
 			Float4Color,
 			RGBAColor,
+			Count,
+		};
+
+		template<ElementType> struct Map;
+		template<> struct Map<Position2D>
+		{
+			using SysType = DirectX::XMFLOAT2;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
+			static constexpr const char* semantic = "Position";
+		};
+
+		template<> struct Map<Position3D>
+		{
+			using SysType = DirectX::XMFLOAT4;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Position";
+		};
+
+		template<> struct Map<Texture2D>
+		{
+			using SysType = DirectX::XMFLOAT2;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
+			static constexpr const char* semantic = "Texcoord";
+		};
+
+		template<> struct Map<Normal>
+		{
+			using SysType = DirectX::XMFLOAT4;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Normal";
+		};
+
+		template<> struct Map<Float4Color>
+		{
+			using SysType = DirectX::XMFLOAT4;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Color";
+		};
+
+		template<> struct Map<RGBAColor>
+		{
+			using SysType = VertexHandler::RGBAColor;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Color";
 		};
 
 		class Element {
@@ -48,22 +94,22 @@ namespace VertexHandler
 				switch ( type )
 				{
 				case Position2D:
-					return sizeof( DirectX::XMFLOAT2 );
+					return sizeof( Map<Position2D>::SysType );
 
 				case Position3D:
-					return sizeof( DirectX::XMFLOAT4 );
+					return sizeof( Map<Position3D>::SysType );
 
 				case Texture2D:
-					return sizeof( DirectX::XMFLOAT2 );
+					return sizeof( Map<Texture2D>::SysType );
 
 				case Normal:
-					return sizeof( DirectX::XMFLOAT4 );
+					return sizeof( Map<Normal>::SysType );
 
 				case Float4Color:
-					return sizeof( DirectX::XMFLOAT4 );
+					return sizeof( Map<Float4Color>::SysType );
 
 				case RGBAColor:
-					return sizeof( RGBAColor );
+					return sizeof( Map<RGBAColor>::SysType );
 				}
 				assert( "Invalid element type" && false );
 				return 0u;
@@ -74,7 +120,39 @@ namespace VertexHandler
 				return type;
 			}
 
+			D3D11_INPUT_ELEMENT_DESC GetDesc() const noexcept
+			{
+				switch ( type )
+				{
+				case Position2D:
+					return GenerateDesc<Position2D>( GetOffset() );
+
+				case Position3D:
+					return GenerateDesc<Position3D>( GetOffset() );
+
+				case Texture2D:
+					return GenerateDesc<Texture2D>( GetOffset() );
+
+				case Normal:
+					return GenerateDesc<Normal>( GetOffset() );
+
+				case Float4Color:
+					return GenerateDesc<Float4Color>( GetOffset() );
+
+				case RGBAColor:
+					return GenerateDesc<RGBAColor>( GetOffset() );
+				}
+
+				assert( "Invalid element type" && false );
+				return { "INVALID",0,DXGI_FORMAT_UNKNOWN,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 };
+			}
 		private:
+			template<ElementType type>
+			static constexpr D3D11_INPUT_ELEMENT_DESC GenerateDesc( size_t offset ) noexcept
+			{
+				return { Map<type>::semantic, 0, Map<type>::dxgiFormat, 0, (UINT) offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+			}
+
 			ElementType type;
 			size_t offset;
 		};
@@ -100,10 +178,9 @@ namespace VertexHandler
 			return elements[i];
 		}
 
-		template<ElementType Type>
-		VertexLayout& Append() noexcept
+		VertexLayout& Append( ElementType type ) noexcept
 		{
-			elements.emplace_back( Type, Size() );
+			elements.emplace_back( type, Size() );
 			return *this;
 		}
 
@@ -117,6 +194,19 @@ namespace VertexHandler
 			return elements.size();
 		}
 
+		std::vector<D3D11_INPUT_ELEMENT_DESC> GetD3DLayout() const noexcept
+		{
+			std::vector<D3D11_INPUT_ELEMENT_DESC> desc;
+			desc.reserve( GetElementCount() );
+
+			for ( const auto& e : elements )
+			{
+				desc.push_back( e.GetDesc() );
+			}
+
+			return desc;
+		}
+
 	private:
 		std::vector<Element> elements;
 	};
@@ -127,41 +217,8 @@ namespace VertexHandler
 		template<VertexLayout::ElementType Type>
 		auto& Attr() noexcept
 		{
-			const auto& element = layout.Resolve<Type>();
-			auto pAttribute = pData + element.GetOffset();
-			if constexpr ( Type == VertexLayout::Position2D )
-			{
-				return *reinterpret_cast<DirectX::XMFLOAT2*>( pAttribute );
-			}
-			else if constexpr ( Type == VertexLayout::Position3D )
-			{
-				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
-			}
-			else if constexpr ( Type == VertexLayout::Texture2D )
-			{
-				return *reinterpret_cast<DirectX::XMFLOAT2*>( pAttribute );
-			}
-			else if constexpr ( Type == VertexLayout::Normal )
-			{
-				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
-			}
-			else if constexpr ( Type == VertexLayout::Float4Color )
-			{
-				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
-			}
-			else if constexpr ( Type == VertexLayout::Float4Color )
-			{
-				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
-			}
-			else if constexpr ( Type == VertexLayout::RGBAColor )
-			{
-				return *reinterpret_cast<RGBAColor*>( pAttribute );
-			}
-			else
-			{
-				assert( "Bad element type" && false );
-				return *reinterpret_cast<char*>( pAttribute );
-			}
+			auto pAttribute = pData + layout.Resolve<Type>().GetOffset();
+			return *reinterpret_cast<typename VertexLayout::Map<Type>::SysType*>( pAttribute );
 		}
 
 		template<typename T>
@@ -173,27 +230,27 @@ namespace VertexHandler
 			switch ( element.GetType() )
 			{
 			case VertexLayout::Position2D:
-				SetAttribute<DirectX::XMFLOAT2>( pAttribute, std::forward<T>( val ) );
+				SetAttribute<VertexLayout::Position2D>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			case VertexLayout::Position3D:
-				SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
+				SetAttribute<VertexLayout::Position3D>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			case VertexLayout::Texture2D:
-				SetAttribute<DirectX::XMFLOAT2>( pAttribute, std::forward<T>( val ) );
+				SetAttribute<VertexLayout::Texture2D>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			case VertexLayout::Normal:
-				SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
+				SetAttribute<VertexLayout::Normal>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			case VertexLayout::Float4Color:
-				SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
+				SetAttribute<VertexLayout::Float4Color>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			case VertexLayout::RGBAColor:
-				SetAttribute<RGBAColor>( pAttribute, std::forward<T>( val ) );
+				SetAttribute<VertexLayout::RGBAColor>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			default:
@@ -217,10 +274,11 @@ namespace VertexHandler
 		}
 
 		// helper to reduce code duplication in SetAttributeByIndex
-		template<typename Dest, typename Src>
-		void SetAttribute( char* pAttribute, Src&& val ) noexcept
+		template<VertexLayout::ElementType DestLayoutType, typename SrcType>
+		void SetAttribute( char* pAttribute, SrcType&& val ) noexcept
 		{
-			if constexpr ( std::is_assignable<Dest, Src>::value )
+			using Dest = typename VertexLayout::Map<DestLayoutType>::SysType;
+			if constexpr ( std::is_assignable<Dest, SrcType>::value )
 			{
 				*reinterpret_cast<Dest*>( pAttribute ) = val;
 			}

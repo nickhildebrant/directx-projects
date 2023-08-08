@@ -17,8 +17,8 @@ ModelTest::ModelTest( Renderer& renderer, std::mt19937& rng, std::uniform_real_d
 		// Setting Up the struct for the Vertex for the model
 		using VertexHandler::VertexLayout;
 		VertexHandler::VertexBuffer vertexBuffer( std::move( VertexLayout{}
-			.Append<VertexLayout::Position3D>()
-			.Append<VertexLayout::Normal>()
+			.Append( VertexLayout::Position3D )
+			.Append( VertexLayout::Normal )
 		) );
 
 		Assimp::Importer importer;
@@ -54,13 +54,7 @@ ModelTest::ModelTest( Renderer& renderer, std::mt19937& rng, std::uniform_real_d
 
 		AddStaticBind( std::make_unique<PixelShader>( renderer, L"PhongPixelShader.cso" ) );
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
-
-		AddStaticBind( std::make_unique<InputLayout>( renderer, ied, pvsbc ) );
+		AddStaticBind( std::make_unique<InputLayout>( renderer, vertexBuffer.GetLayout().GetD3DLayout(), pvsbc));
 
 		AddStaticBind( std::make_unique<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
