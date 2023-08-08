@@ -1,6 +1,7 @@
 #include "ModelTest.h"
 #include "BindableBase.h"
 #include "RendererErrorMacros.h"
+#include "VertexLayout.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -13,33 +14,23 @@ ModelTest::ModelTest( Renderer& renderer, std::mt19937& rng, std::uniform_real_d
 {
 	if ( !IsStaticInitialized() )
 	{
-		struct Vertex
-		{
-			DirectX::XMFLOAT4 position;
-			DirectX::XMFLOAT4 normal;
-		};
+		// Setting Up the struct for the Vertex for the model
+		using VertexHandler::VertexLayout;
+		VertexHandler::VertexBuffer vertexBuffer( std::move( VertexLayout{}
+			.Append<VertexLayout::Position3D>()
+			.Append<VertexLayout::Normal>()
+		) );
 
 		Assimp::Importer importer;
 		const auto pModel = importer.ReadFile( "../Models/suzanne.obj", aiProcess_Triangulate | aiProcess_JoinIdenticalVertices );
 		const auto pMesh = pModel->mMeshes[0];
 
-		std::vector<Vertex> vertices;
-		vertices.reserve( pMesh->mNumVertices );
 		for ( unsigned int i = 0; i < pMesh->mNumVertices; i++ )
 		{
-			Vertex meshVertex;
-			meshVertex.position = { pMesh->mVertices[i].x * scale,pMesh->mVertices[i].y * scale,pMesh->mVertices[i].z * scale, 1.0f };
-			meshVertex.normal = { pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z, 0.0f };
-
-			vertices.push_back( meshVertex );
-
-
-			//vertices.push_back
-			//( {
-			//	{ pMesh->mVertices[i].x * scale,pMesh->mVertices[i].y * scale,pMesh->mVertices[i].z * scale },
-			//	*reinterpret_cast<DirectX::XMFLOAT4*>( &pMesh->mNormals[i] )
-			//	}
-			//);
+			vertexBuffer.EmplaceBack(
+				DirectX::XMFLOAT4{ pMesh->mVertices[i].x * scale,pMesh->mVertices[i].y * scale,pMesh->mVertices[i].z * scale, 1.0f },
+				DirectX::XMFLOAT4{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z, 0.0f }
+			);
 		}
 
 		std::vector<unsigned short> indices;
@@ -53,7 +44,7 @@ ModelTest::ModelTest( Renderer& renderer, std::mt19937& rng, std::uniform_real_d
 			indices.push_back( face.mIndices[2] );
 		}
 
-		AddStaticBind( std::make_unique<VertexBuffer>( renderer, vertices ) );
+		AddStaticBind( std::make_unique<VertexBuffer>( renderer, vertexBuffer ) );
 
 		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( renderer, indices ) );
 

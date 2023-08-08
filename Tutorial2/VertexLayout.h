@@ -3,276 +3,318 @@
 #include <DirectXMath.h>
 #include <type_traits>
 
-struct RGBAColor {
-	float r;
-	float g;
-	float b;
-	float a;
-};
-
-class VertexLayout {
-public:
-	enum ElementType
-	{
-		Position2D,
-		Position3D,
-		Texture2D,
-		Normal,
-		Float4Color,
-		RGBAColor,
+namespace VertexHandler
+{
+	struct RGBAColor {
+		float r;
+		float g;
+		float b;
+		float a;
 	};
 
-	class Element {
+	class VertexLayout {
 	public:
-		Element( ElementType type, size_t offset ) : type( type ), offset( offset ) {}
-		
-		size_t GetOffsetAfter() const noexcept
+		enum ElementType
 		{
-			return offset + Size();
+			Position2D,
+			Position3D,
+			Texture2D,
+			Normal,
+			Float4Color,
+			RGBAColor,
+		};
+
+		class Element {
+		public:
+			Element( ElementType type, size_t offset ) : type( type ), offset( offset ) {}
+
+			size_t GetOffsetAfter() const noexcept
+			{
+				return offset + Size();
+			}
+
+			size_t GetOffset() const
+			{
+				return offset;
+			}
+
+			size_t Size() const noexcept
+			{
+				return SizeOf( type );
+			}
+
+			static constexpr size_t SizeOf( ElementType type ) noexcept
+			{
+				switch ( type )
+				{
+				case Position2D:
+					return sizeof( DirectX::XMFLOAT2 );
+
+				case Position3D:
+					return sizeof( DirectX::XMFLOAT4 );
+
+				case Texture2D:
+					return sizeof( DirectX::XMFLOAT2 );
+
+				case Normal:
+					return sizeof( DirectX::XMFLOAT4 );
+
+				case Float4Color:
+					return sizeof( DirectX::XMFLOAT4 );
+
+				case RGBAColor:
+					return sizeof( RGBAColor );
+				}
+				assert( "Invalid element type" && false );
+				return 0u;
+			}
+
+			ElementType GetType() const noexcept
+			{
+				return type;
+			}
+
+		private:
+			ElementType type;
+			size_t offset;
+		};
+
+	public:
+		template<ElementType Type>
+		const Element& Resolve() const noexcept
+		{
+			for ( auto& e : elements )
+			{
+				if ( e.GetType() == Type )
+				{
+					return e;
+				}
+			}
+
+			assert( "Could not resolve element type" && false );
+			return elements.front();
 		}
 
-		size_t GetOffset() const
+		const Element& ResolveByIndex( size_t i ) const noexcept
 		{
-			return offset;
+			return elements[i];
+		}
+
+		template<ElementType Type>
+		VertexLayout& Append() noexcept
+		{
+			elements.emplace_back( Type, Size() );
+			return *this;
 		}
 
 		size_t Size() const noexcept
 		{
-			return SizeOf( type );
+			return elements.empty() ? 0u : elements.back().GetOffsetAfter();
 		}
 
-		static constexpr size_t SizeOf( ElementType type ) noexcept
+		size_t GetElementCount() const noexcept
 		{
-			switch ( type )
-			{
-			case Position2D:
-				return sizeof( DirectX::XMFLOAT2 );
-
-			case Position3D:
-				return sizeof( DirectX::XMFLOAT4 );
-
-			case Texture2D:
-				return sizeof( DirectX::XMFLOAT2 );
-
-			case Normal:
-				return sizeof( DirectX::XMFLOAT4 );
-
-			case Float4Color:
-				return sizeof( DirectX::XMFLOAT4 );
-
-			case RGBAColor:
-				return sizeof( float );
-			}
-			assert( "Invalid element type" && false );
-			return 0u;
-		}
-
-		ElementType GetType() const noexcept
-		{
-			return type;
+			return elements.size();
 		}
 
 	private:
-		ElementType type;
-		size_t offset;
+		std::vector<Element> elements;
 	};
 
-public:
-	template<ElementType Type>
-	const Element& Resolve() const noexcept
-	{
-		for ( auto& e : elements )
+	class Vertex {
+		friend class VertexBuffer;
+	public:
+		template<VertexLayout::ElementType Type>
+		auto& Attr() noexcept
 		{
-			if ( e.GetType() == Type )
+			const auto& element = layout.Resolve<Type>();
+			auto pAttribute = pData + element.GetOffset();
+			if constexpr ( Type == VertexLayout::Position2D )
 			{
-				return e;
+				return *reinterpret_cast<DirectX::XMFLOAT2*>( pAttribute );
+			}
+			else if constexpr ( Type == VertexLayout::Position3D )
+			{
+				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
+			}
+			else if constexpr ( Type == VertexLayout::Texture2D )
+			{
+				return *reinterpret_cast<DirectX::XMFLOAT2*>( pAttribute );
+			}
+			else if constexpr ( Type == VertexLayout::Normal )
+			{
+				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
+			}
+			else if constexpr ( Type == VertexLayout::Float4Color )
+			{
+				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
+			}
+			else if constexpr ( Type == VertexLayout::Float4Color )
+			{
+				return *reinterpret_cast<DirectX::XMFLOAT4*>( pAttribute );
+			}
+			else if constexpr ( Type == VertexLayout::RGBAColor )
+			{
+				return *reinterpret_cast<RGBAColor*>( pAttribute );
+			}
+			else
+			{
+				assert( "Bad element type" && false );
+				return *reinterpret_cast<char*>( pAttribute );
 			}
 		}
 
-		assert( "Could not resolve element type" && false );
-		return elements.front();
-	}
-
-	const Element& ResolveByIndex( size_t i ) const noexcept
-	{
-		return elements[i];
-	}
-
-	template<ElementType Type>
-	VertexLayout& Append() noexcept
-	{
-		elements.emplace_back( Type, Size() );
-		return *this;
-	}
-
-	size_t Size() const noexcept
-	{
-		return elements.empty() ? 0u : elements.back().GetOffsetAfter();
-	}
-
-	size_t GetElementCount() const noexcept
-	{
-		return elements.size();
-	}
-
-private:
-	std::vector<Element> elements;
-};
-
-class Vertex {
-	friend class VertexBuffer;
-public:
-	template<VertexLayout::ElementType Type>
-	auto& Attr() noexcept
-	{
-		using namespace DirectX;
-		const auto& element = layout.Resolve<Type>();
-		auto pAttribute = pData + element.GetOffset();
-		if constexpr ( Type == VertexLayout::Position2D )
+		template<typename T>
+		void SetAttributeByIndex( size_t i, T&& val ) noexcept
 		{
-			return *reinterpret_cast<XMFLOAT2*>( pAttribute );
+			const auto& element = layout.ResolveByIndex( i );
+			auto pAttribute = pData + element.GetOffset();
+
+			switch ( element.GetType() )
+			{
+			case VertexLayout::Position2D:
+				SetAttribute<DirectX::XMFLOAT2>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::Position3D:
+				SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::Texture2D:
+				SetAttribute<DirectX::XMFLOAT2>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::Normal:
+				SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::Float4Color:
+				SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::RGBAColor:
+				SetAttribute<RGBAColor>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			default:
+				assert( "Bad element type" && false );
+			}
 		}
-		else if constexpr ( Type == VertexLayout::Position3D )
+
+	protected:
+		Vertex( char* pData, const VertexLayout& layout ) noexcept : pData( pData ), layout( layout )
 		{
-			return *reinterpret_cast<XMFLOAT4*>( pAttribute );
+			assert( pData != nullptr );
 		}
-		else if constexpr ( Type == VertexLayout::Texture2D )
+
+	private:
+		template<typename First, typename ...Rest>
+		// enables parameter pack setting of multiple parameters by element index
+		void SetAttributeByIndex( size_t i, First&& first, Rest&&... rest ) noexcept
 		{
-			return *reinterpret_cast<XMFLOAT2*>( pAttribute );
+			SetAttributeByIndex( i, std::forward<First>( first ) );
+			SetAttributeByIndex( i + 1, std::forward<Rest>( rest )... );
 		}
-		else if constexpr ( Type == VertexLayout::Normal )
+
+		// helper to reduce code duplication in SetAttributeByIndex
+		template<typename Dest, typename Src>
+		void SetAttribute( char* pAttribute, Src&& val ) noexcept
 		{
-			return *reinterpret_cast<XMFLOAT4*>( pAttribute );
+			if constexpr ( std::is_assignable<Dest, Src>::value )
+			{
+				*reinterpret_cast<Dest*>( pAttribute ) = val;
+			}
+			else
+			{
+				assert( "Parameter attribute type mismatch" && false );
+			}
 		}
-		else if constexpr ( Type == VertexLayout::Float4Color )
+
+		char* pData = nullptr;
+		const VertexLayout& layout;
+	};
+
+	class ConstantVertex {
+	public:
+		ConstantVertex( const Vertex& vertex ) noexcept : vertex( vertex ) {}
+
+		template<VertexLayout::ElementType Type>
+		const auto& Attr() const noexcept
 		{
-			return *reinterpret_cast<XMFLOAT4*>( pAttribute );
+			return const_cast<Vertex&>( vertex ).Attr<Type>();
 		}
-		else if constexpr ( Type == VertexLayout::Float4Color )
+
+	private:
+		Vertex vertex;
+	};
+
+	class VertexBuffer {
+	public:
+		VertexBuffer( VertexLayout layout ) noexcept : layout( std::move( layout ) ) {}
+
+		const VertexLayout& GetLayout() const noexcept
 		{
-			return *reinterpret_cast<XMFLOAT4*>( pAttribute );
+			return layout;
 		}
-		else if constexpr ( Type == VertexLayout::RGBAColor )
+
+		const char* GetData() const noexcept
 		{
-			return *reinterpret_cast<RGBAColor*>( pAttribute );
+			return buffer.data();
 		}
-		else
+
+		size_t Size() const noexcept
 		{
-			assert( "Bad element type" && false );
-			return *reinterpret_cast<char*>( pAttribute );
+			return buffer.size() / layout.Size();
 		}
-	}
 
-	template<typename T>
-	void SetAttributeByIndex( size_t i, T&& val ) noexcept
-	{
-		const auto& element = layout.ResolveByIndex( i );
-		auto pAttribute = pData + element.GetOffset();
-
-		switch ( element.GetType() )
+		size_t SizeBytes() const noexcept
 		{
-		case VertexLayout::Position2D:
-			SetAttribute<DirectX::XMFLOAT2>( pAttribute, std::forward<T>( val ) );
-			break;
-
-		case VertexLayout::Position3D:
-			SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
-			break;
-
-		case VertexLayout::Texture2D:
-			SetAttribute<DirectX::XMFLOAT2>( pAttribute, std::forward<T>( val ) );
-			break;
-
-		case VertexLayout::Normal:
-			SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
-			break;
-
-		case VertexLayout::Float4Color:
-			SetAttribute<DirectX::XMFLOAT4>( pAttribute, std::forward<T>( val ) );
-			break;
-
-		case VertexLayout::RGBAColor:
-			SetAttribute<RGBAColor>( pAttribute, std::forward<T>( val ) );
-			break;
-
-		default:
-			assert( "Bad element type" && false );
+			return buffer.size();
 		}
-	}
-private:
-	Vertex( char* pData, const VertexLayout& layout ) noexcept : pData( pData ), layout( layout )
-	{
-		assert( pData != nullptr );
-	}
 
-	template<typename First, typename ...Rest>
-	// enables parameter pack setting of multiple parameters by element index
-	void SetAttributeByIndex( size_t i, First&& first, Rest&&... rest ) noexcept
-	{
-		SetAttributeByIndex( i, std::forward<First>( first ) );
-		SetAttributeByIndex( i + 1, std::forward<Rest>( rest )... );
-	}
-
-	// helper to reduce code duplication in SetAttributeByIndex
-	template<typename Dest, typename Src>
-	void SetAttribute( char* pAttribute, Src&& val ) noexcept
-	{
-		if constexpr ( std::is_assignable<Dest, Src>::value )
+		template<typename ...Params>
+		void EmplaceBack( Params&&... params ) noexcept
 		{
-			*reinterpret_cast<Dest*>( pAttribute ) = val;
+			assert( sizeof...( params ) == layout.GetElementCount() && "Parameter count doesn't match number of vertex elements" );
+			buffer.resize( buffer.size() + layout.Size() );
+			Back().SetAttributeByIndex( 0u, std::forward<Params>( params )... );
 		}
-		else
+
+		Vertex Back() noexcept
 		{
-			assert( "Parameter attribute type mismatch" && false );
+			assert( buffer.size() != 0u );
+			return Vertex{ buffer.data() + buffer.size() - layout.Size(),layout };
 		}
-	}
 
-private:
-	char* pData = nullptr;
-	const VertexLayout& layout;
-};
+		Vertex Front() noexcept
+		{
+			assert( buffer.size() != 0u );
+			return Vertex{ buffer.data(),layout };
+		}
 
-class VertexBuffer {
-public:
-	VertexBuffer( VertexLayout layout ) noexcept : layout( std::move( layout ) ) {}
+		Vertex operator[]( size_t i ) noexcept
+		{
+			assert( i < Size() );
+			return Vertex{ buffer.data() + layout.Size() * i,layout };
+		}
 
-	const VertexLayout& GetLayout() const noexcept
-	{
-		return layout;
-	}
+		ConstantVertex Back() const noexcept
+		{
+			return const_cast<VertexBuffer*>( this )->Back();
+		}
 
-	size_t Size() const noexcept
-	{
-		return buffer.size() / layout.Size();
-	}
+		ConstantVertex Front() const noexcept
+		{
+			return const_cast<VertexBuffer*>( this )->Front();
+		}
 
-	template<typename ...Params>
-	void EmplaceBack( Params&&... params ) noexcept
-	{
-		assert( sizeof...( params ) == layout.GetElementCount() && "Parameter count doesn't match number of vertex elements" );
-		buffer.resize( buffer.size() + layout.Size() );
-		Back().SetAttributeByIndex( 0u, std::forward<Params>( params )... );
-	}
+		ConstantVertex operator[]( size_t i ) const noexcept
+		{
+			return const_cast<VertexBuffer&>( *this )[i];
+		}
 
-	Vertex Back() noexcept
-	{
-		assert( buffer.size() != 0u );
-		return Vertex{ buffer.data() + buffer.size() - layout.Size(),layout };
-	}
-
-	Vertex Front() noexcept
-	{
-		assert( buffer.size() != 0u );
-		return Vertex{ buffer.data(),layout };
-	}
-
-	Vertex operator[]( size_t i ) noexcept
-	{
-		assert( i < Size() );
-		return Vertex{ buffer.data() + layout.Size() * i,layout };
-	}
-
-private:
-	std::vector<char> buffer;
-	VertexLayout layout;
-};
+	private:
+		std::vector<char> buffer;
+		VertexLayout layout;
+	};
+}
