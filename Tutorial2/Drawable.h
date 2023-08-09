@@ -16,7 +16,7 @@ public:
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 
 	void Draw(Renderer& renderer) const noexcept;
-	virtual void Update(float dt) noexcept = 0;
+	virtual void Update(float dt) noexcept {}
 
 protected:
 	void AddBind(std::unique_ptr<Bindable> bind) noexcept;

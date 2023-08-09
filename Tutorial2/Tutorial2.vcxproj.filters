@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="ColorBlendPixelShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorBlendVertexShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="TexturePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -26,12 +20,6 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="IndexedPhongPixelShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="BlendedPhongVertexShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="BlendedPhongPixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TexturePhongPixelShader.hlsl">
@@ -156,7 +144,7 @@
     <ClCompile Include="Cylinder.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="ModelTest.cpp">
+    <ClCompile Include="Model.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -311,17 +299,17 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestPoly.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="Cylinder.h">
       <Filter>Header Files\Drawable\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="ModelTest.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="VertexLayout.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPoly.h">
+      <Filter>Header Files\Drawable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
