@@ -22,6 +22,9 @@ public:
 	HWND getHandle();
 	Renderer& getRenderer();
 
+	void EnableCursor();
+	void DisableCursor();
+
 	Keyboard keyboard;
 	Mouse mouse;
 
@@ -50,9 +53,19 @@ public:
 	};
 
 private:
+	bool cursorEnabled = false;
 	int m_width, m_height;
 	HWND m_handle;
 	std::unique_ptr<Renderer> m_renderer;
+
+	void ConfineCursor();
+	void FreeCursor();
+
+	void ShowCursor();
+	void HideCursor();
+
+	void EnableImGuiMouse();
+	void DisableImGuiMouse();
 
 	static LRESULT WINAPI HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT WINAPI HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

@@ -93,6 +93,18 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	// ******************************* Mouse **************************************** //
 	case WM_MOUSEMOVE:
 	{
+		// cursorless exclusive gets first dibs
+		if ( !cursorEnabled )
+		{
+			if ( !mouse.IsInWindow() )
+			{
+				SetCapture( hWnd );
+				mouse.OnMouseEnter();
+				ShowCursor();
+			}
+			break;
+		}
+
 		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS(lParam);
@@ -122,6 +134,13 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONDOWN:
 	{
+		SetForegroundWindow( m_handle );
+		if ( !cursorEnabled )
+		{
+			ConfineCursor();
+			HideCursor();
+		}
+
 		if ( ImGui::GetIO().WantCaptureMouse ) break; // Ignores UI/UX Intended Input
 
 		const POINTS pt = MAKEPOINTS(lParam);
@@ -183,6 +202,23 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		mouse.OnWheelDelta(pt.x, pt.y, delta);
 		break;
 	}
+
+	case WM_ACTIVATE:
+		// confine/free cursor on window to foreground/background if cursor disabled
+		if ( !cursorEnabled )
+		{
+			if ( wParam & WA_ACTIVE )
+			{
+				ConfineCursor();
+				HideCursor();
+			}
+			else
+			{
+				FreeCursor();
+				ShowCursor();
+			}
+		}
+		break;
 	// ****************************************************************************** //
 
 	case WM_CLOSE:
@@ -251,6 +287,22 @@ void Window::SetTitle(const std::string title)
 	if (SetWindowText(m_handle, title.c_str()) == 0) throw HWND_LAST_EXCEPT();
 }
 
+void Window::EnableCursor()
+{
+	cursorEnabled = true;
+	ShowCursor();
+	EnableImGuiMouse();
+	FreeCursor();
+}
+
+void Window::DisableCursor()
+{
+	cursorEnabled = false;
+	HideCursor();
+	DisableImGuiMouse();
+	ConfineCursor();
+}
+
 std::optional<int> Window::ProcessMessages()
 {
 	MSG msg = { 0 };
@@ -279,6 +331,39 @@ Renderer& Window::getRenderer()
 	if (!m_renderer) throw HWND_NOGFX_EXCEPT();
 
 	return *m_renderer; 
+}
+
+void Window::ConfineCursor() 
+{
+	RECT rect;
+	GetClientRect( m_handle, &rect );
+	MapWindowPoints( m_handle, nullptr, reinterpret_cast<POINT*>( &rect ), 2 );
+	ClipCursor( &rect );
+}
+
+void Window::FreeCursor() 
+{
+	ClipCursor( nullptr );
+}
+
+void Window::HideCursor() 
+{
+	while ( ::ShowCursor( FALSE ) >= 0 );
+}
+
+void Window::ShowCursor() 
+{
+	while ( ::ShowCursor( TRUE ) < 0 );
+}
+
+void Window::EnableImGuiMouse() 
+{
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::DisableImGuiMouse() 
+{
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 
 // *** Window Exception Handling *****************************************************************
