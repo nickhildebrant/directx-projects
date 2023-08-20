@@ -5,6 +5,18 @@ int Mouse::GetMouseX() { return x; }
 int Mouse::GetMouseY() { return y; }
 std::pair<int, int> Mouse::GetPos() { return {x, y}; }
 
+std::optional<Mouse::RawDelta> Mouse::ReadRawDelta()
+{
+	if ( rawDeltaBuffer.empty() )
+	{
+		return std::nullopt;
+	}
+
+	const RawDelta delta = rawDeltaBuffer.front();
+	rawDeltaBuffer.pop();
+	return delta;
+}
+
 bool Mouse::IsInWindow() { return isInWindow; }
 
 bool Mouse::LeftIsPressed() { return isLeftPressed; }
@@ -29,6 +41,14 @@ void Mouse::TrimBuffer()
 	while (buffer.size() > bufferSize)
 	{
 		buffer.pop();
+	}
+}
+
+void Mouse::TrimRawInputBuffer()
+{
+	while ( rawDeltaBuffer.size() > bufferSize )
+	{
+		rawDeltaBuffer.pop();
 	}
 }
 
@@ -130,4 +150,10 @@ void Mouse::OnWheelDelta(int x, int y, int delta)
 		wheelDeltaCry += WHEEL_DELTA;
 		OnWheelDown(x, y);
 	}
+}
+
+void Mouse::OnRawDelta( int dx, int dy )
+{
+	rawDeltaBuffer.push( { dx,dy } );
+	TrimBuffer();
 }

@@ -1,10 +1,15 @@
 #pragma once
 #include <queue>
+#include <optional>
 
 class Mouse {
 	friend class Window;
 
 public:
+	struct RawDelta {
+		int x, y;
+	};
+
 	class Event {
 	public:
 		enum class Type
@@ -13,16 +18,16 @@ public:
 		  Move, Enter, Leave, Invalid
 		};
 
-		Event()
-			: type(Type::Invalid), x(0), y(0),
-			isLeftPressed(false), isRightPressed(false), isMiddlePressed(false)
-		{}
+		Event() : type(Type::Invalid), x(0), y(0), isLeftPressed(false), isRightPressed(false), isMiddlePressed(false)
+		{
 
-		Event(Type type, const Mouse& parent)
-			: type(type), x(parent.x), y(parent.y),
-			isLeftPressed(parent.isLeftPressed), isRightPressed(parent.isRightPressed),
-			isMiddlePressed(parent.isMiddlePressed)
-		{}
+		}
+
+		Event(Type type, const Mouse& parent) : type(type), x(parent.x), y(parent.y), isLeftPressed(parent.isLeftPressed), 
+												isRightPressed(parent.isRightPressed), isMiddlePressed(parent.isMiddlePressed)
+		{
+			
+		}
 
 	public:
 		bool IsValid() { return type != Type::Invalid; }
@@ -52,6 +57,7 @@ public:
 	int GetMouseX();
 	int GetMouseY();
 	std::pair<int, int> GetPos();
+	std::optional<RawDelta> ReadRawDelta();
 
 	bool IsInWindow();
 
@@ -69,6 +75,8 @@ private:
 	void OnMouseLeave();
 	void OnMouseEnter();
 
+	void OnRawDelta( int dx, int dy );
+
 	void OnLeftPressed(int x, int y);
 	void OnLeftReleased(int x, int y);
 
@@ -83,10 +91,13 @@ private:
 
 	void OnWheelDelta(int x, int y, int delta);
 
+	void TrimRawInputBuffer();
+
 	void TrimBuffer();
 
 	static constexpr unsigned int bufferSize = 16u;
 	std::queue<Event> buffer;
+	std::queue<RawDelta> rawDeltaBuffer;
 
 	int x;
 	int y;
