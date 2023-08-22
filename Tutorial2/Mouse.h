@@ -65,6 +65,10 @@ public:
 	bool RightIsPressed();
 	bool MiddleIsPressed();
 
+	void EnableRawInput();
+	void DisableRawInput();
+	bool IsRawEnabled() const;
+
 	Mouse::Event Read();
 	bool IsEmpty() { return buffer.empty(); }
 	void Flush();
@@ -101,6 +105,8 @@ private:
 
 	int x;
 	int y;
+
+	bool rawEnabled = false;
 
 	int wheelDeltaCry = 0;
 

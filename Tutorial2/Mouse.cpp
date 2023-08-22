@@ -23,6 +23,10 @@ bool Mouse::LeftIsPressed() { return isLeftPressed; }
 bool Mouse::RightIsPressed() { return isRightPressed; }
 bool Mouse::MiddleIsPressed() { return isMiddlePressed; }
 
+void Mouse::EnableRawInput() { rawEnabled = true; }
+void Mouse::DisableRawInput() { rawEnabled = false; }
+bool Mouse::IsRawEnabled() const { return rawEnabled; }
+
 Mouse::Event Mouse::Read()
 {
 	if (buffer.size() > 0u)

@@ -22,6 +22,7 @@ public:
 	HWND getHandle();
 	Renderer& getRenderer();
 
+	bool IsCursorEnabled() const;
 	void EnableCursor();
 	void DisableCursor();
 

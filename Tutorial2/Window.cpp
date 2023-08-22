@@ -224,6 +224,11 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	/************** RAW MOUSE MESSAGES **************/
 	case WM_INPUT:
 	{
+		if ( !mouse.IsRawEnabled() )
+		{
+			break;
+		}
+
 		UINT size;
 		// first get the size of the input data
 		if ( GetRawInputData( reinterpret_cast<HRAWINPUT>( lParam ), RID_INPUT, nullptr, &size, sizeof( RAWINPUTHEADER ) ) == -1 )
@@ -323,6 +328,11 @@ Window::~Window() { ImGui_ImplWin32_Shutdown(); DestroyWindow( m_handle ); }
 void Window::SetTitle(const std::string title)
 {
 	if (SetWindowText(m_handle, title.c_str()) == 0) throw HWND_LAST_EXCEPT();
+}
+
+bool Window::IsCursorEnabled() const
+{
+	return cursorEnabled;
 }
 
 void Window::EnableCursor()
