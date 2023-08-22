@@ -13,7 +13,6 @@ GDIPlusManager gdipm;
 
 Application::Application() : m_window(1280, 720, "3D Renderer"), light(m_window.getRenderer())
 {
-	m_window.DisableCursor();
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 45.0f));
 }
 
@@ -28,6 +27,23 @@ int Application::Run()
 
 		m_window.getRenderer().SetCameraView( camera.GetMatrix() );
 		light.Bind( m_window.getRenderer(), camera.GetMatrix() );
+
+		while ( const auto e = m_window.keyboard.ReadKey() )
+		{
+			if ( e->IsPressed() && e->GetCode() == VK_INSERT )
+			{
+				if ( cursorEnabled )
+				{
+					m_window.DisableCursor();
+					cursorEnabled = false;
+				}
+				else
+				{
+					m_window.EnableCursor();
+					cursorEnabled = true;
+				}
+			}
+		}
 
 		/// --- Main Loop ---
 		RenderFrame();
@@ -78,6 +94,7 @@ void Application::ShowRawWindow()
 	if ( ImGui::Begin( "Raw Input" ) )
 	{
 		ImGui::Text( "Tally: (%d, %d)", x, y );
+		ImGui::Text( "Cursor: %s", cursorEnabled ? "enabled" : "disabled" );
 	}
 
 	ImGui::End();

@@ -20,7 +20,7 @@ void Keyboard::EnableAutorepeat() { isAutorepeatEnabled = true; }
 void Keyboard::DisableAutorepeat() { isAutorepeatEnabled = false; }
 bool Keyboard::GetAutorepeatStatus() { return isAutorepeatEnabled; }
 
-Keyboard::Event Keyboard::ReadKey()
+std::optional<Keyboard::Event> Keyboard::ReadKey()
 {
 	if (keyBuffer.size() > 0u)
 	{
@@ -28,10 +28,10 @@ Keyboard::Event Keyboard::ReadKey()
 		keyBuffer.pop(); // remove key from queue
 		return e;
 	}
-	else return Keyboard::Event();
+	else return {};
 }
 
-char Keyboard::ReadChar()
+std::optional<char> Keyboard::ReadChar()
 {
 	if (charBuffer.size() > 0u)
 	{
@@ -39,7 +39,7 @@ char Keyboard::ReadChar()
 		charBuffer.pop(); // remove char from queue
 		return charcode;
 	}
-	else return 0;
+	else return {};
 }
 
 void Keyboard::OnKeyPressed(unsigned char keycode)

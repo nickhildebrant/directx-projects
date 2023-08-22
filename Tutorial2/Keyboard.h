@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <queue>
 #include <bitset>
 
@@ -18,11 +19,11 @@ public:
 		Event() : type(Type::Invalid), code(0u) {}
 		Event(Type type, unsigned char code) : type(type), code(code) {}
 
-		bool IsPressed() { return type == Type::Press; }
-		bool IsReleased() { return type == Type::Release; }
-		bool IsValid() { return type != Type::Invalid; }
+		bool IsPressed() const { return type == Type::Press; }
+		bool IsReleased() const { return type == Type::Release; }
+		bool IsValid() const { return type != Type::Invalid; }
 
-		unsigned char GetCode() { return code; }
+		unsigned char GetCode() const { return code; }
 	};
 
 	Keyboard() = default;
@@ -33,12 +34,12 @@ public:
 	// key events
 	bool isKeyPressed(unsigned char keycode);
 	bool isKeyEmpty();
-	Event ReadKey();
+	std::optional<Event> ReadKey();
 	void ClearKeyQueue();
 
 	// char events
 	bool isCharEmpty();
-	char ReadChar();
+	std::optional<char> ReadChar();
 	void ClearCharQueue();
 
 	void ClearQueues();

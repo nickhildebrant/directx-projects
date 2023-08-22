@@ -19,6 +19,7 @@ public:
 	void ShowDemoUI();
 
 private:
+	bool cursorEnabled = true;
 	int x = 0, y = 0;
 
 	GUIManager m_guiManager;
