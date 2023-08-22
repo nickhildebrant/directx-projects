@@ -51,6 +51,8 @@ void Application::RenderFrame()
 	//ShowDemoUI();
 	nano.ShowWindow();
 
+	ShowRawWindow();
+
 	m_window.getRenderer().EndFrame();
 }
 
@@ -60,6 +62,22 @@ void Application::ShowDemoUI()
 	if ( show_demo_window )
 	{
 		ImGui::ShowDemoWindow( &show_demo_window );
+	}
+
+	ImGui::End();
+}
+
+void Application::ShowRawWindow()
+{
+	while ( const auto delta = m_window.mouse.ReadRawDelta() )
+	{
+		x += delta->x;
+		y += delta->y;
+	}
+
+	if ( ImGui::Begin( "Raw Input" ) )
+	{
+		ImGui::Text( "Tally: (%d, %d)", x, y );
 	}
 
 	ImGui::End();

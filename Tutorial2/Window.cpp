@@ -221,6 +221,35 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	// ****************************************************************************** //
 
+	/************** RAW MOUSE MESSAGES **************/
+	case WM_INPUT:
+	{
+		UINT size;
+		// first get the size of the input data
+		if ( GetRawInputData( reinterpret_cast<HRAWINPUT>( lParam ), RID_INPUT, nullptr, &size, sizeof( RAWINPUTHEADER ) ) == -1 )
+		{
+			// bail msg processing if error
+			break;
+		}
+
+		rawInputBuffer.resize( size );
+		// read in the input data
+		if ( GetRawInputData( reinterpret_cast<HRAWINPUT>( lParam ), RID_INPUT, rawInputBuffer.data(), &size, sizeof( RAWINPUTHEADER ) ) != size )
+		{
+			// bail msg processing if error
+			break;
+		}
+
+		// process the raw input data
+		auto& rawInput = reinterpret_cast<const RAWINPUT&>( *rawInputBuffer.data() );
+		if ( rawInput.header.dwType == RIM_TYPEMOUSE && ( rawInput.data.mouse.lLastX != 0 || rawInput.data.mouse.lLastY != 0 ) )
+		{
+			mouse.OnRawDelta( rawInput.data.mouse.lLastX, rawInput.data.mouse.lLastY );
+		}
+		break;
+	}
+	/************** END RAW MOUSE MESSAGES **************/
+
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;
@@ -278,6 +307,15 @@ Window::Window(int width, int height, const char* name) : m_width(width), m_heig
 
 	// Creating Renderer
 	m_renderer = std::make_unique<Renderer>(m_handle, width, height);
+
+	// register mouse raw input device
+	RAWINPUTDEVICE rawInput;
+	rawInput.usUsagePage = 0x01; // mouse page
+	rawInput.usUsage = 0x02; // mouse usage
+	rawInput.dwFlags = 0;
+	rawInput.hwndTarget = nullptr;
+
+	if ( RegisterRawInputDevices( &rawInput, 1, sizeof( rawInput ) ) == FALSE ) throw HWND_LAST_EXCEPT();
 }
 
 Window::~Window() { ImGui_ImplWin32_Shutdown(); DestroyWindow( m_handle ); }

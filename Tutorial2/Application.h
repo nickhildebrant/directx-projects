@@ -19,6 +19,8 @@ public:
 	void ShowDemoUI();
 
 private:
+	int x = 0, y = 0;
+
 	GUIManager m_guiManager;
 
 	Window m_window;
@@ -31,6 +33,8 @@ private:
 
 	bool showUI = true;
 	float simulationSpeed = 1.0f;
+
+	void ShowRawWindow();
 
 	void RenderFrame();
 };

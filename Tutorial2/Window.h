@@ -53,10 +53,11 @@ public:
 	};
 
 private:
-	bool cursorEnabled = false;
+	bool cursorEnabled = true;
 	int m_width, m_height;
 	HWND m_handle;
 	std::unique_ptr<Renderer> m_renderer;
+	std::vector<BYTE> rawInputBuffer;
 
 	void ConfineCursor();
 	void FreeCursor();
