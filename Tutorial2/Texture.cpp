@@ -2,7 +2,7 @@
 #include "Surface.h"
 #include "RendererErrorMacros.h"
 
-Texture::Texture( Renderer& renderer, const Surface& surface )
+Texture::Texture( Renderer& renderer, const Surface& surface, unsigned int slot ) : slot(slot)
 {
 	INFO_MANAGER( renderer );
 
@@ -38,5 +38,5 @@ Texture::Texture( Renderer& renderer, const Surface& surface )
 
 void Texture::Bind( Renderer& renderer ) noexcept
 {
-	GetContext( renderer )->PSSetShaderResources( 0u, 1u, pTextureView.GetAddressOf() );
+	GetContext( renderer )->PSSetShaderResources( slot, 1u, pTextureView.GetAddressOf() );
 }

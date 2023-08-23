@@ -1,5 +1,7 @@
 #include "Model.h"
 #include "ImGUI/imgui.h"
+#include "Surface.h"
+#include "BindableBase.h"
 
 #include <unordered_map>
 
@@ -176,7 +178,7 @@ Model::Model( Renderer& renderer, const std::string fileName ) : pWindow( std::m
 
 	for ( size_t i = 0; i < pScene->mNumMeshes; i++ )
 	{
-		meshPtrs.push_back( ParseMesh( renderer, *pScene->mMeshes[i] ) );
+		meshPtrs.push_back( ParseMesh( renderer, *pScene->mMeshes[i], pScene->mMaterials ) );
 	}
 
 	int nextId = 0;
@@ -200,7 +202,7 @@ void Model::ShowWindow( const char* windowName ) noexcept
 	pWindow->Show( windowName, *pRoot );
 }
 
-std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh )
+std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* pMaterials )
 {
 	using VertexHandler::VertexLayout;
 
@@ -208,13 +210,16 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh )
 		VertexLayout{}
 		.Append( VertexLayout::Position3D )
 		.Append( VertexLayout::Normal )
+		.Append( VertexLayout::Texture2D )
 	) );
 
+	const aiMaterial& material = *pMaterials[mesh.mMaterialIndex];
 	for ( unsigned int i = 0; i < mesh.mNumVertices; i++ )
 	{
 		vertexBuffer.EmplaceBack(
 			DirectX::XMFLOAT4{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z, 1.0f },
-			DirectX::XMFLOAT4{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z, 0.0f }
+			DirectX::XMFLOAT4{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z, 0.0f },
+			DirectX::XMFLOAT2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y }
 		);
 	}
 
@@ -231,6 +236,21 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh )
 
 	std::vector<std::unique_ptr<Bindable>> bindablePtrs;
 
+	if ( mesh.mMaterialIndex >= 0 )
+	{
+		const std::string folder_path = "../Models/nanosuit/";
+		const aiMaterial& material = *pMaterials[mesh.mMaterialIndex];
+		aiString textureFileName;
+		material.GetTexture( aiTextureType_DIFFUSE, 0, &textureFileName );
+		bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ) ) );
+
+		material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName );
+		bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 1u ) );
+
+		bindablePtrs.push_back( std::make_unique<Sampler>( renderer ) );
+	}
+
+
 	bindablePtrs.push_back( std::make_unique<VertexBuffer>( renderer, vertexBuffer ) );
 
 	bindablePtrs.push_back( std::make_unique<IndexBuffer>( renderer, indices ) );
@@ -245,7 +265,6 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh )
 
 	struct PSMaterialConstant
 	{
-		DirectX::XMFLOAT4 color = { 0.6f, 0.6f, 0.8f, 1.0f };
 		float specularIntensity = 0.6f;
 		float specularPower = 30.0f;
 		float padding[2];

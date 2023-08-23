@@ -27,7 +27,7 @@ private:
 	Camera camera;
 	Light light;
 
-	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit-hierarchy.gltf" };
+	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit.obj" };
 
 	bool showUI = true;
 	bool showDemoUI = false;

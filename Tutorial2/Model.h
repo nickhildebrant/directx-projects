@@ -65,6 +65,6 @@ private:
 	std::vector<std::unique_ptr<Mesh>> meshPtrs;
 	std::unique_ptr<class ModelWindow> pWindow;
 
-	static std::unique_ptr<Mesh> ParseMesh( Renderer& renderer, const aiMesh& mesh );
+	static std::unique_ptr<Mesh> ParseMesh( Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* pMaterials ); // array of const aiMaterials <- const ptr <- ptr
 	std::unique_ptr<Node> ParseNode( int& nextId, const aiNode& node ) noexcept;
 };

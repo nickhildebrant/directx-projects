@@ -12,17 +12,19 @@ cbuffer LightConstantBuffer {
 
 cbuffer ObjectConstantBuffer
 {
-    float4 materialColor;
     float specularIntensity;
     float shininess;
 };
+
+Texture2D tex;
+SamplerState samplr;
 
 static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 static const float ambientIntensity = 1.0f;
 static const float lightIntensity = 1.0f;
 
-float4 main( float4 worldPosition : Position, float4 normal : Normal) : SV_Target
+float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord ) : SV_Target
 {
     // light vector data
     float distance = length(lightPosition - worldPosition);
@@ -40,8 +42,7 @@ float4 main( float4 worldPosition : Position, float4 normal : Normal) : SV_Targe
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
     float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
-    float4 color = saturate(ambient + diffuse + specular) * materialColor;
-
+    float4 color = saturate(ambient + diffuse + specular) * tex.Sample(samplr, texcoord);
     color.a = 1;
     return color;
 }
