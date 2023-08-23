@@ -400,3 +400,4 @@ FodyWeavers.xsd
 
 /assimp
 !Models/*.obj
+!Models/*/*.obj
