@@ -11,5 +11,5 @@ public:
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 
 private:
-	DirectX::XMFLOAT4 position = { 1.0f,1.0f,1.0f,0.0f };
+	DirectX::XMFLOAT4 position = { 1.0f,1.0f,1.0f,1.0f };
 };
