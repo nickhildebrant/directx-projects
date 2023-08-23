@@ -236,16 +236,20 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 	std::vector<std::unique_ptr<Bindable>> bindablePtrs;
 
+	bool hasSpecular = false;
 	if ( mesh.mMaterialIndex >= 0 )
 	{
 		const std::string folder_path = "../Models/nanosuit/";
 		const aiMaterial& material = *pMaterials[mesh.mMaterialIndex];
 		aiString textureFileName;
 		material.GetTexture( aiTextureType_DIFFUSE, 0, &textureFileName );
-		bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ) ) );
+		bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 0u ) );
 
-		material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName );
-		bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 1u ) );
+		if ( material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName ) == aiReturn_SUCCESS )
+		{
+			bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 1u ) );
+			hasSpecular = true;
+		}
 
 		bindablePtrs.push_back( std::make_unique<Sampler>( renderer ) );
 	}
@@ -259,14 +263,20 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	auto pvsbc = pvs->GetBytecode();
 	bindablePtrs.push_back( std::move( pvs ) );
 
+	if ( hasSpecular )
+	{
+		bindablePtrs.push_back( std::make_unique<PixelShader>( renderer, L"TextureSpecularPixelShader.cso" ) );
+		return std::make_unique<Mesh>( renderer, std::move( bindablePtrs ) );
+	}
+	
 	bindablePtrs.push_back( std::make_unique<PixelShader>( renderer, L"PhongPixelShader.cso" ) );
 
 	bindablePtrs.push_back( std::make_unique<InputLayout>( renderer, vertexBuffer.GetLayout().GetD3DLayout(), pvsbc ) );
 
 	struct PSMaterialConstant
 	{
-		float specularIntensity = 0.6f;
-		float specularPower = 30.0f;
+		float specularIntensity = 1.6f;
+		float specularPower = 50.0f;
 		float padding[2];
 	} materialConstant;
 

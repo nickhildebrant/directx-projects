@@ -1,4 +1,5 @@
-cbuffer LightConstantBuffer {
+cbuffer LightConstantBuffer
+{
     float4 lightPosition;
     
     float4 ambientColor;
@@ -10,22 +11,14 @@ cbuffer LightConstantBuffer {
     float attenuationQuadradic;
 };
 
-cbuffer ObjectConstantBuffer
-{
-    float specularIntensity;
-    float shininess;
-    float padding[2];
-};
-
 Texture2D tex;
+Texture2D specular;
 SamplerState samplr;
-
-static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 static const float ambientIntensity = 1.0f;
 static const float lightIntensity = 1.0f;
 
-float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord ) : SV_Target
+float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord) : SV_Target
 {
     // light vector data
     float distance = length(lightPosition - worldPosition);
@@ -42,8 +35,11 @@ float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 tex
     // diffuse intensity
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
-    float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
-    float4 color = saturate(ambient + diffuse + specular) * tex.Sample(samplr, texcoord);
+    float4 specularSample = specular.Sample(samplr, texcoord);
+    float4 specularIntensity = specularSample.rgba;
+    float4 specular = attenuation * pow(max(0, dot(V, R)), specularIntensity.a) * float4(specularIntensity.rgb, 1.0f);
+    
+    float4 color = saturate(diffuse + ambient + specular) * tex.Sample(samplr, texcoord);
     color.a = 1;
     return color;
 }
