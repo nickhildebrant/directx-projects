@@ -125,6 +125,7 @@ public:
 				ImGui::SliderAngle( "Roll", &transform.roll, -180.0f, 180.0f );
 				ImGui::SliderAngle( "Pitch", &transform.pitch, -180.0f, 180.0f );
 				ImGui::SliderAngle( "Yaw", &transform.yaw, -180.0f, 180.0f );
+
 				ImGui::Text( "Position" );
 				ImGui::SliderFloat( "X", &transform.x, -20.0f, 20.0f );
 				ImGui::SliderFloat( "Y", &transform.y, -20.0f, 20.0f );

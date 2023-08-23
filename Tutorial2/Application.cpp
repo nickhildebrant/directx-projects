@@ -30,8 +30,14 @@ int Application::Run()
 
 		while ( const auto e = m_window.keyboard.ReadKey() )
 		{
-			if ( e->IsPressed() && e->GetCode() == VK_INSERT )
+			if ( !e->IsPressed() )
 			{
+				continue;
+			}
+			
+			switch( e->GetCode() )
+			{
+			case VK_ESCAPE:
 				if ( m_window.IsCursorEnabled() )
 				{
 					m_window.DisableCursor();
@@ -42,6 +48,11 @@ int Application::Run()
 					m_window.EnableCursor();
 					m_window.mouse.DisableRawInput();
 				}
+				break;
+
+			case VK_F1:
+				showDemoUI = true;
+				break;
 			}
 		}
 
@@ -58,6 +69,25 @@ void Application::RenderFrame()
 	
 	float deltaTime = simulationSpeed * m_timer.DeltaTime();
 
+	// Camera Controls
+	if ( !m_window.IsCursorEnabled() )
+	{
+		if ( m_window.keyboard.isKeyPressed( 'W' ) ) camera.Translate( { 0.0f, 0.0f, deltaTime, 1.0f } );
+		if ( m_window.keyboard.isKeyPressed( 'A' ) ) camera.Translate( { -deltaTime, 0.0f, 0.0f, 1.0f } );
+		if ( m_window.keyboard.isKeyPressed( 'S' ) ) camera.Translate( { 0.0f, 0.0f, -deltaTime, 1.0f } );
+		if ( m_window.keyboard.isKeyPressed( 'D' ) ) camera.Translate( { deltaTime, 0.0f, 0.0f, 1.0f } );
+		if ( m_window.keyboard.isKeyPressed( 'E' ) ) camera.Translate( { 0.0f, deltaTime, 0.0f, 1.0f } );
+		if ( m_window.keyboard.isKeyPressed( 'Q' ) ) camera.Translate( { 0.0f, -deltaTime, 0.0f, 1.0f } );
+	}
+
+	while ( const auto delta = m_window.mouse.ReadRawDelta() )
+	{
+		if ( !m_window.IsCursorEnabled() )
+		{
+			camera.Rotate( delta->y, delta->x, 0.0f );
+		}
+	}
+
 	nano.Draw( m_window.getRenderer() );
 	light.Draw( m_window.getRenderer() );
 
@@ -67,35 +97,13 @@ void Application::RenderFrame()
 	//ShowDemoUI();
 	nano.ShowWindow();
 
-	ShowRawWindow();
-
 	m_window.getRenderer().EndFrame();
 }
 
 void Application::ShowDemoUI()
 {
-	static bool show_demo_window = true;
-	if ( show_demo_window )
+	if ( showDemoUI )
 	{
-		ImGui::ShowDemoWindow( &show_demo_window );
+		ImGui::ShowDemoWindow( &showDemoUI );
 	}
-
-	ImGui::End();
-}
-
-void Application::ShowRawWindow()
-{
-	while ( const auto delta = m_window.mouse.ReadRawDelta() )
-	{
-		x += delta->x;
-		y += delta->y;
-	}
-
-	if ( ImGui::Begin( "Raw Input" ) )
-	{
-		ImGui::Text( "Tally: (%d, %d)", x, y );
-		ImGui::Text( "Cursor: %s", m_window.IsCursorEnabled() ? "enabled" : "disabled");
-	}
-
-	ImGui::End();
 }

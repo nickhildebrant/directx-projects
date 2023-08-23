@@ -19,8 +19,6 @@ public:
 	void ShowDemoUI();
 
 private:
-	int x = 0, y = 0;
-
 	GUIManager m_guiManager;
 
 	Window m_window;
@@ -32,9 +30,8 @@ private:
 	Model nano{ m_window.getRenderer(), "../Models/nano.gltf" };
 
 	bool showUI = true;
+	bool showDemoUI = false;
 	float simulationSpeed = 1.0f;
-
-	void ShowRawWindow();
 
 	void RenderFrame();
 };

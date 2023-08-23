@@ -10,9 +10,7 @@ Camera::Camera()
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 {
-	const auto position = DirectX::XMVector4Transform( DirectX::XMVectorSet( 0.0f, 0.0f, -r, 0.0f ), DirectX::XMMatrixRotationRollPitchYaw( phi, -theta, 0.0f ) );
-
-	return DirectX::XMMatrixLookAtLH( position, DirectX::XMVectorZero(), DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) ) * DirectX::XMMatrixRotationRollPitchYaw( pitch, -yaw, roll );
+	return DirectX::XMMatrixTranslation( -position.x, -position.y, -position.z ) * DirectX::XMMatrixRotationRollPitchYaw( -roll, -pitch, -yaw );
 }
 
 void Camera::SpawnControlWindow() noexcept
@@ -26,7 +24,7 @@ void Camera::SpawnControlWindow() noexcept
 
 		ImGui::Text( "Orientation" );
 		ImGui::SliderAngle( "Roll", &roll, -90.0f, 90.0f );
-		ImGui::SliderAngle( "Pitch", &pitch, -90.0f, 90.0f );
+		ImGui::SliderAngle( "Pitch", &pitch, -180.0f, 180.0f );
 		ImGui::SliderAngle( "Yaw", &yaw, -180.0f, 180.0f );
 
 		if ( ImGui::Button( "Reset" ) )
@@ -50,7 +48,7 @@ void Camera::ResetView() noexcept
 void Camera::Translate( DirectX::XMFLOAT4 translation )
 {
 	DirectX::XMStoreFloat4( &translation, DirectX::XMVector4Transform( DirectX::XMLoadFloat4( &translation ), 
-			DirectX::XMMatrixRotationYawPitchRoll( roll, pitch, yaw ) * 
+			DirectX::XMMatrixRotationRollPitchYaw( roll, pitch, yaw ) * 
 			DirectX::XMMatrixScaling( translationSpeed, translationSpeed, translationSpeed ) ) );
 
 	position = 
@@ -62,15 +60,16 @@ void Camera::Translate( DirectX::XMFLOAT4 translation )
 	};
 }
 
-void Camera::Rotate( float dx, float dy, float dz )
-{
-	yaw = wrap_angle( yaw + dx * rotationSpeed );
-	pitch = std::clamp( pitch + dy * rotationSpeed, -PI / 2.0f, PI / 2.0f );
-}
-
 float wrap_angle( float theta )
 {
 	const float PI = 3.1415926535897932f;
 	const float modded = fmod( theta, 2.0f * PI );
 	return modded > PI ? ( modded - 2.0f * PI ) : modded;
+}
+
+void Camera::Rotate( float dx, float dy, float dz )
+{
+	roll = wrap_angle( roll + dx * rotationSpeed );
+	pitch = std::clamp( pitch + dy * rotationSpeed, -PI / 2.0f, PI / 2.0f );
+	yaw = wrap_angle( yaw + dz * rotationSpeed );
 }
