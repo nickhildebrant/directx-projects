@@ -43,7 +43,7 @@ float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 tex
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
     float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
-    float4 color = saturate(ambient + diffuse + specular) * tex.Sample(samplr, texcoord);
+    float4 color = saturate(ambient + diffuse) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular.a;
     color.a = 1;
     return color;
 }

@@ -275,7 +275,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 	struct PSMaterialConstant
 	{
-		float specularIntensity = 1.6f;
+		float specularIntensity = 0.80f;
 		float specularPower = 50.0f;
 		float padding[2];
 	} materialConstant;

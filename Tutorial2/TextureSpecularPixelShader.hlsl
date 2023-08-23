@@ -18,6 +18,8 @@ SamplerState samplr;
 static const float ambientIntensity = 1.0f;
 static const float lightIntensity = 1.0f;
 
+static const float specularPowerFactor = 100.0f;
+
 float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord) : SV_Target
 {
     // light vector data
@@ -36,10 +38,11 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texc
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
     float4 specularSample = specular.Sample(samplr, texcoord);
-    float4 specularIntensity = specularSample.rgba;
-    float4 specular = attenuation * pow(max(0, dot(V, R)), specularIntensity.a) * float4(specularIntensity.rgb, 1.0f);
+    float4 specularColor = float4(specularSample.rgb, 1.0f);
+    float power = specularSample.a * specularPowerFactor;
+    float4 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0, dot(V, R)), power);
     
-    float4 color = saturate(diffuse + ambient + specular) * tex.Sample(samplr, texcoord);
+    float4 color = saturate((diffuse + ambient) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular * specularColor);
     color.a = 1;
     return color;
 }
