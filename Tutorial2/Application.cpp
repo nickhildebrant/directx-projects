@@ -84,7 +84,7 @@ void Application::RenderFrame()
 	{
 		if ( !m_window.IsCursorEnabled() )
 		{
-			camera.Rotate( delta->y, delta->x, 0.0f );
+			camera.Rotate( (float) delta->y, (float) delta->x, 0.0f );
 		}
 	}
 

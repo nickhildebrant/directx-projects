@@ -7,8 +7,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <optional>
-
 class Mesh : public DrawableBase<Mesh> {
 public:
 	Mesh( Renderer& renderer, std::vector<std::unique_ptr<Bindable>> bindPtrs );
@@ -22,15 +20,18 @@ private:
 
 class Node {
 	friend class Model;
-	friend class ModelWindow;
 
 public:
-	Node( const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform ) noexcept;
+	Node( int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform ) noexcept;
 
 	void Draw( Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform ) const noexcept;
 	void SetAppliedTransform( DirectX::FXMMATRIX transform ) noexcept;
+	void ShowTree( Node*& pSelectedNode ) const noexcept;
+
+	int GetID() const;
 
 private:
+	int id;
 	std::string name;
 	std::vector<std::unique_ptr<Node>> childPtrs;
 	std::vector<Mesh*> meshPtrs;
@@ -39,7 +40,6 @@ private:
 	DirectX::XMFLOAT4X4 appliedTransform;
 
 	void AddChild( std::unique_ptr<Node> pChild ) noexcept;
-	void ShowTree( int& nodeIndex, std::optional<int>& selectedIndex, Node*& pSelectedNode ) const noexcept;
 };
 
 class Model {
@@ -66,5 +66,5 @@ private:
 	std::unique_ptr<class ModelWindow> pWindow;
 
 	static std::unique_ptr<Mesh> ParseMesh( Renderer& renderer, const aiMesh& mesh );
-	std::unique_ptr<Node> ParseNode( const aiNode& node ) noexcept;
+	std::unique_ptr<Node> ParseNode( int& nextId, const aiNode& node ) noexcept;
 };
