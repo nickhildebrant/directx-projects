@@ -1,6 +1,8 @@
 #pragma once
-#include "Renderer.h"
 #include <DirectXMath.h>
+#include <memory>
+
+#include "Renderer.h"
 
 class Bindable;
 
@@ -16,7 +18,6 @@ public:
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 
 	void Draw(Renderer& renderer) const noexcept;
-	virtual void Update(float dt) noexcept {}
 
 protected:
 	void AddBind(std::unique_ptr<Bindable> bind) noexcept;
