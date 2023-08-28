@@ -221,7 +221,6 @@
     <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Sampler.cpp" />
-    <ClCompile Include="Sheet.cpp" />
     <ClCompile Include="SolidSphere.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -274,7 +273,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererErrorMacros.h" />
     <ClInclude Include="Sampler.h" />
-    <ClInclude Include="Sheet.h" />
     <ClInclude Include="SolidSphere.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Surface.h" />

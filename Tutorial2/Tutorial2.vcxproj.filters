@@ -105,9 +105,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
-    <ClCompile Include="Sheet.cpp">
-      <Filter>Source Files\Drawable</Filter>
-    </ClCompile>
     <ClCompile Include="GDIPlusManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -232,9 +229,6 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="Sheet.h">
-      <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="GDIPlusManager.h">
       <Filter>Header Files</Filter>
