@@ -8,33 +8,30 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 	:
 	TestPoly( renderer, rng, adist, ddist, odist, rdist )
 {
-	if (!IsStaticInitialized())
+	auto pvs = std::make_shared<VertexShader>(renderer, L"BlendedPhongVertexShader.cso");
+	auto pvsbc = pvs->GetBytecode();
+	AddBind(std::move(pvs));
+
+	AddBind(std::make_shared<PixelShader>(renderer, L"BlendedPhongPixelShader.cso"));
+
+	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
-		auto pvs = std::make_unique<VertexShader>(renderer, L"BlendedPhongVertexShader.cso");
-		auto pvsbc = pvs->GetBytecode();
-		AddStaticBind(std::move(pvs));
+		{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "Color",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,32,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
 
-		AddStaticBind(std::make_unique<PixelShader>(renderer, L"BlendedPhongPixelShader.cso"));
+	AddBind(std::make_shared<InputLayout>(renderer, ied, pvsbc));
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Color",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,32,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
-
-		AddStaticBind(std::make_unique<InputLayout>(renderer, ied, pvsbc));
-
-		AddStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddBind(std::make_shared<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		
-		struct PixelShaderConstant {
-			float specularIntensity = 0.6f;
-			float shininess = 30.0f;
-			float padding[2];
-		} colorConstant;
+	struct PixelShaderConstant {
+		float specularIntensity = 0.6f;
+		float shininess = 30.0f;
+		float padding[2];
+	} colorConstant;
 
-		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderConstant>>( renderer, colorConstant, 1u ) );
-	}
+	AddBind( std::make_shared<PixelConstantBuffer<PixelShaderConstant>>( renderer, colorConstant, 1u ) );
 	
 	struct Vertex {
 		DirectX::XMFLOAT4 position;
@@ -57,9 +54,9 @@ Pyramid::Pyramid(Renderer& renderer, std::mt19937& rng, std::uniform_real_distri
 
 	model.SetNormalsIndependentFlat();
 
-	AddBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
+	AddBind( std::make_shared<VertexBuffer>( renderer, model.vertices ) );
 
-	AddIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
+	AddBind( std::make_shared<IndexBuffer>( renderer, model.indices ) );
 
-	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
+	AddBind(std::make_shared<TransformConstantBuffer>(renderer, *this));
 }

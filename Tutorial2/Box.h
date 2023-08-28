@@ -1,4 +1,5 @@
 #pragma once
+#include "Renderer.h"
 #include "TestPoly.h"
 #include "ConstantBuffers.h"
 
@@ -14,7 +15,7 @@ public:
 
 	bool SpawnControlWindow( Renderer& renderer, int id ) noexcept;
 
-	DirectX::XMMATRIX GetTransformXM() const noexcept override;
+	DirectX::XMMATRIX GetTransformXM() const noexcept;
 
 private:
 	DirectX::XMFLOAT4X4 modelTransform;

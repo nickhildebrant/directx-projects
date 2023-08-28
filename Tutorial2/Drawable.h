@@ -1,14 +1,13 @@
 #pragma once
 #include <DirectXMath.h>
 #include <memory>
-
 #include "Renderer.h"
+
+#include "IndexBuffer.h"
 
 class Bindable;
 
 class Drawable {
-	template<class T>
-	friend class DrawableBase;
 
 public:
 	Drawable() = default;
@@ -20,8 +19,7 @@ public:
 	void Draw(Renderer& renderer) const noexcept;
 
 protected:
-	void AddBind(std::unique_ptr<Bindable> bind) noexcept;
-	void AddIndexBuffer(std::unique_ptr<class IndexBuffer> ibuf) noexcept;
+	void AddBind(std::shared_ptr<Bindable> bind) noexcept;
 
 	// Can search for a specific bindable to manipulate it
 	template<class T>
@@ -36,8 +34,6 @@ protected:
 	}
 
 private:
-	virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
-
-	const IndexBuffer* m_indexBuffer = nullptr;
-	std::vector<std::unique_ptr<Bindable>> binds;
+	const IndexBuffer* pIndexBuffer = nullptr;
+	std::vector<std::shared_ptr<Bindable>> binds;
 };

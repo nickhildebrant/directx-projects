@@ -1,5 +1,5 @@
 #pragma once
-#include "DrawableBase.h"
+#include "Drawable.h"
 #include "BindableBase.h"
 #include "VertexLayout.h"
 
@@ -7,9 +7,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-class Mesh : public DrawableBase<Mesh> {
+class Mesh : public Drawable {
 public:
-	Mesh( Renderer& renderer, std::vector<std::unique_ptr<Bindable>> bindPtrs );
+	Mesh( Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindPtrs );
 
 	void Draw( Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform ) const noexcept;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;

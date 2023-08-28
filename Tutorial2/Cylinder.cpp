@@ -7,41 +7,38 @@ Cylinder::Cylinder( Renderer& renderer, std::mt19937& rng, std::uniform_real_dis
 	:
 	TestPoly( renderer, rng, adist, ddist, odist, rdist )
 {
-	if ( !IsStaticInitialized() )
+	auto pvs = std::make_shared<VertexShader>( renderer, L"PhongVertexShader.cso" );
+	auto pvsbc = pvs->GetBytecode();
+	AddBind( std::move( pvs ) );
+
+	AddBind( std::make_shared<PixelShader>( renderer, L"IndexedPhongPixelShader.cso" ) );
+
+	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
-		auto pvs = std::make_unique<VertexShader>( renderer, L"PhongVertexShader.cso" );
-		auto pvsbc = pvs->GetBytecode();
-		AddStaticBind( std::move( pvs ) );
+		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
 
-		AddStaticBind( std::make_unique<PixelShader>( renderer, L"IndexedPhongPixelShader.cso" ) );
+	AddBind( std::make_shared<InputLayout>( renderer, ied, pvsbc ) );
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	AddBind( std::make_shared<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+
+	struct PSMaterialConstant
+	{
+		alignas(16) DirectX::XMFLOAT4 colors[6] = {
+			{1.0f,0.0f,0.0f,1.0f},
+			{0.0f,1.0f,0.0f,1.0f},
+			{0.0f,0.0f,1.0f,1.0f},
+			{1.0f,1.0f,0.0f,1.0f},
+			{1.0f,0.0f,1.0f,1.0f},
+			{0.0f,1.0f,1.0f,1.0f},
 		};
 
-		AddStaticBind( std::make_unique<InputLayout>( renderer, ied, pvsbc ) );
+		float specularIntensity = 0.6f;
+		float specularPower = 30.0f;
+	} materialConstant;
 
-		AddStaticBind( std::make_unique<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
-
-		struct PSMaterialConstant
-		{
-			alignas(16) DirectX::XMFLOAT4 colors[6] = {
-				{1.0f,0.0f,0.0f,1.0f},
-				{0.0f,1.0f,0.0f,1.0f},
-				{0.0f,0.0f,1.0f,1.0f},
-				{1.0f,1.0f,0.0f,1.0f},
-				{1.0f,0.0f,1.0f,1.0f},
-				{0.0f,1.0f,1.0f,1.0f},
-			};
-
-			float specularIntensity = 0.6f;
-			float specularPower = 30.0f;
-		} materialConstant;
-
-		AddStaticBind( std::make_unique<PixelConstantBuffer<PSMaterialConstant>>( renderer, materialConstant, 1u ) );
-	}
+	AddBind( std::make_shared<PixelConstantBuffer<PSMaterialConstant>>( renderer, materialConstant, 1u ) );
 	
 	struct Vertex {
 		DirectX::XMFLOAT4 position;
@@ -50,9 +47,9 @@ Cylinder::Cylinder( Renderer& renderer, std::mt19937& rng, std::uniform_real_dis
 
 	auto model = Prism::MakeTesselatedIndependentCapNormals<Vertex>( tdist( rng ) );
 
-	AddBind( std::make_unique<VertexBuffer>( renderer, model.vertices ) );
+	AddBind( std::make_shared<VertexBuffer>( renderer, model.vertices ) );
 
-	AddIndexBuffer( std::make_unique<IndexBuffer>( renderer, model.indices ) );
+	AddBind( std::make_shared<IndexBuffer>( renderer, model.indices ) );
 
-	AddBind( std::make_unique<TransformConstantBuffer>( renderer, *this ) );
+	AddBind( std::make_shared<TransformConstantBuffer>( renderer, *this ) );
 }

@@ -1,9 +1,9 @@
 #pragma once
 #include <math.h>
-#include "DrawableBase.h"
+#include "Drawable.h"
 
 template<class T>
-class TestPoly : public DrawableBase<T> {
+class TestPoly : public Drawable {
 public:
 	TestPoly( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist,
 		std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist )

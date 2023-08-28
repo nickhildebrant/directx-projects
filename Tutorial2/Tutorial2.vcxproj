@@ -246,7 +246,6 @@
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DirectXErrors.h" />
     <ClInclude Include="Drawable.h" />
-    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="GDIPlusManager.h" />

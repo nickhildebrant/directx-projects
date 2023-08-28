@@ -1,7 +1,7 @@
 #pragma once
-#include "DrawableBase.h"
+#include "Drawable.h"
 
-class SolidSphere : public DrawableBase<SolidSphere> {
+class SolidSphere : public Drawable {
 public:
 	SolidSphere( Renderer& renderer, float radius );
 

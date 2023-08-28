@@ -10,46 +10,39 @@ Box::Box( Renderer& renderer, std::mt19937& rng, std::uniform_real_distribution<
 	:
 	TestPoly( renderer, rng, adist, ddist, odist, rdist )
 {
-	if (!IsStaticInitialized())
+	struct Vertex {
+		DirectX::XMFLOAT4 position;
+		DirectX::XMFLOAT4 normal;
+	};
+
+	auto model = Cube::MakeIndependent<Vertex>();
+	model.SetNormalsIndependentFlat();
+
+	AddBind(std::make_shared<VertexBuffer>(renderer, model.vertices));
+
+	auto pvs = std::make_shared<VertexShader>(renderer, L"PhongVertexShader.cso");
+	auto pvsbc = pvs->GetBytecode();
+	AddBind(std::move(pvs));
+
+	AddBind(std::make_shared<PixelShader>(renderer, L"PhongPixelShader.cso"));
+
+	AddBind(std::make_shared<IndexBuffer>(renderer, model.indices));
+
+	const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
 	{
-		struct Vertex {
-			DirectX::XMFLOAT4 position;
-			DirectX::XMFLOAT4 normal;
-		};
+		{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
 
-		auto model = Cube::MakeIndependent<Vertex>();
-		model.SetNormalsIndependentFlat();
+	AddBind(std::make_shared<InputLayout>(renderer, inputDesc, pvsbc));
 
-		AddStaticBind(std::make_unique<VertexBuffer>(renderer, model.vertices));
+	AddBind(std::make_shared<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-		auto pvs = std::make_unique<VertexShader>(renderer, L"PhongVertexShader.cso");
-		auto pvsbc = pvs->GetBytecode();
-		AddStaticBind(std::move(pvs));
-
-		AddStaticBind(std::make_unique<PixelShader>(renderer, L"PhongPixelShader.cso"));
-
-		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
-
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc =
-		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
-
-		AddStaticBind(std::make_unique<InputLayout>(renderer, inputDesc, pvsbc));
-
-		AddStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-	}
-	else
-	{
-		SetIndexFromStatic();
-	}
-
-	AddBind(std::make_unique<TransformConstantBuffer>(renderer, *this));
+	AddBind(std::make_shared<TransformConstantBuffer>(renderer, *this));
 
 	m_materialConstants.color = materialColor;
 
-	AddBind( std::make_unique<PixelConstantBuffer<PSMaterialConstant>>( renderer, m_materialConstants, 1u ) );
+	AddBind( std::make_shared<PixelConstantBuffer<PSMaterialConstant>>( renderer, m_materialConstants, 1u ) );
 
 	// model deformation - per instance
 	DirectX::XMStoreFloat4x4(&modelTransform, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng)));
