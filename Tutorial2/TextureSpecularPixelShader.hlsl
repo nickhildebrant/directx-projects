@@ -39,7 +39,7 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texc
 
     float4 specularSample = specular.Sample(samplr, texcoord);
     float4 specularColor = float4(specularSample.rgb, 1.0f);
-    float power = specularSample.a * specularPowerFactor;
+    float power = pow(2.0f, specularSample.a * 13.0f);
     float4 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0, dot(V, R)), power);
     
     float4 color = saturate((diffuse + ambient) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular * specularColor);

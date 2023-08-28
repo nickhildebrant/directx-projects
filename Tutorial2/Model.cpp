@@ -237,6 +237,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	std::vector<std::unique_ptr<Bindable>> bindablePtrs;
 
 	bool hasSpecular = false;
+	float shininess = 35.0f;
 	if ( mesh.mMaterialIndex >= 0 )
 	{
 		const std::string folder_path = "../Models/nanosuit/";
@@ -249,6 +250,10 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 		{
 			bindablePtrs.push_back( std::make_unique<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 1u ) );
 			hasSpecular = true;
+		}
+		else
+		{
+			material.Get( AI_MATKEY_SHININESS, shininess );
 		}
 
 		bindablePtrs.push_back( std::make_unique<Sampler>( renderer ) );
@@ -276,10 +281,11 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	struct PSMaterialConstant
 	{
 		float specularIntensity = 0.80f;
-		float specularPower = 50.0f;
+		float specularPower;
 		float padding[2];
 	} materialConstant;
 
+	materialConstant.specularPower = shininess;
 	bindablePtrs.push_back( std::make_unique<PixelConstantBuffer<PSMaterialConstant>>( renderer, materialConstant, 1u ) );
 
 	return std::make_unique<Mesh>( renderer, std::move( bindablePtrs ) );
