@@ -1,16 +1,13 @@
 #include "SolidSphere.h"
 #include "BindableBase.h"
 #include "RendererErrorMacros.h"
+#include "VertexLayout.h"
 #include "Sphere.h"
 
 
 SolidSphere::SolidSphere( Renderer& renderer, float radius )
 {
-	struct Vertex {
-		DirectX::XMFLOAT4 position;
-	};
-
-	auto model = Sphere::MakeTesselated<Vertex>(8, 16);
+	auto model = Sphere::Make();
 	model.Transform( DirectX::XMMatrixScaling( radius, radius, radius ) );
 
 	AddBind( std::make_shared<VertexBuffer>( renderer, model.vertices ) );
@@ -29,12 +26,7 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 
 	AddBind( std::make_shared<PixelConstantBuffer<PSColorConstant>>( renderer, colorConst ) );
 
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-	{
-		{ "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-	};
-
-	AddBind( std::make_shared<InputLayout>( renderer, ied, pvsbc ) );
+	AddBind( std::make_shared<InputLayout>( renderer, model.vertices.GetLayout().GetD3DLayout(), pvsbc ) );
 
 	AddBind( std::make_shared<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 

@@ -1,11 +1,12 @@
 #pragma once
-#include "IndexedTriangleList.h"
+#include <optional>
 #include <DirectXMath.h>
+#include "IndexedTriangleList.h"
+#include "VertexLayout.h"
 
 class Sphere {
 public:
-    template<class V>
-    static IndexedTriangleList<V> MakeTesselated( int latitudeDivisions, int longitudeDivisions )
+    static IndexedTriangleList MakeTesselated( VertexHandler::VertexLayout layout, int latitudeDivisions, int longitudeDivisions )
     {
         const float PI = 3.14159265f;
 
@@ -16,7 +17,7 @@ public:
         const float latitudeAngle = PI / latitudeDivisions;
         const float longitudeAngle = 2.0f * PI / longitudeDivisions;
 
-        std::vector<V> vertices;
+        VertexHandler::VertexBuffer vertexBuffer { std::move( layout ) };
         std::vector<unsigned short> indices;
 
         // Generate vertices for the sphere
@@ -32,12 +33,12 @@ public:
                 const float sinPhi = std::sin( phi );
                 const float cosPhi = std::cos( phi );
 
-                V vertex;
-                vertex.position.x = radius * sinTheta * cosPhi;
-                vertex.position.y = radius * cosTheta;
-                vertex.position.z = radius * sinTheta * sinPhi;
-                vertex.position.w = 1.0f;
-                vertices.push_back( vertex );
+                DirectX::XMFLOAT4 calculatedPosition;
+                calculatedPosition.x = radius * sinTheta * cosPhi;
+                calculatedPosition.y = radius * cosTheta;
+                calculatedPosition.z = radius * sinTheta * sinPhi;
+                calculatedPosition.w = 1.0f;
+                vertexBuffer.EmplaceBack( calculatedPosition );
             }
         }
 
@@ -61,13 +62,14 @@ public:
             }
         }
 
-        return { std::move( vertices ), std::move( indices ) };
+        return { std::move( vertexBuffer ), std::move( indices ) };
     }
 
-
-	template<class V>
-	static IndexedTriangleList<V> Make()
+    static IndexedTriangleList Make( std::optional<VertexHandler::VertexLayout> layout = std::nullopt )
 	{
-		return MakeTesselated<V>(12, 24);
+        using Element = VertexHandler::VertexLayout::ElementType;
+        if ( !layout ) layout = VertexHandler::VertexLayout{}.Append( Element::Position3D );
+
+		return MakeTesselated( std::move( *layout ), 12, 24);
 	}
 };

@@ -1,28 +1,29 @@
 #pragma once
 #include <vector>
 #include <DirectXMath.h>
+#include "VertexLayout.h"
 
-template<class T>
 class IndexedTriangleList {
 public:
 	IndexedTriangleList() = default;
-	IndexedTriangleList(std::vector<T> vertices_in, std::vector<unsigned short> indices_in)
-		: vertices(std::move(vertices_in)), indices(std::move(indices_in))
+	IndexedTriangleList( VertexHandler::VertexBuffer vertices_in, std::vector<unsigned short> indices_in ) : vertices(std::move(vertices_in)), indices(std::move(indices_in))
 	{
-		assert(vertices.size() > 2);
+		assert(vertices.Size() > 2);
 		assert(indices.size() % 3 == 0);
 	}
 
 	void Transform(DirectX::FXMMATRIX matrix)
 	{
-		for (auto& vertex : vertices)
+		using Elements = VertexHandler::VertexLayout::ElementType;
+		for (int i = 0; i < vertices.Size(); i++)
 		{
-			const DirectX::XMVECTOR pos = DirectX::XMLoadFloat4(&vertex.position);
-			DirectX::XMStoreFloat4(&vertex.position, DirectX::XMVector4Transform(pos, matrix));
+			DirectX::XMFLOAT4& position = vertices[i].Attr<Elements::Position3D>();
+			const DirectX::XMVECTOR pos = DirectX::XMLoadFloat4(&position);
+			DirectX::XMStoreFloat4(&position, DirectX::XMVector4Transform(pos, matrix));
 		}
 	}
 
-	void SetNormalsIndependentFlat() noexcept
+	/*void SetNormalsIndependentFlat() noexcept
 	{
 		assert( indices.size() % 3 == 0 && indices.size() > 0 );
 
@@ -43,9 +44,9 @@ public:
 			DirectX::XMStoreFloat4( &v1.normal, normal );
 			DirectX::XMStoreFloat4( &v2.normal, normal );
 		}
-	}
+	}*/
 
 public:
-	std::vector<T> vertices;
+	VertexHandler::VertexBuffer vertices;
 	std::vector<unsigned short> indices;
 };
