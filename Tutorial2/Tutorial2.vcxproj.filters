@@ -135,6 +135,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="TestPlane.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -284,6 +287,9 @@
     <ClInclude Include="BindableCodex.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="TestPlane.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl" />
@@ -344,6 +350,12 @@
       <Filter>Images</Filter>
     </Image>
     <Image Include="Images\walter.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Images\brickwall.jpg">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Images\brickwall_normal.jpg">
       <Filter>Images</Filter>
     </Image>
   </ItemGroup>

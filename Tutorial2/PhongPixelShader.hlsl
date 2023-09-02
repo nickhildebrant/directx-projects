@@ -14,10 +14,12 @@ cbuffer ObjectConstantBuffer
 {
     float specularIntensity;
     float shininess;
-    float padding[2];
+    float normalMapEnabled;
+    float padding;
 };
 
 Texture2D tex;
+Texture2D normalmap;
 SamplerState samplr;
 
 static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -27,6 +29,14 @@ static const float lightIntensity = 1.0f;
 
 float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord ) : SV_Target
 {
+    if(normalMapEnabled)
+    {
+        const float4 normalSample = normalmap.Sample(samplr, texcoord);
+        normal.x = normalSample.x * 2.0f - 1.0f;
+        normal.y = -normalSample.y * 2.0f - 1.0f;
+        normal.z = -normalSample.z;
+    }
+    
     // light vector data
     float distance = length(lightPosition - worldPosition);
     float4 L = normalize(lightPosition - worldPosition);

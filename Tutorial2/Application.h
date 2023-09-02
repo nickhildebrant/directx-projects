@@ -9,6 +9,8 @@
 #include "Camera.h"
 #include "Light.h"
 
+#include "TestPlane.h"
+
 class Application {
 public:
 	Application();
@@ -28,6 +30,7 @@ private:
 	Light light;
 
 	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit.obj" };
+	TestPlane plane;
 
 	bool showUI = true;
 	bool showDemoUI = false;
