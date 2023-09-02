@@ -33,6 +33,7 @@ void VertexBuffer::Bind(Renderer& renderer) noexcept
 
 std::shared_ptr<VertexBuffer> VertexBuffer::Resolve( Renderer& renderer, const std::string& tag, const VertexHandler::VertexBuffer& vbuf )
 {
+	assert( tag != "?" );
 	return Codex::Resolve<VertexBuffer>( renderer, tag, vbuf );
 }
 
