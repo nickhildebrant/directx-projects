@@ -34,8 +34,9 @@ UINT IndexBuffer::GetCount() const noexcept
 	return count;
 }
 
-std::shared_ptr<Bindable> IndexBuffer::Resolve( Renderer& renderer, const std::string& tag, const std::vector<unsigned short>& indices )
+std::shared_ptr<IndexBuffer> IndexBuffer::Resolve( Renderer& renderer, const std::string& tag, const std::vector<unsigned short>& indices )
 {
+	assert( tag != "?" );
 	return Codex::Resolve<IndexBuffer>( renderer, tag, indices );
 }
 

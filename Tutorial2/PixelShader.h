@@ -6,7 +6,7 @@ public:
 	PixelShader(Renderer& renderer, const std::string& path);
 	void Bind(Renderer& renderer) noexcept override;
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const std::string& path );
+	static std::shared_ptr<PixelShader> Resolve( Renderer& renderer, const std::string& path );
 	static std::string GenerateUID( const std::string& path );
 	std::string GetUID() const override;
 

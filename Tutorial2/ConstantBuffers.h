@@ -65,12 +65,12 @@ public:
 		GetContext(renderer)->VSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 	}
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const C& consts, UINT slot = 0 )
+	static std::shared_ptr<VertexConstantBuffer> Resolve( Renderer& renderer, const C& consts, UINT slot = 0 )
 	{
 		return Codex::Resolve<VertexConstantBuffer>( renderer, consts, slot );
 	}
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, UINT slot = 0 )
+	static std::shared_ptr<VertexConstantBuffer> Resolve( Renderer& renderer, UINT slot = 0 )
 	{
 		return Codex::Resolve<VertexConstantBuffer>( renderer, slot );
 	}
@@ -106,12 +106,12 @@ public:
 		GetContext(renderer)->PSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 	}
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const C& consts, UINT slot = 0 )
+	static std::shared_ptr<PixelConstantBuffer> Resolve( Renderer& renderer, const C& consts, UINT slot = 0 )
 	{
 		return Codex::Resolve<PixelConstantBuffer>( renderer, consts, slot );
 	}
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, UINT slot = 0 )
+	static std::shared_ptr<PixelConstantBuffer> Resolve( Renderer& renderer, UINT slot = 0 )
 	{
 		return Codex::Resolve<PixelConstantBuffer>( renderer, slot );
 	}
@@ -124,7 +124,7 @@ public:
 	static std::string GenerateUID( UINT slot = 0 )
 	{
 		using namespace std::string_literals;
-		return typeid( VertexConstantBuffer ).name() + "#"s + std::to_string( slot );
+		return typeid( PixelConstantBuffer ).name() + "#"s + std::to_string( slot );
 	}
 
 	std::string GetUID() const override

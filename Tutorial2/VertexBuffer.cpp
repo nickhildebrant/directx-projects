@@ -31,7 +31,7 @@ void VertexBuffer::Bind(Renderer& renderer) noexcept
 	GetContext(renderer)->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 }
 
-std::shared_ptr<Bindable> VertexBuffer::Resolve( Renderer& renderer, const std::string& tag, const VertexHandler::VertexBuffer& vbuf )
+std::shared_ptr<VertexBuffer> VertexBuffer::Resolve( Renderer& renderer, const std::string& tag, const VertexHandler::VertexBuffer& vbuf )
 {
 	return Codex::Resolve<VertexBuffer>( renderer, tag, vbuf );
 }

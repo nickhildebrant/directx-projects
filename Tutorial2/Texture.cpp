@@ -44,7 +44,7 @@ void Texture::Bind( Renderer& renderer ) noexcept
 	GetContext( renderer )->PSSetShaderResources( slot, 1u, pTextureView.GetAddressOf() );
 }
 
-std::shared_ptr<Bindable> Texture::Resolve( Renderer& renderer, const std::string& path, UINT slot )
+std::shared_ptr<Texture> Texture::Resolve( Renderer& renderer, const std::string& path, UINT slot )
 {
 	return Codex::Resolve<Texture>( renderer, path, slot );
 }

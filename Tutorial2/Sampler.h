@@ -6,7 +6,7 @@ public:
 	Sampler( Renderer& renderer );
 	void Bind( Renderer& renderer ) noexcept override;
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer );
+	static std::shared_ptr<Sampler> Resolve( Renderer& renderer );
 	static std::string GenerateUID();
 	std::string GetUID() const override;
 

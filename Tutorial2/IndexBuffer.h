@@ -9,7 +9,7 @@ public:
 	void Bind(Renderer& renderer) noexcept override;
 	UINT GetCount() const noexcept;
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const std::string& tag, const std::vector<unsigned short>& indices );
+	static std::shared_ptr<IndexBuffer> Resolve( Renderer& renderer, const std::string& tag, const std::vector<unsigned short>& indices );
 
 	template<typename...Ignore>
 	static std::string GenerateUID( const std::string& tag, Ignore&&...ignore )

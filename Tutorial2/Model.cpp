@@ -254,8 +254,8 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 	bindablePtrs.push_back( IndexBuffer::Resolve( renderer, meshTag, indices ) );
 
-	const std::shared_ptr<Bindable> pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
-	ID3DBlob* pvsbc = static_cast<VertexShader&>( *pvs ).GetBytecode();
+	std::shared_ptr<VertexShader> pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
+	ID3DBlob* pvsbc = pvs->GetBytecode();
 	bindablePtrs.push_back( std::move( pvs ) );
 
 	bindablePtrs.push_back( InputLayout::Resolve( renderer, vertexBuffer.GetLayout(), pvsbc ) );

@@ -7,7 +7,7 @@
 class Codex {
 public:
 	template<class T, typename...Params>
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, Params&&...params )
+	static std::shared_ptr<T> Resolve( Renderer& renderer, Params&&...params )
 	{
 		static_assert( std::is_base_of<Bindable, T>::value, "Can only resolve Bindable child classes." );
 		return Get().Resolve_<T>( renderer, std::forward<Params>( params )... );
@@ -17,7 +17,7 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Bindable>> binds;
 
 	template<class T, typename...Params>
-	std::shared_ptr<Bindable> Resolve_( Renderer& renderer, Params&&...p )
+	std::shared_ptr<T> Resolve_( Renderer& renderer, Params&&...p )
 	{
 		const auto key = T::GenerateUID( std::forward<Params>( p )... );
 		const auto i = binds.find( key );
@@ -29,7 +29,7 @@ private:
 		}
 		else
 		{
-			return i->second;
+			return std::static_pointer_cast<T>( i->second );
 		}
 	}
 

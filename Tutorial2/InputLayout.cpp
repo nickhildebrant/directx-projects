@@ -15,7 +15,7 @@ void InputLayout::Bind(Renderer& renderer) noexcept
 	GetContext(renderer)->IASetInputLayout(m_inputLayout.Get());
 }
 
-std::shared_ptr<Bindable> InputLayout::Resolve( Renderer& renderer, const VertexHandler::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode )
+std::shared_ptr<InputLayout> InputLayout::Resolve( Renderer& renderer, const VertexHandler::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode )
 {
 	return Codex::Resolve<InputLayout>( renderer, layout, pVertexShaderBytecode );
 }

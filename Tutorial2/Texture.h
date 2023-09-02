@@ -6,7 +6,7 @@ public:
 	Texture( Renderer& renderer, const std::string& path, UINT slot = 0 );
 	void Bind( Renderer& renderer ) noexcept override;
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const std::string& path, UINT slot = 0);
+	static std::shared_ptr<Texture> Resolve( Renderer& renderer, const std::string& path, UINT slot = 0);
 	static std::string GenerateUID( const std::string& path, UINT slot = 0);
 	std::string GetUID() const override;
 

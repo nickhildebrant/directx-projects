@@ -9,7 +9,7 @@ public:
 	VertexBuffer( Renderer& renderer, const VertexHandler::VertexBuffer& vertexBuffer );
 	void Bind(Renderer& renderer) noexcept override;
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const std::string& tag, const VertexHandler::VertexBuffer& vertexBuffer );
+	static std::shared_ptr<VertexBuffer> Resolve( Renderer& renderer, const std::string& tag, const VertexHandler::VertexBuffer& vertexBuffer );
 
 	template<typename...Ignore>
 	static std::string GenerateUID( const std::string& tag, Ignore&&...ignore )

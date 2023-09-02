@@ -7,7 +7,7 @@ public:
 	InputLayout( Renderer& renderer, VertexHandler::VertexLayout layout, ID3DBlob* vertexShaderBlob );
 	void Bind(Renderer& renderer) noexcept override;
 
-	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const VertexHandler::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode );
+	static std::shared_ptr<InputLayout> Resolve( Renderer& renderer, const VertexHandler::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode );
 	static std::string GenerateUID( const VertexHandler::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode = nullptr );
 	std::string GetUID() const noexcept override;
 

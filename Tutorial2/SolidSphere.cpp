@@ -16,8 +16,8 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 
 	AddBind( IndexBuffer::Resolve( renderer, geometryTag, model.indices ) );
 
-	auto pvs = VertexShader::Resolve( renderer, "SolidVertexShader.cso" );
-	auto pvsbc = static_cast<VertexShader&>( *pvs ).GetBytecode();
+	std::shared_ptr<VertexShader> pvs = VertexShader::Resolve( renderer, "SolidVertexShader.cso" );
+	ID3DBlob* pvsbc = pvs->GetBytecode();
 	AddBind( std::move( pvs ) );
 
 	AddBind( PixelShader::Resolve( renderer, "SolidPixelShader.cso" ) );

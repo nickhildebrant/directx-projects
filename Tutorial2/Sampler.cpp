@@ -20,7 +20,7 @@ void Sampler::Bind( Renderer& renderer ) noexcept
 	GetContext( renderer )->PSSetSamplers( 0, 1, pSampler.GetAddressOf() );
 }
 
-std::shared_ptr<Bindable> Sampler::Resolve( Renderer& renderer )
+std::shared_ptr<Sampler> Sampler::Resolve( Renderer& renderer )
 {
 	return Codex::Resolve<Sampler>( renderer );
 }

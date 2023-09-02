@@ -16,7 +16,7 @@ void PixelShader::Bind(Renderer& renderer) noexcept
 	GetContext(renderer)->PSSetShader(m_pixelShader.Get(), nullptr, 0u);
 }
 
-std::shared_ptr<Bindable> PixelShader::Resolve( Renderer& renderer, const std::string& path )
+std::shared_ptr<PixelShader> PixelShader::Resolve( Renderer& renderer, const std::string& path )
 {
 	return Codex::Resolve<PixelShader>( renderer, path );
 }

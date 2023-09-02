@@ -20,7 +20,7 @@ ID3DBlob* VertexShader::GetBytecode() const noexcept
 	return pBlob.Get();
 }
 
-std::shared_ptr<Bindable> VertexShader::Resolve( Renderer& renderer, const std::string& path )
+std::shared_ptr<VertexShader> VertexShader::Resolve( Renderer& renderer, const std::string& path )
 {
 	return Codex::Resolve<VertexShader>( renderer, path );
 }
