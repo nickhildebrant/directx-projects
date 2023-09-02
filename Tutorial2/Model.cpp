@@ -8,7 +8,7 @@
 // Mesh
 Mesh::Mesh( Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindPtrs )
 {
-	AddBind( std::make_shared<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+	AddBind( Topology::Resolve( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
 	for ( auto& pBindable : bindPtrs )
 	{
