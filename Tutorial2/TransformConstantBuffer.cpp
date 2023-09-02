@@ -7,16 +7,24 @@ TransformConstantBuffer::TransformConstantBuffer(Renderer& renderer, const Drawa
 
 void TransformConstantBuffer::Bind(Renderer& renderer) noexcept
 {
+	UpdateBindImpl( renderer, GetTransforms( renderer ) );
+}
+
+void TransformConstantBuffer::UpdateBindImpl( Renderer& renderer, const Transforms& tf )
+{
+	pVertexConstantBuffer->Update( renderer, tf );
+	pVertexConstantBuffer->Bind( renderer );
+}
+
+TransformConstantBuffer::Transforms TransformConstantBuffer::GetTransforms( Renderer& renderer )
+{
 	const auto modelView = parent.GetTransformXM() * renderer.GetView();
 
-	const Transforms transforms =
+	return
 	{
 		DirectX::XMMatrixTranspose( modelView ),
 		DirectX::XMMatrixTranspose( modelView * renderer.GetProjection() )
 	};
-
-	pVertexConstantBuffer->Update(renderer, transforms );
-	pVertexConstantBuffer->Bind(renderer);
 }
 
 std::unique_ptr<VertexConstantBuffer<TransformConstantBuffer::Transforms>> TransformConstantBuffer::pVertexConstantBuffer;

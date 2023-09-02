@@ -18,8 +18,8 @@ cbuffer ObjectConstantBuffer
     float padding;
 };
 
-Texture2D tex;
-Texture2D normalmap;
+Texture2D tex : register(t1);
+Texture2D normalmap : register(t2);
 SamplerState samplr;
 
 static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -33,8 +33,8 @@ float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 tex
     {
         const float4 normalSample = normalmap.Sample(samplr, texcoord);
         normal.x = normalSample.x * 2.0f - 1.0f;
-        normal.y = -normalSample.y * 2.0f - 1.0f;
-        normal.z = -normalSample.z;
+        normal.y = normalSample.y * 2.0f - 1.0f;
+        normal.z = normalSample.z;
     }
     
     // light vector data
@@ -55,5 +55,5 @@ float4 main( float4 worldPosition : Position, float4 normal : Normal, float2 tex
     float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
     float4 color = saturate(ambient + diffuse) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular.a;
     color.a = 1;
-    return color;
+    return tex.Sample(samplr, texcoord);
 }
