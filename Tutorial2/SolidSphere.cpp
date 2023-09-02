@@ -10,25 +10,27 @@ SolidSphere::SolidSphere( Renderer& renderer, float radius )
 	auto model = Sphere::Make();
 	model.Transform( DirectX::XMMatrixScaling( radius, radius, radius ) );
 
-	AddBind( std::make_shared<VertexBuffer>( renderer, model.vertices ) );
+	const std::string geometryTag = "$sphere." + std::to_string( radius );
 
-	AddBind( std::make_shared<IndexBuffer>( renderer, model.indices ) );
+	AddBind( VertexBuffer::Resolve( renderer, geometryTag, model.vertices ) );
 
-	auto pvs = std::make_shared<VertexShader>( renderer, L"SolidVertexShader.cso" );
-	auto pvsbc = pvs->GetBytecode();
+	AddBind( IndexBuffer::Resolve( renderer, geometryTag, model.indices ) );
+
+	auto pvs = VertexShader::Resolve( renderer, "SolidVertexShader.cso" );
+	auto pvsbc = static_cast<VertexShader&>( *pvs ).GetBytecode();
 	AddBind( std::move( pvs ) );
 
-	AddBind( std::make_shared<PixelShader>( renderer, L"SolidPixelShader.cso" ) );
+	AddBind( PixelShader::Resolve( renderer, "SolidPixelShader.cso" ) );
 
 	struct PSColorConstant {
 		DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	} colorConst;
 
-	AddBind( std::make_shared<PixelConstantBuffer<PSColorConstant>>( renderer, colorConst ) );
+	AddBind( PixelConstantBuffer<PSColorConstant>::Resolve( renderer, colorConst ) );
 
-	AddBind( std::make_shared<InputLayout>( renderer, model.vertices.GetLayout().GetD3DLayout(), pvsbc ) );
+	AddBind( InputLayout::Resolve( renderer, model.vertices.GetLayout(), pvsbc ) );
 
-	AddBind( std::make_shared<Topology>( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+	AddBind( Topology::Resolve( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
 	AddBind( std::make_shared<TransformConstantBuffer>( renderer, *this ) );
 }

@@ -1,10 +1,13 @@
 #include "Texture.h"
 #include "Surface.h"
 #include "RendererErrorMacros.h"
+#include "BindableCodex.h"
 
-Texture::Texture( Renderer& renderer, const Surface& surface, unsigned int slot ) : slot(slot)
+Texture::Texture( Renderer& renderer, const std::string& path, UINT slot) : slot(slot), path(path)
 {
 	INFO_MANAGER( renderer );
+
+	const auto surface = Surface::FromFile( path );
 
 	// create texture resource
 	D3D11_TEXTURE2D_DESC textureDesc = {};
@@ -39,4 +42,20 @@ Texture::Texture( Renderer& renderer, const Surface& surface, unsigned int slot 
 void Texture::Bind( Renderer& renderer ) noexcept
 {
 	GetContext( renderer )->PSSetShaderResources( slot, 1u, pTextureView.GetAddressOf() );
+}
+
+std::shared_ptr<Bindable> Texture::Resolve( Renderer& renderer, const std::string& path, UINT slot )
+{
+	return Codex::Resolve<Texture>( renderer, path, slot );
+}
+
+std::string Texture::GenerateUID( const std::string& path, UINT slot )
+{
+	using namespace std::string_literals;
+	return typeid( Texture ).name() + "#"s + path + "#" + std::to_string( slot );
+}
+
+std::string Texture::GetUID() const
+{
+	return GenerateUID( path, slot );
 }

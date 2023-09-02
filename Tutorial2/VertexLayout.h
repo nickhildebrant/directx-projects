@@ -33,6 +33,7 @@ namespace VertexHandler
 			using SysType = DirectX::XMFLOAT2;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 			static constexpr const char* semantic = "Position";
+			static constexpr const char* code = "P2";
 		};
 
 		template<> struct Map<Position3D>
@@ -40,6 +41,7 @@ namespace VertexHandler
 			using SysType = DirectX::XMFLOAT4;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			static constexpr const char* semantic = "Position";
+			static constexpr const char* code = "P3";
 		};
 
 		template<> struct Map<Texture2D>
@@ -47,6 +49,7 @@ namespace VertexHandler
 			using SysType = DirectX::XMFLOAT2;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 			static constexpr const char* semantic = "Texcoord";
+			static constexpr const char* code = "T2";
 		};
 
 		template<> struct Map<Normal>
@@ -54,6 +57,7 @@ namespace VertexHandler
 			using SysType = DirectX::XMFLOAT4;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			static constexpr const char* semantic = "Normal";
+			static constexpr const char* code = "N";
 		};
 
 		template<> struct Map<Float4Color>
@@ -61,6 +65,7 @@ namespace VertexHandler
 			using SysType = DirectX::XMFLOAT4;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			static constexpr const char* semantic = "Color";
+			static constexpr const char* code = "C4";
 		};
 
 		template<> struct Map<RGBAColor>
@@ -68,6 +73,7 @@ namespace VertexHandler
 			using SysType = VertexHandler::RGBAColor;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			static constexpr const char* semantic = "Color";
+			static constexpr const char* code = "RGBA";
 		};
 
 		class Element {
@@ -118,6 +124,27 @@ namespace VertexHandler
 			ElementType GetType() const noexcept
 			{
 				return type;
+			}
+
+			const char* GetCode() const
+			{
+				switch ( type )
+				{
+				case Position2D:
+					return Map<Position2D>::code;
+				case Position3D:
+					return Map<Position3D>::code;
+				case Texture2D:
+					return Map<Texture2D>::code;
+				case Normal:
+					return Map<Normal>::code;
+				case Float4Color:
+					return Map<Float4Color>::code;
+				case RGBAColor:
+					return Map<RGBAColor>::code;
+				}
+				assert( "Invalid element type" && false );
+				return "Invalid";
 			}
 
 			D3D11_INPUT_ELEMENT_DESC GetDesc() const noexcept
@@ -205,6 +232,17 @@ namespace VertexHandler
 			}
 
 			return desc;
+		}
+
+		std::string GetCode() const
+		{
+			std::string code;
+			for ( const auto& e : elements )
+			{
+				code += e.GetCode();
+			}
+
+			return code;
 		}
 
 	private:

@@ -224,20 +224,20 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	}
 
 	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
+	const std::string folder_path = "../Models/nanosuit/";
 
 	bool hasSpecular = false;
 	float shininess = 35.0f;
 	if ( mesh.mMaterialIndex >= 0 )
 	{
-		const std::string folder_path = "../Models/nanosuit/";
 		const aiMaterial& material = *pMaterials[mesh.mMaterialIndex];
 		aiString textureFileName;
 		material.GetTexture( aiTextureType_DIFFUSE, 0, &textureFileName );
-		bindablePtrs.push_back( std::make_shared<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 0u ) );
+		bindablePtrs.push_back( Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 0u ) );
 
 		if ( material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName ) == aiReturn_SUCCESS )
 		{
-			bindablePtrs.push_back( std::make_shared<Texture>( renderer, Surface::FromFile( folder_path + std::string( textureFileName.C_Str() ) ), 1u ) );
+			bindablePtrs.push_back( Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 1u ) );
 			hasSpecular = true;
 		}
 		else
@@ -245,27 +245,28 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 			material.Get( AI_MATKEY_SHININESS, shininess );
 		}
 
-		bindablePtrs.push_back( std::make_shared<Sampler>( renderer ) );
+		bindablePtrs.push_back( Sampler::Resolve( renderer ) );
 	}
 
+	std::string meshTag = folder_path + "%" + mesh.mName.C_Str();
 
-	bindablePtrs.push_back( std::make_shared<VertexBuffer>( renderer, vertexBuffer ) );
+	bindablePtrs.push_back( VertexBuffer::Resolve( renderer, meshTag, vertexBuffer));
 
-	bindablePtrs.push_back( std::make_shared<IndexBuffer>( renderer, indices ) );
+	bindablePtrs.push_back( IndexBuffer::Resolve( renderer, meshTag, indices ) );
 
-	auto pvs = std::make_shared<VertexShader>( renderer, L"PhongVertexShader.cso" );
-	auto pvsbc = pvs->GetBytecode();
+	const std::shared_ptr<Bindable> pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
+	ID3DBlob* pvsbc = static_cast<VertexShader&>( *pvs ).GetBytecode();
 	bindablePtrs.push_back( std::move( pvs ) );
+
+	bindablePtrs.push_back( InputLayout::Resolve( renderer, vertexBuffer.GetLayout(), pvsbc ) );
 
 	if ( hasSpecular )
 	{
-		bindablePtrs.push_back( std::make_shared<PixelShader>( renderer, L"TextureSpecularPixelShader.cso" ) );
+		bindablePtrs.push_back( PixelShader::Resolve( renderer, "TextureSpecularPixelShader.cso" ) );
 		return std::make_unique<Mesh>( renderer, std::move( bindablePtrs ) );
 	}
 	
-	bindablePtrs.push_back( std::make_shared<PixelShader>( renderer, L"PhongPixelShader.cso" ) );
-
-	bindablePtrs.push_back( std::make_shared<InputLayout>( renderer, vertexBuffer.GetLayout().GetD3DLayout(), pvsbc ) );
+	bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongPixelShader.cso" ) );
 
 	struct PSMaterialConstant
 	{
@@ -275,7 +276,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	} materialConstant;
 
 	materialConstant.specularPower = shininess;
-	bindablePtrs.push_back( std::make_shared<PixelConstantBuffer<PSMaterialConstant>>( renderer, materialConstant, 1u ) );
+	bindablePtrs.push_back( PixelConstantBuffer<PSMaterialConstant>::Resolve( renderer, materialConstant, 1u ) );
 
 	return std::make_unique<Mesh>( renderer, std::move( bindablePtrs ) );
 }

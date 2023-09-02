@@ -1,5 +1,6 @@
 #include "Sampler.h"
 #include "RendererErrorMacros.h"
+#include "BindableCodex.h"
 
 Sampler::Sampler( Renderer& renderer )
 {
@@ -17,4 +18,19 @@ Sampler::Sampler( Renderer& renderer )
 void Sampler::Bind( Renderer& renderer ) noexcept
 {
 	GetContext( renderer )->PSSetSamplers( 0, 1, pSampler.GetAddressOf() );
+}
+
+std::shared_ptr<Bindable> Sampler::Resolve( Renderer& renderer )
+{
+	return Codex::Resolve<Sampler>( renderer );
+}
+
+std::string Sampler::GenerateUID()
+{
+	return typeid( Sampler ).name();
+}
+
+std::string Sampler::GetUID() const
+{
+	return GenerateUID();
 }

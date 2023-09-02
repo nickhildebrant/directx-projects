@@ -1,6 +1,7 @@
 #pragma once
 #include "Bindable.h"
 #include "RendererErrorMacros.h"
+#include "BindableCodex.h"
 
 template<typename C>
 class ConstantBuffer : public Bindable {
@@ -63,6 +64,32 @@ public:
 	{
 		GetContext(renderer)->VSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
 	}
+
+	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const C& consts, UINT slot = 0 )
+	{
+		return Codex::Resolve<VertexConstantBuffer>( renderer, consts, slot );
+	}
+
+	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, UINT slot = 0 )
+	{
+		return Codex::Resolve<VertexConstantBuffer>( renderer, slot );
+	}
+
+	static std::string GenerateUID( const C&, UINT slot )
+	{
+		return GenerateUID( slot );
+	}
+
+	static std::string GenerateUID( UINT slot = 0 )
+	{
+		using namespace std::string_literals;
+		return typeid( VertexConstantBuffer ).name() + "#"s + std::to_string( slot );
+	}
+
+	std::string GetUID() const override
+	{
+		return GenerateUID( slot );
+	}
 };
 
 template<typename C>
@@ -77,5 +104,31 @@ public:
 	void Bind(Renderer& renderer) noexcept override
 	{
 		GetContext(renderer)->PSSetConstantBuffers(slot, 1u, m_constantBuffer.GetAddressOf());
+	}
+
+	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, const C& consts, UINT slot = 0 )
+	{
+		return Codex::Resolve<PixelConstantBuffer>( renderer, consts, slot );
+	}
+
+	static std::shared_ptr<Bindable> Resolve( Renderer& renderer, UINT slot = 0 )
+	{
+		return Codex::Resolve<PixelConstantBuffer>( renderer, slot );
+	}
+
+	static std::string GenerateUID( const C&, UINT slot )
+	{
+		return GenerateUID( slot );
+	}
+
+	static std::string GenerateUID( UINT slot = 0 )
+	{
+		using namespace std::string_literals;
+		return typeid( VertexConstantBuffer ).name() + "#"s + std::to_string( slot );
+	}
+
+	std::string GetUID() const override
+	{
+		return GenerateUID( slot );
 	}
 };
