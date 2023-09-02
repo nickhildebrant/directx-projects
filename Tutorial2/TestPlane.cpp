@@ -20,7 +20,7 @@ TestPlane::TestPlane( Renderer& renderer, float size )
 	auto pvsbc = pvs->GetBytecode();
 	AddBind( std::move( pvs ) );
 
-	AddBind( PixelShader::Resolve( renderer, "PhongPixelShader.cso" ) );
+	AddBind( PixelShader::Resolve( renderer, "NormalPhongPS.cso" ) );
 
 
 	AddBind( PixelConstantBuffer<PSMaterialConstant>::Resolve( renderer, materialConstant, 1u ) );
