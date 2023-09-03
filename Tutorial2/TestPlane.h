@@ -21,7 +21,7 @@ private:
 	struct PSMaterialConstant
 	{
 		float specularIntensity = 0.1f;
-		float specularPower = 20.0f;
+		float shininess = 20.0f;
 		BOOL normalMappingEnabled = TRUE;
 		float padding;
 	} materialConstant;

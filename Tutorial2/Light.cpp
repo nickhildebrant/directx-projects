@@ -12,9 +12,9 @@ void Light::SpawnControlWindow() noexcept
 	{
 		ImGui::Text( "Position" );
 
-		ImGui::SliderFloat( "X", &bufferData.position.x, -60.0f, 60.0f, "%.1f" );
-		ImGui::SliderFloat( "Y", &bufferData.position.y, -60.0f, 60.0f, "%.1f" );
-		ImGui::SliderFloat( "Z", &bufferData.position.z, -60.0f, 60.0f, "%.1f" );
+		ImGui::SliderFloat( "X", &bufferData.position.x, -30.0f, 30.0f, "%.01f" );
+		ImGui::SliderFloat( "Y", &bufferData.position.y, -30.0f, 30.0f, "%.01f" );
+		ImGui::SliderFloat( "Z", &bufferData.position.z, -30.0f, 30.0f, "%.01f" );
 
 		ImGui::Text( "Intensity/Color" );
 		ImGui::SliderFloat( "Intensity", &bufferData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2 );

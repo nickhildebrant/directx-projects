@@ -66,7 +66,7 @@ void TestPlane::SpawnControlWindow( Renderer& renderer )
 		ImGui::Text( "Shading" );
 
 		bool changed0 = ImGui::SliderFloat( "Spec. Int.", &materialConstant.specularIntensity, 0.0f, 1.0f );
-		bool changed1 = ImGui::SliderFloat( "Spec. Power", &materialConstant.specularPower, 0.0f, 100.0f );
+		bool changed1 = ImGui::SliderFloat( "Spec. Power", &materialConstant.shininess, 0.0f, 100.0f );
 		bool checkState = materialConstant.normalMappingEnabled == TRUE;
 		bool changed2 = ImGui::Checkbox( "Enable Normal Map", &checkState );
 

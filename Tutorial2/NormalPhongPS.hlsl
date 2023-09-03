@@ -11,11 +11,11 @@ cbuffer LightConstantBuffer
     float attenuationQuadradic;
 };
 
-cbuffer ObjectConstantBuffer
+cbuffer PSMaterialConstant
 {
     float specularIntensity;
     float shininess;
-    float normalMapEnabled;
+    bool normalMapEnabled;
     float padding;
 };
 
@@ -34,8 +34,8 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texc
     {
         const float4 normalSample = normalmap.Sample(samplr, texcoord);
         normal.x = normalSample.x * 2.0f - 1.0f;
-        normal.y = normalSample.y * 2.0f - 1.0f;
-        normal.z = normalSample.z;
+        normal.y = -normalSample.y * 2.0f + 1.0f;
+        normal.z = -normalSample.z;
     }
     
     // light vector data
@@ -56,5 +56,5 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texc
     float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
     float4 color = saturate(ambient + diffuse) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular.a;
     color.a = 1;
-    return normalmap.Sample(samplr, texcoord);
+    return color;
 }
