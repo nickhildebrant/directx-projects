@@ -19,6 +19,12 @@ cbuffer PSMaterialConstant
     float padding;
 };
 
+cbuffer TransformConstantBuffer
+{
+    matrix world;
+    matrix view;
+};
+
 Texture2D tex;
 Texture2D normalmap;
 SamplerState samplr;
@@ -36,6 +42,7 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texc
         normal.x = normalSample.x * 2.0f - 1.0f;
         normal.y = -normalSample.y * 2.0f + 1.0f;
         normal.z = -normalSample.z;
+        normal = mul(normal, world);
     }
     
     // light vector data

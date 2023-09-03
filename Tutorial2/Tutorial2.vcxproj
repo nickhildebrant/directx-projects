@@ -199,6 +199,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectXErrors.cpp" />
     <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="DualTransformCBuffer.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="ExceptionHandler.cpp" />
     <ClCompile Include="GDIPlusManager.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="DirectXErrors.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="DualTransformCBuffer.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="GDIPlusManager.h" />
