@@ -11,8 +11,8 @@ public:
 		assert( xDivisions >= 1 );
 		assert( yDivisions >= 1 );
 
-		constexpr float width = 2.0f;
-		constexpr float height = 2.0f;
+		constexpr float width = 1.0f;
+		constexpr float height = 1.0f;
 
 		const int numberVerticesX = xDivisions + 1;
 		const int numberVerticesY = yDivisions + 1;

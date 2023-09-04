@@ -346,7 +346,7 @@ namespace VertexHandler
 
 	class VertexBuffer {
 	public:
-		VertexBuffer( VertexLayout layout ) noexcept : layout( std::move( layout ) ) {}
+		VertexBuffer( VertexLayout layout, size_t size = 0u ) noexcept : layout( std::move( layout ) ) { Resize( size ); }
 
 		const VertexLayout& GetLayout() const noexcept
 		{
@@ -356,6 +356,15 @@ namespace VertexHandler
 		const char* GetData() const noexcept
 		{
 			return buffer.data();
+		}
+
+		void Resize( size_t newSize ) noexcept
+		{
+			const auto size = Size();
+			if ( size < newSize )
+			{
+				buffer.resize( buffer.size() + layout.Size() * ( newSize - size ) );
+			}
 		}
 
 		size_t Size() const noexcept

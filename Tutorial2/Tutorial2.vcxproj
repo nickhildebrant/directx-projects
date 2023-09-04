@@ -240,6 +240,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliWin.h" />
     <ClInclude Include="ConstantBuffers.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="DirectXErrors.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DualTransformCBuffer.h" />

@@ -23,28 +23,30 @@ public:
 		}
 	}
 
-	/*void SetNormalsIndependentFlat() noexcept
+	void SetNormalsIndependentFlat() noexcept
 	{
+		using Type = VertexHandler::VertexLayout::ElementType;
+
 		assert( indices.size() % 3 == 0 && indices.size() > 0 );
 
 		for ( size_t i = 0; i < indices.size(); i += 3 )
 		{
-			auto& v0 = vertices[indices[i]];
-			auto& v1 = vertices[indices[i + 1]];
-			auto& v2 = vertices[indices[i + 2]];
+			VertexHandler::Vertex v0 = vertices[indices[i]];
+			VertexHandler::Vertex v1 = vertices[indices[i + 1]];
+			VertexHandler::Vertex v2 = vertices[indices[i + 2]];
 
-			const auto p0 = DirectX::XMLoadFloat4( &v0.position );
-			const auto p1 = DirectX::XMLoadFloat4( &v1.position );
-			const auto p2 = DirectX::XMLoadFloat4( &v2.position );
+			const DirectX::XMVECTOR p0 = DirectX::XMLoadFloat4( &v0.Attr<Type::Position3D>() );
+			const DirectX::XMVECTOR p1 = DirectX::XMLoadFloat4( &v1.Attr<Type::Position3D>() );
+			const DirectX::XMVECTOR p2 = DirectX::XMLoadFloat4( &v2.Attr<Type::Position3D>() );
 
-			const auto cross = DirectX::XMVector3Cross( DirectX::XMVectorSubtract( p1, p0 ), DirectX::XMVectorSubtract( p2, p0 ) );
-			const auto normal = DirectX::XMVector4Normalize( cross );
+			const DirectX::XMVECTOR cross = DirectX::XMVector3Cross( DirectX::XMVectorSubtract( p1, p0 ), DirectX::XMVectorSubtract( p2, p0 ) );
+			const DirectX::XMVECTOR normal = DirectX::XMVector4Normalize( cross );
 
-			DirectX::XMStoreFloat4( &v0.normal, normal );
-			DirectX::XMStoreFloat4( &v1.normal, normal );
-			DirectX::XMStoreFloat4( &v2.normal, normal );
+			DirectX::XMStoreFloat4( &v0.Attr<Type::Normal>(), normal );
+			DirectX::XMStoreFloat4( &v1.Attr<Type::Normal>(), normal );
+			DirectX::XMStoreFloat4( &v2.Attr<Type::Normal>(), normal );
 		}
-	}*/
+	}
 
 public:
 	VertexHandler::VertexBuffer vertices;
