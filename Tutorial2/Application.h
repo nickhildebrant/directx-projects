@@ -10,6 +10,7 @@
 #include "Light.h"
 
 #include "TestPlane.h"
+#include "TestCube.h"
 
 class Application {
 public:
@@ -31,6 +32,7 @@ private:
 
 	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit.obj" };
 	TestPlane plane;
+	TestCube cube;
 
 	bool showUI = true;
 	bool showDemoUI = false;
