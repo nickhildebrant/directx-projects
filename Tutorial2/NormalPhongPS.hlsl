@@ -26,23 +26,25 @@ cbuffer PSMaterialConstant
 //};
 
 Texture2D tex;
-Texture2D normalmap;
+Texture2D normalmap : register(t2);
 SamplerState samplr;
 
 static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 static const float ambientIntensity = 1.0f;
-static const float lightIntensity = 1.0f;
 
-float4 main(float4 viewPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord) : SV_Target
-{
+float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tangent : Tangent, float4 bitangent : Bitangent, float2 texcoord : Texcoord) : SV_Target
+{ 
     if (normalMapEnabled)
     {
-        const float4 normalSample = normalmap.Sample(samplr, texcoord);
+        float3x3 tanToView = float3x3(normalize(tangent.xyz), normalize(bitangent.xyz), normalize(normal.xyz));
+    
+        float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
         normal.x = normalSample.x * 2.0f - 1.0f;
         normal.y = -normalSample.y * 2.0f + 1.0f;
         normal.z = -normalSample.z;
-        //normal = mul(normal, world);
+    
+        normal = float4(mul(normal.xyz, tanToView), 0.0f);
     }
     
     // light vector data

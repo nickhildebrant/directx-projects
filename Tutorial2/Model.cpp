@@ -162,7 +162,9 @@ Model::Model( Renderer& renderer, const std::string fileName ) : pWindow( std::m
 	const auto pScene = imp.ReadFile( fileName.c_str(),
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
-		aiProcess_GenNormals
+		aiProcess_GenNormals |
+		aiProcess_GenNormals |
+		aiProcess_CalcTangentSpace
 	);
 
 	for ( size_t i = 0; i < pScene->mNumMeshes; i++ )
@@ -191,6 +193,11 @@ void Model::ShowWindow( const char* windowName ) noexcept
 	pWindow->Show( windowName, *pRoot );
 }
 
+void Model::SetRootTransform( DirectX::FXMMATRIX transform )
+{
+	pRoot->SetAppliedTransform( transform );
+}
+
 std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* pMaterials )
 {
 	using VertexHandler::VertexLayout;
@@ -199,6 +206,8 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 		VertexLayout{}
 		.Append( VertexLayout::Position3D )
 		.Append( VertexLayout::Normal )
+		.Append( VertexLayout::Tangent )
+		.Append( VertexLayout::Bitangent )
 		.Append( VertexLayout::Texture2D )
 	) );
 
@@ -208,6 +217,8 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 		vertexBuffer.EmplaceBack(
 			DirectX::XMFLOAT4{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z, 1.0f },
 			DirectX::XMFLOAT4{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z, 0.0f },
+			DirectX::XMFLOAT4{ mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z, 0.0f },
+			DirectX::XMFLOAT4{ mesh.mBitangents[i].x, mesh.mBitangents[i].y, mesh.mBitangents[i].z, 0.0f },
 			DirectX::XMFLOAT2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y }
 		);
 	}
@@ -224,7 +235,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	}
 
 	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
-	const std::string folder_path = "../Models/nanosuit/";
+	const std::string folder_path = "../Models/brick_wall/";
 
 	bool hasSpecular = false;
 	float shininess = 35.0f;
@@ -245,6 +256,10 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 			material.Get( AI_MATKEY_SHININESS, shininess );
 		}
 
+		material.GetTexture( aiTextureType_NORMALS, 0, &textureFileName );
+
+		bindablePtrs.push_back( Texture::Resolve( renderer, folder_path + textureFileName.C_Str(), 2u ) );
+
 		bindablePtrs.push_back( Sampler::Resolve( renderer ) );
 	}
 
@@ -254,7 +269,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 	bindablePtrs.push_back( IndexBuffer::Resolve( renderer, meshTag, indices ) );
 
-	std::shared_ptr<VertexShader> pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
+	std::shared_ptr<VertexShader> pvs = VertexShader::Resolve( renderer, "NormalPhongVS.cso" );
 	ID3DBlob* pvsbc = pvs->GetBytecode();
 	bindablePtrs.push_back( std::move( pvs ) );
 
@@ -262,17 +277,26 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 	if ( hasSpecular )
 	{
-		bindablePtrs.push_back( PixelShader::Resolve( renderer, "TextureSpecularPixelShader.cso" ) );
+		bindablePtrs.push_back( PixelShader::Resolve( renderer, "NormalSpecularPS.cso" ) );
+
+		struct MaterialConstant {
+			BOOL normalMapEnabled = TRUE;
+			float padding[3];
+		} materialConstant;
+
+		bindablePtrs.push_back( PixelConstantBuffer<MaterialConstant>::Resolve( renderer, materialConstant, 1u ) );
+
 		return std::make_unique<Mesh>( renderer, std::move( bindablePtrs ) );
 	}
 	
-	bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongPixelShader.cso" ) );
+	bindablePtrs.push_back( PixelShader::Resolve( renderer, "NormalPhongPS.cso" ) );
 
 	struct PSMaterialConstant
 	{
 		float specularIntensity = 0.80f;
 		float specularPower;
-		float padding[2];
+		BOOL normalMapEnabled = TRUE;
+		float padding;
 	} materialConstant;
 
 	materialConstant.specularPower = shininess;

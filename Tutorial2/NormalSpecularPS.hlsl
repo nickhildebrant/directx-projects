@@ -11,8 +11,15 @@ cbuffer LightConstantBuffer
     float attenuationQuadradic;
 };
 
+cbuffer ObjectConstantBuffer
+{
+    bool normalMapEnabled;
+    float padding[3];
+};
+
 Texture2D tex;
 Texture2D specular;
+Texture2D normalmap;
 SamplerState samplr;
 
 static const float ambientIntensity = 1.0f;
@@ -20,8 +27,20 @@ static const float lightIntensity = 1.0f;
 
 static const float specularPowerFactor = 100.0f;
 
-float4 main(float4 viewPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord) : SV_Target
+float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tangent : Tangent, float4 bitangent : Bitangent, float2 texcoord : Texcoord) : SV_Target
 {
+    if (normalMapEnabled)
+    {
+        float3x3 tanToView = float3x3(normalize(tangent.xyz), normalize(bitangent.xyz), normalize(normal.xyz));
+    
+        const float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
+        normal.x = normalSample.x * 2.0f - 1.0f;
+        normal.y = -normalSample.y * 2.0f + 1.0f;
+        normal.z = -normalSample.z;
+    
+        normal = float4(mul(normal.xyz, tanToView), 0.0f);
+    }
+    
     // light vector data
     float distance = length(lightPosition - viewPosition);
     float4 L = normalize(lightPosition - viewPosition);

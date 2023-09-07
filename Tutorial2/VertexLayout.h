@@ -22,6 +22,8 @@ namespace VertexHandler
 			Position3D,
 			Texture2D,
 			Normal,
+			Tangent,
+			Bitangent,
 			Float4Color,
 			RGBAColor,
 			Count,
@@ -58,6 +60,22 @@ namespace VertexHandler
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			static constexpr const char* semantic = "Normal";
 			static constexpr const char* code = "N";
+		};
+
+		template<> struct Map<Tangent>
+		{
+			using SysType = DirectX::XMFLOAT4;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Tangent";
+			static constexpr const char* code = "NT";
+		};
+
+		template<> struct Map<Bitangent>
+		{
+			using SysType = DirectX::XMFLOAT4;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Bitangent";
+			static constexpr const char* code = "NB";
 		};
 
 		template<> struct Map<Float4Color>
@@ -111,6 +129,12 @@ namespace VertexHandler
 				case Normal:
 					return sizeof( Map<Normal>::SysType );
 
+				case Tangent:
+					return sizeof( Map<Tangent>::SysType );
+
+				case Bitangent:
+					return sizeof( Map<Bitangent>::SysType );
+
 				case Float4Color:
 					return sizeof( Map<Float4Color>::SysType );
 
@@ -138,6 +162,10 @@ namespace VertexHandler
 					return Map<Texture2D>::code;
 				case Normal:
 					return Map<Normal>::code;
+				case Tangent:
+					return Map<Tangent>::code;
+				case Bitangent:
+					return Map<Bitangent>::code;
 				case Float4Color:
 					return Map<Float4Color>::code;
 				case RGBAColor:
@@ -162,6 +190,12 @@ namespace VertexHandler
 
 				case Normal:
 					return GenerateDesc<Normal>( GetOffset() );
+
+				case Tangent:
+					return GenerateDesc<Tangent>( GetOffset() );
+
+				case Bitangent:
+					return GenerateDesc<Bitangent>( GetOffset() );
 
 				case Float4Color:
 					return GenerateDesc<Float4Color>( GetOffset() );
@@ -281,6 +315,14 @@ namespace VertexHandler
 
 			case VertexLayout::Normal:
 				SetAttribute<VertexLayout::Normal>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::Tangent:
+				SetAttribute<VertexLayout::Tangent>( pAttribute, std::forward<T>( val ) );
+				break;
+
+			case VertexLayout::Bitangent:
+				SetAttribute<VertexLayout::Bitangent>( pAttribute, std::forward<T>( val ) );
 				break;
 
 			case VertexLayout::Float4Color:

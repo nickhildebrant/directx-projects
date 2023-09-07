@@ -30,9 +30,7 @@ private:
 	Camera camera;
 	Light light;
 
-	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit.obj" };
-	TestPlane plane;
-	//TestCube cube;
+	Model wall { m_window.getRenderer(), "../Models/brick_wall/brick_wall.obj" };
 
 	bool showUI = true;
 	bool showDemoUI = false;

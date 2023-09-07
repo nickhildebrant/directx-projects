@@ -7,7 +7,7 @@ GDIPlusManager gdipm;
 
 App::App() : window(640, 480, "Hildev Game Engine")
 {
-	window.GetRenderer().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f, 3.0f / 4.0f, 0.5f, 45.0f ) );
+	window.GetRenderer().SetProjection( DirectX::XMMatrixPerspectiveRH( 1.0f, 3.0f / 4.0f, 0.5f, 45.0f ) );
 }
 
 App::~App()

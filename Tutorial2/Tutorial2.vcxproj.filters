@@ -16,10 +16,13 @@
     <FxCompile Include="TexturePhongVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="TextureSpecularPixelShader.hlsl">
+    <FxCompile Include="NormalSpecularPS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="NormalPhongPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="NormalPhongVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

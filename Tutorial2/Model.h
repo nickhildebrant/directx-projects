@@ -50,6 +50,8 @@ public:
 	void Draw( Renderer& renderer ) const;
 	void ShowWindow( const char* windowName = nullptr ) noexcept;
 
+	void SetRootTransform( DirectX::FXMMATRIX transform );
+
 private:
 	struct {
 		float roll = 0.0f;

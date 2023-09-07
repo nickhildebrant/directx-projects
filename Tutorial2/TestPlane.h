@@ -13,15 +13,15 @@ public:
 	void SpawnControlWindow( Renderer& renderer );
 
 private:
-	DirectX::XMFLOAT4 position = { 1.0f,1.0f,1.0f,1.0f };
+	DirectX::XMFLOAT4 position = { 0.0f,0.0f,0.0f,1.0f };
 	float roll = 0.0f;
 	float pitch = 0.0f;
 	float yaw = 0.0f;
 
 	struct PSMaterialConstant
 	{
-		float specularIntensity = 0.1f;
-		float shininess = 20.0f;
+		float specularIntensity = 0.18f;
+		float shininess = 18.0f;
 		BOOL normalMappingEnabled = TRUE;
 		float padding;
 	} materialConstant;
