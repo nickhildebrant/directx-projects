@@ -30,7 +30,7 @@ TestPlane::TestPlane( Renderer& renderer, float size )
 
 	AddBind( Topology::Resolve( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
-	AddBind( std::make_shared<DualTransformCBuffer>( renderer, *this, 0u, 2u ) );
+	AddBind( std::make_shared<TransformConstantBuffer>( renderer, *this ) );
 }
 
 void TestPlane::SetPosition( DirectX::XMFLOAT4 position )

@@ -32,7 +32,7 @@ private:
 
 	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit.obj" };
 	TestPlane plane;
-	TestCube cube;
+	//TestCube cube;
 
 	bool showUI = true;
 	bool showDemoUI = false;

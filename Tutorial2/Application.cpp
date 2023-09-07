@@ -11,10 +11,10 @@
 
 GDIPlusManager gdipm;
 
-Application::Application() : m_window(1280, 720, "3D Renderer"), light(m_window.getRenderer()), plane(m_window.getRenderer(), 3.0f), cube( m_window.getRenderer(), 4.0f )
+Application::Application() : m_window(1280, 720, "3D Renderer"), light(m_window.getRenderer()), plane(m_window.getRenderer(), 3.0f)//, cube( m_window.getRenderer(), 4.0f )
 {
 	plane.SetPosition( { 1.0f, 17.0f, -1.0f, 1.0f } );
-	cube.SetPosition( { 3.0f, 14.0f, -2.0f, 1.0f } );
+	//cube.SetPosition( { 3.0f, 14.0f, -2.0f, 1.0f } );
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 45.0f));
 }
 
@@ -92,7 +92,7 @@ void Application::RenderFrame()
 
 	nano.Draw( m_window.getRenderer() );
 	plane.Draw( m_window.getRenderer() );
-	cube.Draw( m_window.getRenderer() );
+	//cube.Draw( m_window.getRenderer() );
 	light.Draw( m_window.getRenderer() );
 
 	// imgui windows for lights and camera
@@ -102,7 +102,7 @@ void Application::RenderFrame()
 	//ShowDemoUI();
 	nano.ShowWindow();
 	plane.SpawnControlWindow( m_window.getRenderer() );
-	cube.SpawnControlWindow( m_window.getRenderer() );
+	//cube.SpawnControlWindow( m_window.getRenderer() );
 
 	m_window.getRenderer().EndFrame();
 }

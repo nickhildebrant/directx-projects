@@ -19,11 +19,11 @@ cbuffer PSMaterialConstant
     float padding;
 };
 
-cbuffer TransformConstantBuffer
-{
-    matrix world;
-    matrix view;
-};
+//cbuffer TransformConstantBuffer
+//{
+//    matrix world;
+//    matrix view;
+//};
 
 Texture2D tex;
 Texture2D normalmap;
@@ -34,7 +34,7 @@ static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 static const float ambientIntensity = 1.0f;
 static const float lightIntensity = 1.0f;
 
-float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord) : SV_Target
+float4 main(float4 viewPosition : Position, float4 normal : Normal, float2 texcoord : Texcoord) : SV_Target
 {
     if (normalMapEnabled)
     {
@@ -42,14 +42,14 @@ float4 main(float4 worldPosition : Position, float4 normal : Normal, float2 texc
         normal.x = normalSample.x * 2.0f - 1.0f;
         normal.y = -normalSample.y * 2.0f + 1.0f;
         normal.z = -normalSample.z;
-        normal = mul(normal, world);
+        //normal = mul(normal, world);
     }
     
     // light vector data
-    float distance = length(lightPosition - worldPosition);
-    float4 L = normalize(lightPosition - worldPosition);
+    float distance = length(lightPosition - viewPosition);
+    float4 L = normalize(lightPosition - viewPosition);
     float4 N = normalize(normal);
-    float4 V = normalize(-worldPosition);
+    float4 V = normalize(-viewPosition);
     float4 R = reflect(-L, N);
     
     float4 ambient = ambientColor * ambientIntensity;
