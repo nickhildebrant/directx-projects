@@ -31,6 +31,7 @@ private:
 	Light light;
 
 	Model wall { m_window.getRenderer(), "../Models/brick_wall/brick_wall.obj" };
+	TestPlane plane{ m_window.getRenderer(), 2.0f };
 
 	bool showUI = true;
 	bool showDemoUI = false;

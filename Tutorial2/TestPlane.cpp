@@ -21,8 +21,7 @@ TestPlane::TestPlane( Renderer& renderer, float size )
 	auto pvsbc = pvs->GetBytecode();
 	AddBind( std::move( pvs ) );
 
-	AddBind( PixelShader::Resolve( renderer, "NormalPhongPS.cso" ) );
-
+	AddBind( PixelShader::Resolve( renderer, "NormalPhongObjectPS.cso" ) );
 
 	AddBind( PixelConstantBuffer<PSMaterialConstant>::Resolve( renderer, materialConstant, 1u ) );
 
@@ -30,7 +29,7 @@ TestPlane::TestPlane( Renderer& renderer, float size )
 
 	AddBind( Topology::Resolve( renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
-	AddBind( std::make_shared<TransformConstantBuffer>( renderer, *this ) );
+	AddBind( std::make_shared<DualTransformCBuffer>( renderer, *this, 0u, 2u ) );
 }
 
 void TestPlane::SetPosition( DirectX::XMFLOAT4 position )

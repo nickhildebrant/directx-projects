@@ -13,6 +13,9 @@ GDIPlusManager gdipm;
 
 Application::Application() : m_window(1280, 720, "3D Renderer"), light(m_window.getRenderer())
 {
+	wall.SetRootTransform( DirectX::XMMatrixTranslation( -1.5f, 0.0f, 0.0f ) );
+	plane.SetPosition( { 2.0f,1.0f,0.0f,1.0f } );
+
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveRH(1.0f, 9.0f / 16.0f, 0.5f, 45.0f));
 }
 
@@ -89,6 +92,7 @@ void Application::RenderFrame()
 	}
 
 	wall.Draw( m_window.getRenderer() );
+	plane.Draw( m_window.getRenderer() );
 	light.Draw( m_window.getRenderer() );
 
 	// imgui windows for lights and camera
@@ -97,6 +101,7 @@ void Application::RenderFrame()
 
 	//ShowDemoUI();
 	wall.ShowWindow( "Wall" );
+	plane.SpawnControlWindow( m_window.getRenderer() );
 
 	m_window.getRenderer().EndFrame();
 }
