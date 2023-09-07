@@ -40,10 +40,10 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal, float2 texco
         float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
         normal.x = normalSample.x * 2.0f - 1.0f;
         normal.y = -normalSample.y * 2.0f + 1.0f;
-        normal.z = -normalSample.z * 2.0f + 1.0f;
+        normal.z = normalSample.z * 2.0f - 1.0f;
         //normal.w = 0.0f;
     
-        normal = mul(normal, view);
+        normal = mul(normal, world);
     }
     
     // light vector data
