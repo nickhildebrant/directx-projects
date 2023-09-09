@@ -41,7 +41,7 @@ void App::RenderFrame()
 	//light.Draw( window.GetRenderer() );
 
 	// Sim speed UI
-	SpawnSimulationWindow();
+	//SpawnSimulationWindow();
 
 	// imgui windows for lights and camera
 	camera.SpawnControlWindow();

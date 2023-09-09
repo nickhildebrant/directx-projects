@@ -30,11 +30,11 @@ public:
 
 			for ( int y = 0, i = 0; y < numberVerticesY; y++ )
 			{
-				float y_pos = float( y ) * yDivisionSize - 1.0f;
+				float y_pos = float( y ) * yDivisionSize - sideY;
 				float y_pos_tc = 1.0f - float( y ) * yDivisionTexCoord;
 				for ( int x = 0; x < numberVerticesX; x++, i++ )
 				{
-					float x_pos = float( x ) * xDivisionSize - 1.0f;
+					float x_pos = float( x ) * xDivisionSize - sideX;
 					float x_pos_tc = float( x ) * xDivisionTexCoord;
 
 					vertexBuffer.EmplaceBack( DirectX::XMFLOAT4{ x_pos, y_pos, 0.0f, 1.0f }, DirectX::XMFLOAT4{ 0.0f, 0.0f, -1.0f, 0.0f }, DirectX::XMFLOAT2{ x_pos_tc, y_pos_tc } );
