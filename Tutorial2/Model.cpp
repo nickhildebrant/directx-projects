@@ -204,6 +204,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	const std::string folder_path = "../Models/goblin/";
 
 	bool hasSpecular = false;
+	bool hasAlphaGloss = false;
 	bool hasNormal = false;
 	bool hasDiffuse = false;
 	float shininess = 35.0f;
@@ -221,17 +222,22 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 		if ( material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName ) == aiReturn_SUCCESS )
 		{
-			bindablePtrs.push_back( Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 1u ) );
+			std::shared_ptr<Texture> pTexture = Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 1u );
+			hasAlphaGloss = pTexture->HasAlpha();
+			bindablePtrs.push_back( std::move( pTexture ) );
 			hasSpecular = true;
 		}
-		else
+
+		if ( !hasAlphaGloss )
 		{
 			material.Get( AI_MATKEY_SHININESS, shininess );
 		}
 
 		if ( material.GetTexture( aiTextureType_NORMALS, 0, &textureFileName ) == aiReturn_SUCCESS )
 		{
-			bindablePtrs.push_back( Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 2u ) );
+			std::shared_ptr<Texture> pTexture = Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 2u );
+			hasAlphaGloss = pTexture->HasAlpha();
+			bindablePtrs.push_back( std::move( pTexture ) );
 			hasNormal = true;
 		}
 
@@ -292,8 +298,13 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 		struct PSMaterialConstantFullmonte
 		{
 			BOOL normalMapEnabled = TRUE;
-			float padding[3];
+			BOOL  hasGlossMap;
+			float specularPower;
+			float padding[1];
 		} materialConstant;
+
+		materialConstant.specularPower = shininess;
+		materialConstant.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
 
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
 		// Ns (specular power) specified for each in the material properties... bad conflict
@@ -450,7 +461,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 		struct PSMaterialConstantNotex
 		{
-			DirectX::XMFLOAT4 materialColor = { 0.65f,0.65f,0.85f,1.0f };
+			DirectX::XMFLOAT4 materialColor = { 0.45f,0.45f,0.85f,1.0f };
 			float specularIntensity = 0.18f;
 			float specularPower;
 			float padding[2];

@@ -14,7 +14,9 @@ cbuffer LightConstantBuffer
 cbuffer ObjectConstantBuffer
 {
     bool normalMapEnabled;
-    float padding[3];
+    bool hasGloss;
+    float specularPower;
+    float padding;
 };
 
 Texture2D tex;
@@ -56,7 +58,7 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tange
 
     float4 specularSample = specular.Sample(samplr, texcoord);
     float4 specularColor = float4(specularSample.rgb, 1.0f);
-    float power = pow(2.0f, specularSample.a * 13.0f);
+    float power = hasGloss ? pow(2.0f, specularSample.a * 13.0f) : specularPower;
     float4 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0, dot(V, R)), power);
     
     float4 color = saturate((diffuse + ambient) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular * specularColor);

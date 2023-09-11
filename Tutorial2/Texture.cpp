@@ -8,6 +8,7 @@ Texture::Texture( Renderer& renderer, const std::string& path, UINT slot) : slot
 	INFO_MANAGER( renderer );
 
 	const auto surface = Surface::FromFile( path );
+	hasAlpha = surface.AlphaLoaded();
 
 	// create texture resource
 	D3D11_TEXTURE2D_DESC textureDesc = {};
@@ -58,4 +59,9 @@ std::string Texture::GenerateUID( const std::string& path, UINT slot )
 std::string Texture::GetUID() const
 {
 	return GenerateUID( path, slot );
+}
+
+bool Texture::HasAlpha() const
+{
+	return hasAlpha;
 }
