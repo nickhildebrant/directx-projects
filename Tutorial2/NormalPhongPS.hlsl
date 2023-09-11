@@ -19,12 +19,6 @@ cbuffer PSMaterialConstant
     float padding;
 };
 
-//cbuffer TransformConstantBuffer
-//{
-//    matrix world;
-//    matrix view;
-//};
-
 Texture2D tex;
 Texture2D normalmap;
 SamplerState samplr;
@@ -35,14 +29,15 @@ static const float ambientIntensity = 1.0f;
 
 float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tangent : Tangent, float4 bitangent : Bitangent, float2 texcoord : Texcoord) : SV_Target
 { 
+    texcoord.y = 1.0f - texcoord.y;
+    
     if (normalMapEnabled)
     {
         float3x3 tanToView = float3x3(normalize(tangent.xyz), normalize(bitangent.xyz), normalize(normal.xyz));
     
         float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
-        normal.x = normalSample.x * 2.0f - 1.0f;
-        normal.y = normalSample.y * 2.0f - 1.0f;
-        normal.z = -normalSample.z * 2.0f + 1.0f;
+        normal.xyz = normalSample * 2.0f - 1.0f;
+        normal.y = -normal.y;
     
         normal = float4(mul(normal.xyz, tanToView), 0.0f);
     }

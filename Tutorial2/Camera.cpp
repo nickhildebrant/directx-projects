@@ -44,9 +44,9 @@ void Camera::SpawnControlWindow() noexcept
 
 void Camera::ResetView() noexcept
 {
-	position = { 0.0f, 0.0f, 5.0f, 1.0f };
+	position = { 0.0f, 10.0f, 15.0f, 1.0f };
 
-	roll = 0.0f;
+	roll = -0.45f;
 	pitch = 0.0f;
 	yaw = 0.0f;
 }
