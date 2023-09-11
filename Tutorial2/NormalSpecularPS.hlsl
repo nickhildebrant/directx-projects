@@ -36,7 +36,7 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tange
         const float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
         normal.x = normalSample.x * 2.0f - 1.0f;
         normal.y = normalSample.y * 2.0f - 1.0f;
-        normal.z = -normalSample.z * 2.0f + 1.0f;
+        normal.z = normalSample.z * 2.0f - 1.0f;
     
         normal = float4(mul(normal.xyz, tanToView), 0.0f);
     }
