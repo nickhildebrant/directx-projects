@@ -96,7 +96,7 @@ void Application::RenderFrame()
 	light.SpawnControlWindow();
 
 	//ShowDemoUI();
-	goblin.ShowWindow( "Goblin" );
+	goblin.ShowWindow( m_window.getRenderer(), "Goblin" );
 
 	m_window.getRenderer().EndFrame();
 }

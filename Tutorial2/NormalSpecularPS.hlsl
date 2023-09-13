@@ -13,10 +13,14 @@ cbuffer LightConstantBuffer
 
 cbuffer ObjectConstantBuffer
 {
+    float4 specularColor;
+    float specularWeight;
+    float specularPower;
+    bool specularMapEnabled;
+    
     bool normalMapEnabled;
     bool hasGloss;
-    float specularPower;
-    float padding;
+    float padding[3];
 };
 
 Texture2D tex;
@@ -56,12 +60,25 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tange
     // diffuse intensity
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
-    float4 specularSample = specular.Sample(samplr, texcoord);
-    float4 specularColor = float4(specularSample.rgb, 1.0f);
-    float power = hasGloss ? pow(2.0f, specularSample.a * 13.0f) : specularPower;
-    float4 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0, dot(V, R)), power);
+    float4 specularReflection;
+    float power = specularPower;
+    if(specularMapEnabled)
+    {
+        float4 specularSample = specular.Sample(samplr, texcoord);
+        specularReflection = float4(specularSample.rgb * specularWeight, 1.0f);
+        
+        if(hasGloss)
+        {
+            power = pow(2.0f, specularSample.a * 13.0f);
+        }
+    }
+    else
+    {
+        specularReflection = specularColor;
+    }
     
-    float4 color = saturate((diffuse + ambient) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular * specularColor);
+    float4 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0, dot(V, R)), power);
+    float4 color = saturate((diffuse + ambient) * float4(tex.Sample(samplr, texcoord).rgb, 1.0f) + specular * specularReflection);
     color.a = 1;
     return color;
 }

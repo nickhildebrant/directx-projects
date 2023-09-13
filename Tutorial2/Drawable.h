@@ -18,9 +18,6 @@ public:
 
 	void Draw(Renderer& renderer) const noexcept;
 
-protected:
-	void AddBind(std::shared_ptr<Bindable> bind) noexcept;
-
 	// Can search for a specific bindable to manipulate it
 	template<class T>
 	T* SearchBindable() noexcept
@@ -32,6 +29,9 @@ protected:
 
 		return nullptr;
 	}
+
+protected:
+	void AddBind(std::shared_ptr<Bindable> bind) noexcept;
 
 private:
 	const IndexBuffer* pIndexBuffer = nullptr;

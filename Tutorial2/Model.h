@@ -22,11 +22,25 @@ class Node {
 	friend class Model;
 
 public:
+	struct PSMaterialConstantFullmonte
+	{
+		DirectX::XMFLOAT4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float specularWeight = 1.0f;
+		float specularPower;
+		BOOL specularMapEnabled = TRUE;
+
+		BOOL normalMapEnabled = TRUE;
+		BOOL  hasGlossMap = FALSE;
+		float padding[3];
+	};
+	
 	Node( int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform ) noexcept;
 
 	void Draw( Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform ) const noexcept;
 	void SetAppliedTransform( DirectX::FXMMATRIX transform ) noexcept;
 	void ShowTree( Node*& pSelectedNode ) const noexcept;
+
+	void ControlsUI( Renderer& renderer, PSMaterialConstantFullmonte& matConst);
 
 	int GetID() const;
 
@@ -48,7 +62,7 @@ public:
 	~Model() noexcept;
 
 	void Draw( Renderer& renderer ) const;
-	void ShowWindow( const char* windowName = nullptr ) noexcept;
+	void ShowWindow( Renderer& renderer, const char* windowName = nullptr ) noexcept;
 
 	void SetRootTransform( DirectX::FXMMATRIX transform );
 
