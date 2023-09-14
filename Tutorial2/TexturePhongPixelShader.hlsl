@@ -28,6 +28,8 @@ static const float lightIntensity = 1.0f;
 
 float4 main(float4 viewPosition : Position, float4 normal : Normal, float2 texCoord : Texcoord) : SV_Target
 {
+    texCoord.y = 1.0f - texCoord.y;
+    
     // light vector data
     float distance = length(lightPosition - viewPosition);
     float4 L = normalize(lightPosition - viewPosition);

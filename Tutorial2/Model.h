@@ -25,8 +25,8 @@ public:
 	struct PSMaterialConstantFullmonte
 	{
 		DirectX::XMFLOAT4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-		float specularWeight = 1.0f;
-		float specularPower;
+		float specularWeight = 0.20f;
+		float specularPower = 20.0f;
 		BOOL specularMapEnabled = TRUE;
 
 		BOOL normalMapEnabled = TRUE;

@@ -240,7 +240,9 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 	bool hasAlphaGloss = false;
 	bool hasNormal = false;
 	bool hasDiffuse = false;
-	float shininess = 35.0f;
+	float shininess = 20.0f;
+	DirectX::XMFLOAT4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DirectX::XMFLOAT4 diffuseColor = { 0.50f, 0.50f, 0.75f, 1.0f };
 	if ( mesh.mMaterialIndex >= 0 )
 	{
 		const aiMaterial& material = *pMaterials[mesh.mMaterialIndex];
@@ -252,6 +254,10 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 			bindablePtrs.push_back( Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ) ) );
 			hasDiffuse = true;
 		}
+		else
+		{
+			material.Get( AI_MATKEY_COLOR_DIFFUSE, reinterpret_cast<aiColor3D&>( diffuseColor ) );
+		}
 
 		if ( material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName ) == aiReturn_SUCCESS )
 		{
@@ -259,6 +265,10 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 			hasAlphaGloss = pTexture->HasAlpha();
 			bindablePtrs.push_back( std::move( pTexture ) );
 			hasSpecular = true;
+		}
+		else
+		{
+			material.Get( AI_MATKEY_COLOR_SPECULAR, reinterpret_cast<aiColor3D&>( specularColor ) );
 		}
 
 		if ( !hasAlphaGloss )
@@ -384,12 +394,13 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 		struct PSMaterialConstantDiffnorm
 		{
-			float specularIntensity = 0.18f;
+			float specularIntensity;
 			float specularPower;
 			BOOL  normalMapEnabled = TRUE;
-			float padding[1];
+			float padding;
 		} materialConstant;
 
+		materialConstant.specularIntensity = ( specularColor.x + specularColor.y + specularColor.z ) / 3.0f;
 		materialConstant.specularPower = shininess;
 
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
@@ -438,10 +449,12 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 		struct PSMaterialConstantDiffuse
 		{
-			float specularIntensity = 0.18f;
+			float specularIntensity;
 			float specularPower;
 			float padding[2];
 		} materialConstant;
+
+		materialConstant.specularIntensity = ( specularColor.x + specularColor.y + specularColor.z ) / 3.0f;;
 		materialConstant.specularPower = shininess;
 
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
@@ -488,11 +501,14 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 
 		struct PSMaterialConstantNotex
 		{
-			DirectX::XMFLOAT4 materialColor = { 0.45f,0.45f,0.85f,1.0f };
-			float specularIntensity = 0.18f;
+			DirectX::XMFLOAT4 materialColor;
+			float specularIntensity;
 			float specularPower;
 			float padding[2];
 		} materialConstant;
+
+		materialConstant.materialColor = diffuseColor;
+		materialConstant.specularIntensity = ( specularColor.x + specularColor.y + specularColor.z ) / 3.0f;
 		materialConstant.specularPower = shininess;
 
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different

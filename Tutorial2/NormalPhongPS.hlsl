@@ -29,7 +29,7 @@ static const float ambientIntensity = 1.0f;
 
 float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tangent : Tangent, float4 bitangent : Bitangent, float2 texcoord : Texcoord) : SV_Target
 { 
-    texcoord.y = 1.0f - texcoord.y;
+    //texcoord.y = 1.0f - texcoord.y;
     
     if (normalMapEnabled)
     {

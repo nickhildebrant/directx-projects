@@ -40,7 +40,7 @@ void Light::Reset() noexcept
 	bufferData =
 	{
 		{ 0.0f, 4.0f, 7.5f, 1.0f },
-		{ 0.05f, 0.05f, 0.05f, 1.0f },
+		{ 0.15f, 0.15f, 0.15f, 1.0f },
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		1.0f,
 		1.0f,
