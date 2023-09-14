@@ -288,8 +288,6 @@
     <ClInclude Include="WindowsErrorMacros.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assimp-vc143-mt.dll" />
-    <None Include="assimp-vc143-mtd.dll" />
     <None Include="DXGetErrorDescription.inl" />
     <None Include="DXGetErrorString.inl" />
     <None Include="DXTrace.inl" />
