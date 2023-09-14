@@ -7,6 +7,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <type_traits>
+#include "ImGUI/imgui.h"
+
 class Mesh : public Drawable {
 public:
 	Mesh( Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindPtrs );
@@ -22,8 +25,7 @@ class Node {
 	friend class Model;
 
 public:
-	struct PSMaterialConstantFullmonte
-	{
+	struct PSMaterialConstantFullmonte {
 		DirectX::XMFLOAT4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float specularWeight = 0.20f;
 		float specularPower = 20.0f;
@@ -33,6 +35,13 @@ public:
 		BOOL  hasGlossMap = FALSE;
 		float padding[3];
 	};
+
+	struct PSMaterialConstantNotex {
+		DirectX::XMFLOAT4 materialColor = { 0.447970f, 0.327254f, 0.176283f, 1.0f };
+		DirectX::XMFLOAT4 specularColor = { 0.65f, 0.65f, 0.65f, 1.0f };
+		float specularPower;
+		float padding[3];
+	};
 	
 	Node( int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform ) noexcept;
 
@@ -40,7 +49,58 @@ public:
 	void SetAppliedTransform( DirectX::FXMMATRIX transform ) noexcept;
 	void ShowTree( Node*& pSelectedNode ) const noexcept;
 
-	void ControlsUI( Renderer& renderer, PSMaterialConstantFullmonte& matConst);
+	template <class T>
+	bool ControlsUI( Renderer& renderer, T& materialConst )
+	{
+		if ( meshPtrs.empty() ) return false;
+
+		if constexpr ( std::is_same<T, PSMaterialConstantFullmonte>::value )
+		{
+			if ( auto pcb = meshPtrs.front()->SearchBindable<PixelConstantBuffer<T>>() )
+			{
+				ImGui::Text( "Material" );
+
+				bool normalMapEnabled = (bool) materialConst.normalMapEnabled;
+				ImGui::Checkbox( "Norm Map", &normalMapEnabled );
+				materialConst.normalMapEnabled = normalMapEnabled ? TRUE : FALSE;
+
+				bool specularMapEnabled = (bool) materialConst.specularMapEnabled;
+				ImGui::Checkbox( "Spec Map", &specularMapEnabled );
+				materialConst.specularMapEnabled = specularMapEnabled ? TRUE : FALSE;
+
+				bool hasGlossMap = (bool) materialConst.hasGlossMap;
+				ImGui::Checkbox( "Gloss Alpha", &hasGlossMap );
+				materialConst.hasGlossMap = hasGlossMap ? TRUE : FALSE;
+
+				ImGui::SliderFloat( "Spec Weight", &materialConst.specularWeight, 0.0f, 2.0f );
+
+				ImGui::SliderFloat( "Spec Pow", &materialConst.specularPower, 0.0f, 1000.0f, "%f", 5.0f );
+
+				ImGui::ColorPicker3( "Spec Color", reinterpret_cast<float*>( &materialConst.specularColor ) );
+
+				pcb->Update( renderer, materialConst );
+				return true;
+			}
+		}
+		else if constexpr ( std::is_same<T, PSMaterialConstantNotex>::value )
+		{
+			if ( auto pcb = meshPtrs.front()->SearchBindable<PixelConstantBuffer<T>>() )
+			{
+				ImGui::Text( "Material" );
+
+				ImGui::SliderFloat( "Spec Power", &materialConst.specularPower, 0.0f, 1000.0f, "%f", 5.0f );
+
+				ImGui::ColorPicker3( "Spec Color", reinterpret_cast<float*>( &materialConst.specularColor ) );
+
+				ImGui::ColorPicker3( "Diffuse Color", reinterpret_cast<float*>( &materialConst.materialColor ) );
+
+				pcb->Update( renderer, materialConst );
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	int GetID() const;
 

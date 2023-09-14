@@ -14,12 +14,10 @@ cbuffer LightConstantBuffer
 cbuffer PSMaterialConstant
 {
     float4 materialColor;
-    float specularIntensity;
+    float4 specularColor;
     float shininess;
-    float padding[2];
+    float padding[3];
 };
-
-static const float4 specularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 static const float ambientIntensity = 1.0f;
 
@@ -40,7 +38,7 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal) : SV_Target
     // diffuse intensity
     float4 diffuse = diffuseColor * diffuseIntensity * attenuation * max(0, dot(L, N));
 
-    float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor * specularIntensity;
+    float4 specular = attenuation * pow(max(0, dot(V, R)), shininess) * specularColor;
     float4 color = saturate(ambient + diffuse) * materialColor + specular.a;
     color.a = 1;
     return color;

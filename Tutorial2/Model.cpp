@@ -94,36 +94,6 @@ void Node::SetAppliedTransform( DirectX::FXMMATRIX transform ) noexcept
 
 int Node::GetID() const { return id; }
 
-void Node::ControlsUI( Renderer& renderer, PSMaterialConstantFullmonte& matConst )
-{
-	if ( meshPtrs.empty() ) return;
-
-	if ( auto pcb = meshPtrs.front()->SearchBindable<PixelConstantBuffer<PSMaterialConstantFullmonte>>() )
-	{
-		ImGui::Text( "Material" );
-
-		bool normalMapEnabled = (bool) matConst.normalMapEnabled;
-		ImGui::Checkbox( "Norm Map", &normalMapEnabled );
-		matConst.normalMapEnabled = normalMapEnabled ? TRUE : FALSE;
-
-		bool specularMapEnabled = (bool) matConst.specularMapEnabled;
-		ImGui::Checkbox( "Spec Map", &specularMapEnabled );
-		matConst.specularMapEnabled = specularMapEnabled ? TRUE : FALSE;
-
-		bool hasGlossMap = (bool) matConst.hasGlossMap;
-		ImGui::Checkbox( "Gloss Alpha", &hasGlossMap );
-		matConst.hasGlossMap = hasGlossMap ? TRUE : FALSE;
-
-		ImGui::SliderFloat( "Spec Weight", &matConst.specularWeight, 0.0f, 2.0f );
-
-		ImGui::SliderFloat( "Spec Pow", &matConst.specularPower, 0.0f, 1000.0f, "%f", 5.0f );
-
-		ImGui::ColorPicker3( "Spec Color", reinterpret_cast<float*>( &matConst.specularColor ) );
-
-		pcb->Update( renderer, matConst );
-	}
-}
-
 // Model
 class ModelWindow {
 public:
@@ -152,7 +122,10 @@ public:
 				ImGui::SliderFloat( "Y", &transform.y, -20.0f, 20.0f );
 				ImGui::SliderFloat( "Z", &transform.z, -20.0f, 20.0f );
 				
-				pSelectedNode->ControlsUI( renderer, matConst );
+				if ( !pSelectedNode->ControlsUI( renderer, skinMaterial ) )
+				{
+					pSelectedNode->ControlsUI( renderer, ringMaterial );
+				}
 			}
 		}
 		ImGui::End();
@@ -173,7 +146,8 @@ public:
 
 private:
 	Node* pSelectedNode;
-	Node::PSMaterialConstantFullmonte matConst;
+	Node::PSMaterialConstantFullmonte skinMaterial;
+	Node::PSMaterialConstantNotex ringMaterial;
 
 	struct TransformParameters {
 		float roll = 0.0f;
@@ -498,22 +472,15 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 		bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongPS.cso" ) );
 
 		bindablePtrs.push_back( InputLayout::Resolve( renderer, vertexBuffer.GetLayout(), pvsbc ) );
-
-		struct PSMaterialConstantNotex
-		{
-			DirectX::XMFLOAT4 materialColor;
-			float specularIntensity;
-			float specularPower;
-			float padding[2];
-		} materialConstant;
-
+		
+		Node::PSMaterialConstantNotex materialConstant;
 		materialConstant.materialColor = diffuseColor;
-		materialConstant.specularIntensity = ( specularColor.x + specularColor.y + specularColor.z ) / 3.0f;
+		materialConstant.specularColor = specularColor;
 		materialConstant.specularPower = shininess;
 
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
 		// Ns (specular power) specified for each in the material properties... bad conflict
-		bindablePtrs.push_back( PixelConstantBuffer<PSMaterialConstantNotex>::Resolve( renderer, materialConstant, 1u ) );
+		bindablePtrs.push_back( PixelConstantBuffer<Node::PSMaterialConstantNotex>::Resolve( renderer, materialConstant, 1u ) );
 	}
 	else
 	{
