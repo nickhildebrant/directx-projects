@@ -1,15 +1,5 @@
-cbuffer LightConstantBuffer
-{
-    float4 lightPosition;
-    
-    float4 ambientColor;
-    float4 diffuseColor;
-    
-    float diffuseIntensity;
-    float attenuationConstant;
-    float attenuationLinear;
-    float attenuationQuadradic;
-};
+#include "ShaderCalculations.hlsl"
+#include "PointLight.hlsl"
 
 cbuffer ObjectConstantBuffer
 {
@@ -30,32 +20,6 @@ SamplerState samplr;
 
 static const float ambientIntensity = 1.0f;
 static const float lightIntensity = 1.0f;
-
-float4 MapNormal(float4 normal, float4 tangent, float4 bitangent, float2 texcoord, Texture2D normalMap, SamplerState samplr)
-{
-    float3x3 tanToView = float3x3(normalize(tangent.xyz), normalize(bitangent.xyz), normalize(normal.xyz));
-    
-    float3 normalSample = normalMap.Sample(samplr, texcoord).xyz;
-    normal.xyz = normalSample * 2.0f - 1.0f;
-    
-    return float4(mul(normal.xyz, tanToView), 0.0f);
-}
-
-float Attenuate(float attConstant, float attLinear, float attQuadradic, float distance)
-{
-    return 1.0f / (attConstant + attLinear * distance + attQuadradic * pow(distance, 2));
-
-}
-
-float4 DiffuseCalculation(float4 color, float intensity, float att, float4 LightVector, float4 NormalVector)
-{
-    return color * intensity * att * max(0, dot(LightVector, NormalVector));
-}
-
-float4 SpecularCalculation(float4 color, float intensity, float att, float power, float4 ViewVector, float4 ReflectionVector)
-{
-    return att * (color * intensity) * pow(max(0, dot(ViewVector, ReflectionVector)), power);
-}
 
 float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tangent : Tangent, float4 bitangent : Bitangent, float2 texcoord : Texcoord) : SV_Target
 {
