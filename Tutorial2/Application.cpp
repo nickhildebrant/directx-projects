@@ -90,9 +90,8 @@ void Application::RenderFrame()
 		}
 	}
 
-	//goblin.Draw( m_window.getRenderer() );
-	//wall.Draw( m_window.getRenderer() );
-	nano.Draw( m_window.getRenderer() );
+	goblin.Draw( m_window.getRenderer() );
+	wall.Draw( m_window.getRenderer() );
 	testPlane.Draw( m_window.getRenderer() );
 	light.Draw( m_window.getRenderer() );
 
@@ -102,9 +101,8 @@ void Application::RenderFrame()
 
 	//ShowDemoUI();
 	testPlane.SpawnControlWindow( m_window.getRenderer() );
-	//wall.ShowWindow( m_window.getRenderer(), "Wall" );
-	//goblin.ShowWindow( m_window.getRenderer(), "Goblin" );
-	nano.ShowWindow( m_window.getRenderer(), "Nanosuit" );
+	wall.ShowWindow( m_window.getRenderer(), "Wall" );
+	goblin.ShowWindow( m_window.getRenderer(), "Goblin" );
 
 	m_window.getRenderer().EndFrame();
 }
