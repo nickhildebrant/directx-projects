@@ -8,6 +8,7 @@
 #include <assimp/postprocess.h>
 
 #include <type_traits>
+#include <filesystem>
 #include "ImGUI/imgui.h"
 
 class Mesh : public Drawable {
@@ -118,7 +119,7 @@ private:
 
 class Model {
 public:
-	Model( Renderer& renderer, const std::string fileName );
+	Model( Renderer& renderer, const std::string& filepath, float scale );
 	~Model() noexcept;
 
 	void Draw( Renderer& renderer ) const;
@@ -141,6 +142,7 @@ private:
 	std::vector<std::unique_ptr<Mesh>> meshPtrs;
 	std::unique_ptr<class ModelWindow> pWindow;
 
-	static std::unique_ptr<Mesh> ParseMesh( Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* pMaterials ); // array of const aiMaterials <- const ptr <- ptr
+	static std::unique_ptr<Mesh> ParseMesh( Renderer& renderer, const aiMesh& mesh, 
+		const aiMaterial* const* pMaterials, const std::filesystem::path& filepath, float scale ); // array of const aiMaterials <- const ptr <- ptr
 	std::unique_ptr<Node> ParseNode( int& nextId, const aiNode& node ) noexcept;
 };

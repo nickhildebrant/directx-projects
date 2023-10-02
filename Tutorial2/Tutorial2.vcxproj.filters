@@ -40,6 +40,9 @@
     <FxCompile Include="ShaderCalculations.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="LightVectorData.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Keyboard.cpp">

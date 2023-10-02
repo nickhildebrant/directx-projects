@@ -162,10 +162,10 @@ private:
 	std::unordered_map<int, TransformParameters> transforms;
 };
 
-Model::Model( Renderer& renderer, const std::string fileName ) : pWindow( std::make_unique<ModelWindow>() )
+Model::Model( Renderer& renderer, const std::string& filepath, float scale ) : pWindow( std::make_unique<ModelWindow>() )
 {
 	Assimp::Importer imp;
-	const aiScene* pScene = imp.ReadFile( fileName.c_str(),
+	const aiScene* pScene = imp.ReadFile( filepath.c_str(),
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_GenNormals |
@@ -174,7 +174,7 @@ Model::Model( Renderer& renderer, const std::string fileName ) : pWindow( std::m
 
 	for ( size_t i = 0; i < pScene->mNumMeshes; i++ )
 	{
-		meshPtrs.push_back( ParseMesh( renderer, *pScene->mMeshes[i], pScene->mMaterials ) );
+		meshPtrs.push_back( ParseMesh( renderer, *pScene->mMeshes[i], pScene->mMaterials, filepath, scale ) );
 	}
 
 	int nextId = 0;
@@ -203,12 +203,14 @@ void Model::SetRootTransform( DirectX::FXMMATRIX transform )
 	pRoot->SetAppliedTransform( transform );
 }
 
-std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* pMaterials )
+std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
+	const aiMaterial* const* pMaterials, const std::filesystem::path& path, float scale )
 {
 	using VertexHandler::VertexLayout;
 
 	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
-	const std::string folder_path = "../Models/goblin/";
+
+	const std::string folder_path = path.parent_path().string() + "\\";
 
 	bool hasSpecular = false;
 	bool hasAlphaGloss = false;
@@ -264,9 +266,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh, 
 		}
 	}
 
-	std::string meshTag = folder_path + "%" + mesh.mName.C_Str();
-
-	float scale = 6.0f;
+	std::string meshTag = path.string() + "%" + mesh.mName.C_Str();
 
 	if ( hasDiffuse && hasNormal && hasSpecular )
 	{
