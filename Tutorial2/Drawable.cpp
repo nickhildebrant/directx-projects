@@ -11,7 +11,7 @@ void Drawable::Draw(Renderer& renderer) const noexcept
 		bind->Bind(renderer);
 	}
 
-	renderer.DrawIndexed( pIndexBuffer->GetCount());
+	renderer.DrawIndexed( pIndexBuffer->GetCount() );
 }
 
 void Drawable::AddBind(std::shared_ptr<Bindable> bind) noexcept

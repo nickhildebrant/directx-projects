@@ -6,7 +6,7 @@
 
 TestPlane::TestPlane( Renderer& renderer, float size )
 {
-	auto model = Plane::Make();
+	IndexedTriangleList model = Plane::Make();
 	model.Transform( DirectX::XMMatrixScaling( size, size, 1.0f ) );
 	const auto geometryTag = "$plane." + std::to_string( size );
 
@@ -17,11 +17,13 @@ TestPlane::TestPlane( Renderer& renderer, float size )
 	AddBind( Texture::Resolve( renderer, "Images\\brickwall.jpg" ) );
 	AddBind( Texture::Resolve( renderer, "Images\\brickwall_normal.jpg", 1u ) );
 
+	AddBind( Sampler::Resolve( renderer ) );
+
 	auto pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
 	auto pvsbc = pvs->GetBytecode();
 	AddBind( std::move( pvs ) );
 
-	AddBind( PixelShader::Resolve( renderer, "NormalPhongObjectPS.cso" ) );
+	AddBind( PixelShader::Resolve( renderer, "NormalPhongObjectPS.cso") );
 
 	AddBind( PixelConstantBuffer<PSMaterialConstant>::Resolve( renderer, materialConstant, 1u ) );
 
