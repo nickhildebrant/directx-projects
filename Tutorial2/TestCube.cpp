@@ -17,6 +17,8 @@ TestCube::TestCube( Renderer& renderer, float size )
 	AddBind( Texture::Resolve( renderer, "Images\\brickwall.jpg" ) );
 	AddBind( Texture::Resolve( renderer, "Images\\brickwall_normal.jpg", 1u ) );
 
+	AddBind( Sampler::Resolve( renderer ) );
+
 	auto pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
 	auto pvsbc = pvs->GetBytecode();
 	AddBind( std::move( pvs ) );
