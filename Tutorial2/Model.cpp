@@ -313,7 +313,6 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 		bindablePtrs.push_back( InputLayout::Resolve( renderer, vertexBuffer.GetLayout(), pvsbc ) );
 
 		Node::PSMaterialConstantFullmonte materialConstant;
-
 		materialConstant.specularPower = shininess;
 		materialConstant.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
 

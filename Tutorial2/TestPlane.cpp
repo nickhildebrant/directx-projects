@@ -15,7 +15,7 @@ TestPlane::TestPlane( Renderer& renderer, float size )
 	AddBind( IndexBuffer::Resolve( renderer, geometryTag, model.indices ) );
 
 	AddBind( Texture::Resolve( renderer, "Images\\brickwall.jpg" ) );
-	AddBind( Texture::Resolve( renderer, "Images\\brickwall_normal.jpg", 1u ) );
+	AddBind( Texture::Resolve( renderer, "Images\\brickwall_normal.jpg", 2u ) );
 
 	AddBind( Sampler::Resolve( renderer ) );
 

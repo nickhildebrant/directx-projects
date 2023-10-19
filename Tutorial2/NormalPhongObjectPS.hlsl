@@ -12,8 +12,8 @@ cbuffer PSMaterialConstant
 
 cbuffer TransformConstantBuffer
 {
-    matrix world;
     matrix view;
+    matrix projection;
 };
 
 Texture2D tex;
@@ -29,10 +29,12 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal, float2 texco
     if (normalMapEnabled)
     {
         float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
-        //normal.xyz = -normalSample * 2.0f + 1.0f;
-        //normal.w = 0.0f;
+        normal.x = normalSample.x * 2.0f - 1.0f;
+        normal.y = -normalSample.y * 2.0f + 1.0f;
+        normal.z = normalSample.z * 2.0f - 1.0f;
+        normal.w = 0.0f;
     
-        normal = normalize(mul(normal, world));
+        normal = normalize(mul(normal, view));
     }
     
     // light vector data

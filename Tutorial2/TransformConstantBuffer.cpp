@@ -18,7 +18,7 @@ void TransformConstantBuffer::UpdateBindImpl( Renderer& renderer, const Transfor
 
 TransformConstantBuffer::Transforms TransformConstantBuffer::GetTransforms( Renderer& renderer )
 {
-	const auto modelView = parent.GetTransformXM() * renderer.GetView();
+	const DirectX::XMMATRIX modelView = parent.GetTransformXM() * renderer.GetView();
 
 	return
 	{
