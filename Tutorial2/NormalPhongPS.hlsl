@@ -36,9 +36,7 @@ float4 main(float4 viewPosition : Position, float4 normal : Normal, float4 tange
         float3x3 tanToView = float3x3(normalize(tangent.xyz), normalize(bitangent.xyz), normalize(normal.xyz));
     
         float3 normalSample = normalmap.Sample(samplr, texcoord).xyz;
-        normal.x = normalSample.x * 2.0f - 1.0f;
-        normal.y = normalSample.y * 2.0f - 1.0f;
-        normal.z = -normalSample.z * 2.0f + 1.0f;
+        normal.xyz = normalSample * 2.0f - 1.0f;
         normal.w = 0.0f;
     
         normal = float4(mul(normal.xyz, tanToView), 0.0f);

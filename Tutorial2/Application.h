@@ -30,6 +30,7 @@ private:
 
 	Model wall{ m_window.getRenderer(), "../Models/brick_wall/brick_wall.obj", 6.0f };
 	Model goblin{ m_window.getRenderer(), "../Models/goblin/GoblinX.obj", 6.0f };
+	Model nano{ m_window.getRenderer(), "../Models/nanosuit/nanosuit.obj", 2.0f };
 	TestPlane testPlane{ m_window.getRenderer(), 6.0 };
 
 	bool showUI = true;

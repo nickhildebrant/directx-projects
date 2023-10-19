@@ -348,9 +348,9 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 		{
 			const auto& face = mesh.mFaces[i];
 			assert( face.mNumIndices == 3 );
-			indices.push_back( face.mIndices[0] );
-			indices.push_back( face.mIndices[1] );
 			indices.push_back( face.mIndices[2] );
+			indices.push_back( face.mIndices[1] );
+			indices.push_back( face.mIndices[0] );
 		}
 
 		bindablePtrs.push_back( VertexBuffer::Resolve( renderer, meshTag, vertexBuffer ) );

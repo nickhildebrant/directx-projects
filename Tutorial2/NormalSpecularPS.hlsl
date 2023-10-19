@@ -16,7 +16,7 @@ cbuffer ObjectConstantBuffer
 
 Texture2D tex;
 Texture2D specular;
-Texture2D normalmap;
+Texture2D normalmap : register(t2);
 SamplerState samplr;
 
 static const float ambientIntensity = 1.0f;
