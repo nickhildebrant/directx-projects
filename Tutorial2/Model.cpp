@@ -380,6 +380,62 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 		// Ns (specular power) specified for each in the material properties... bad conflict
 		bindablePtrs.push_back( PixelConstantBuffer<PSMaterialConstantDiffnorm>::Resolve( renderer, materialConstant, 1u ) );
 	}
+	//else if (hasDiffuse && !hasNormal && hasSpecular)
+	//{
+	//	VertexHandler::VertexBuffer vertexBuffer(std::move(
+	//		VertexLayout{}
+	//		.Append(VertexLayout::Position3D)
+	//		.Append(VertexLayout::Normal)
+	//		.Append(VertexLayout::Texture2D)
+	//	));
+
+	//	for (unsigned int i = 0; i < mesh.mNumVertices; i++)
+	//	{
+	//		vertexBuffer.EmplaceBack(
+	//			DirectX::XMFLOAT4{ mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale, 1.0f },
+	//			DirectX::XMFLOAT4{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z, 0.0f },
+	//			DirectX::XMFLOAT2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y }
+	//		);
+	//	}
+
+	//	std::vector<unsigned short> indices;
+	//	indices.reserve(mesh.mNumFaces * 3);
+	//	for (unsigned int i = 0; i < mesh.mNumFaces; i++)
+	//	{
+	//		const auto& face = mesh.mFaces[i];
+	//		assert(face.mNumIndices == 3);
+	//		indices.push_back(face.mIndices[2]);
+	//		indices.push_back(face.mIndices[1]);
+	//		indices.push_back(face.mIndices[0]);
+	//	}
+
+	//	bindablePtrs.push_back(VertexBuffer::Resolve(renderer, meshTag, vertexBuffer));
+
+	//	bindablePtrs.push_back(IndexBuffer::Resolve(renderer, meshTag, indices));
+
+	//	auto pvs = VertexShader::Resolve(renderer, "PhongVS.cso");
+	//	auto pvsbc = pvs->GetBytecode();
+	//	bindablePtrs.push_back(std::move(pvs));
+
+	//	bindablePtrs.push_back(PixelShader::Resolve(renderer, "PhongSpecularPS.cso"));
+
+	//	bindablePtrs.push_back(InputLayout::Resolve(renderer, vertexBuffer.GetLayout(), pvsbc));
+
+	//	struct PSMaterialConstantDiffuseSpec {
+	//		float specularPowerConst;
+	//		BOOL hasGloss;
+	//		float specularMapWeight;
+	//		float padding;
+	//	} materialConstant;
+
+	//	materialConstant.specularPowerConst = shininess;
+	//	materialConstant.hasGloss = hasAlphaGloss ? TRUE : FALSE;
+	//	materialConstant.specularMapWeight = 1.0f;
+
+	//	// this is CLEARLY an issue... all meshes will share same mat const, but may have different
+	//	// Ns (specular power) specified for each in the material properties... bad conflict
+	//	bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstantDiffuseSpec>::Resolve(renderer, materialConstant, 1u));
+	//}
 	else if ( hasDiffuse )
 	{
 		VertexHandler::VertexBuffer vertexBuffer( std::move( VertexLayout{}
