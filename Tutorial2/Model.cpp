@@ -417,23 +417,18 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 		ID3DBlob* pvsbc = pvs->GetBytecode();
 		bindablePtrs.push_back( std::move( pvs ) );
 
-		//bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongSpecPS.cso" ) );
-		bindablePtrs.push_back( PixelShader::Resolve( renderer, "TexturePhongPixelShader.cso" ) );
+		bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongSpecPS.cso" ) );
+		//bindablePtrs.push_back( PixelShader::Resolve( renderer, "TexturePhongPixelShader.cso" ) );
 
 		bindablePtrs.push_back( InputLayout::Resolve( renderer, vertexBuffer.GetLayout(), pvsbc ) );
 
-		struct PSMaterialConstantDiffuseSpec {
-			float specularPowerConst;
-			//BOOL  hasGloss = TRUE;
-			float specularMapWeight;
-			float padding[2];
-		} psConst;
+		Node::PSMaterialConstantFullmonte materialConstant;
+		materialConstant.specularPower = shininess;
+		materialConstant.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
+		materialConstant.normalMapEnabled = false;
+		materialConstant.specularWeight = 1.0f;
 
-		psConst.specularPowerConst = shininess;
-		//psConst.hasGloss = hasAlphaGloss ? TRUE : FALSE;
-		psConst.specularMapWeight = 1.0f;
-
-		bindablePtrs.push_back( PixelConstantBuffer<PSMaterialConstantDiffuseSpec>::Resolve( renderer, psConst, 1u ) );
+		bindablePtrs.push_back( PixelConstantBuffer<Node::PSMaterialConstantFullmonte>::Resolve( renderer, materialConstant, 1u ) );
 	}
 	else if ( hasDiffuse )
 	{
