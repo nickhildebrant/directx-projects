@@ -1,4 +1,5 @@
-cbuffer ConstantBuffer {
+cbuffer ConstantBuffer 
+{
     matrix modelView;
     matrix worldViewProjection;
 }
