@@ -210,7 +210,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 
 	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
 
-	const std::string folder_path = path.parent_path().string() + "\\";
+	const std::string folder_path = path.parent_path().string() + "/";
 
 	bool hasSpecular = false;
 	bool hasAlphaGloss = false;
@@ -237,6 +237,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 
 		if ( material.GetTexture( aiTextureType_SPECULAR, 0, &textureFileName ) == aiReturn_SUCCESS )
 		{
+			std::string filename = folder_path + std::string( textureFileName.C_Str() );
 			std::shared_ptr<Texture> pTexture = Texture::Resolve( renderer, folder_path + std::string( textureFileName.C_Str() ), 1u );
 			hasAlphaGloss = pTexture->HasAlpha();
 			bindablePtrs.push_back( std::move( pTexture ) );
@@ -382,8 +383,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 	}
 	else if ( hasDiffuse && !hasNormal && hasSpecular )
 	{
-		VertexHandler::VertexBuffer vertexBuffer( std::move(
-			VertexLayout{}
+		VertexHandler::VertexBuffer vertexBuffer( std::move( VertexLayout{}
 			.Append( VertexLayout::Position3D )
 			.Append( VertexLayout::Normal )
 			.Append( VertexLayout::Texture2D )
@@ -402,7 +402,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 		indices.reserve( mesh.mNumFaces * 3 );
 		for ( unsigned int i = 0; i < mesh.mNumFaces; i++ )
 		{
-			const auto& face = mesh.mFaces[i];
+			const aiFace face = mesh.mFaces[i];
 			assert( face.mNumIndices == 3 );
 			indices.push_back( face.mIndices[2] );
 			indices.push_back( face.mIndices[1] );
@@ -413,28 +413,27 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 
 		bindablePtrs.push_back( IndexBuffer::Resolve( renderer, meshTag, indices ) );
 
-		auto pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
-		auto pvsbc = pvs->GetBytecode();
+		std::shared_ptr<VertexShader> pvs = VertexShader::Resolve( renderer, "PhongVertexShader.cso" );
+		ID3DBlob* pvsbc = pvs->GetBytecode();
 		bindablePtrs.push_back( std::move( pvs ) );
 
-		bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongSpecularPS.cso" ) );
+		//bindablePtrs.push_back( PixelShader::Resolve( renderer, "PhongSpecPS.cso" ) );
+		bindablePtrs.push_back( PixelShader::Resolve( renderer, "TexturePhongPixelShader.cso" ) );
 
 		bindablePtrs.push_back( InputLayout::Resolve( renderer, vertexBuffer.GetLayout(), pvsbc ) );
 
 		struct PSMaterialConstantDiffuseSpec {
 			float specularPowerConst;
-			BOOL  hasGloss = TRUE;
+			//BOOL  hasGloss = TRUE;
 			float specularMapWeight;
-			float padding;
-		} materialConstant;
+			float padding[2];
+		} psConst;
 
-		materialConstant.specularPowerConst = shininess;
-		materialConstant.hasGloss = hasAlphaGloss ? TRUE : FALSE;
-		materialConstant.specularMapWeight = 1.0f;
+		psConst.specularPowerConst = shininess;
+		//psConst.hasGloss = hasAlphaGloss ? TRUE : FALSE;
+		psConst.specularMapWeight = 1.0f;
 
-		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
-		// Ns (specular power) specified for each in the material properties... bad conflict
-		bindablePtrs.push_back( PixelConstantBuffer<PSMaterialConstantDiffuseSpec>::Resolve( renderer, materialConstant, 1u ) );
+		bindablePtrs.push_back( PixelConstantBuffer<PSMaterialConstantDiffuseSpec>::Resolve( renderer, psConst, 1u ) );
 	}
 	else if ( hasDiffuse )
 	{
@@ -457,7 +456,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 		indices.reserve( mesh.mNumFaces * 3 );
 		for ( unsigned int i = 0; i < mesh.mNumFaces; i++ )
 		{
-			const auto& face = mesh.mFaces[i];
+			const aiFace face = mesh.mFaces[i];
 			assert( face.mNumIndices == 3 );
 			indices.push_back( face.mIndices[2] );
 			indices.push_back( face.mIndices[1] );
@@ -483,7 +482,7 @@ std::unique_ptr<Mesh> Model::ParseMesh( Renderer& renderer, const aiMesh& mesh,
 			float padding[2];
 		} materialConstant;
 
-		materialConstant.specularIntensity = ( specularColor.x + specularColor.y + specularColor.z ) / 3.0f;;
+		materialConstant.specularIntensity = ( specularColor.x + specularColor.y + specularColor.z ) / 3.0f;
 		materialConstant.specularPower = shininess;
 
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different

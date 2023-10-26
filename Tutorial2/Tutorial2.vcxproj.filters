@@ -43,7 +43,7 @@
     <FxCompile Include="LightVectorData.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="PhongSpecularPS.hlsl">
+    <FxCompile Include="PhongSpecPS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
