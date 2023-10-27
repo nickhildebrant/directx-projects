@@ -156,6 +156,9 @@
     <ClCompile Include="TestCube.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="MatrixOperation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="TestCube.h">
       <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixOperation.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

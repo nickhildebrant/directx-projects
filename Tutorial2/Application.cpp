@@ -13,9 +13,9 @@ GDIPlusManager gdipm;
 
 Application::Application() : m_window(1280, 720, "3D Renderer"), light(m_window.getRenderer())
 {
-	//wall.SetRootTransform( DirectX::XMMatrixTranslation( -12.0f, 0.0f, 0.0f ) );
-	//testPlane.SetPosition( { 12.0f,0.0f,0.0f,1.0f } );
-	//goblin.SetRootTransform( DirectX::XMMatrixTranslation( 0.0f, 0.0f, -4.0f ) );
+	wall.SetRootTransform( DirectX::XMMatrixTranslation( -12.0f, 0.0f, 0.0f ) );
+	testPlane.SetPosition( { 12.0f,0.0f,0.0f,1.0f } );
+	goblin.SetRootTransform( DirectX::XMMatrixTranslation( 0.0f, 0.0f, -4.0f ) );
 	nano.SetRootTransform( DirectX::XMMatrixTranslation( 0.0f, -7.0f, 6.0f ) );
 
 	m_window.getRenderer().SetProjection(DirectX::XMMatrixPerspectiveRH(1.0f, 9.0f / 16.0f, 0.5f, 45.0f));
@@ -93,10 +93,10 @@ void Application::RenderFrame()
 		}
 	}
 
-	//goblin.Draw( m_window.getRenderer() );
+	goblin.Draw( m_window.getRenderer() );
 	nano.Draw( m_window.getRenderer() );
-	//wall.Draw( m_window.getRenderer() );
-	//testPlane.Draw( m_window.getRenderer() );
+	wall.Draw( m_window.getRenderer() );
+	testPlane.Draw( m_window.getRenderer() );
 	light.Draw( m_window.getRenderer() );
 
 	// imgui windows for lights and camera
@@ -104,9 +104,9 @@ void Application::RenderFrame()
 	light.SpawnControlWindow();
 
 	//ShowDemoUI();
-	//testPlane.SpawnControlWindow( m_window.getRenderer() );
-	//wall.ShowWindow( m_window.getRenderer(), "Wall" );
-	//goblin.ShowWindow( m_window.getRenderer(), "Goblin" );
+	testPlane.SpawnControlWindow( m_window.getRenderer() );
+	wall.ShowWindow( m_window.getRenderer(), "Wall" );
+	goblin.ShowWindow( m_window.getRenderer(), "Goblin" );
 	nano.ShowWindow( m_window.getRenderer(), "Nano" );
 
 	m_window.getRenderer().EndFrame();
